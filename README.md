@@ -1,21 +1,21 @@
 # CubeDemo
 
-###**萌新的OpenGL试炼**
+## **萌新的OpenGL试炼**
 
 > 一个职中学历的没文化菜鸟刚学会C++编程后，使用OpenGL做的小游戏.
 
-## How to Play
+### How to Play
 下载好确保文件目录至少为以下结构所示：
-    ├── bin/
-    │   └── Demo.exe
-    │
-    └── res
-    │   └── shaders/<着色器文件>
-    │   └── models/<模型文件>
-    │
+>├── bin/
+>│   └── Demo.exe
+>│
+>└── res
+>│   └── shaders/<着色器文件>
+>│   └── models/<模型文件>
+>│
 确认后运行`bin/Demo.exe`即可.
 
-### Key Description
+#### Key Description
 
 * [**WASD**] - 移动(*会跟随视角朝向来改变Y轴)
 * [**Space/Shift**] - 上升/下降
@@ -25,7 +25,7 @@
 * [**ESC**] 退出游戏
 
 
-#### Changelog
+##### Changelog
 
 * [**1.0.1**] 
      - *(2025.3.17- Night) 热修了一波依赖库丢失的问题.*
