@@ -6,13 +6,13 @@
 
 ## How to Play
 下载好确保文件目录至少为以下结构所示：
-> ├── bin/
-> │   └── Demo.exe
-> │
-> └── res
-> │   └── shaders/<着色器文件>
-> │   └── models/<模型文件>
-> │
+    ├── bin/
+    │   └── Demo.exe
+    │
+    └── res
+    │   └── shaders/<着色器文件>
+    │   └── models/<模型文件>
+    │
 确认后运行`bin/Demo.exe`即可.
 
 ### Key Description
