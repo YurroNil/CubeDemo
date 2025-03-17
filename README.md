@@ -1,14 +1,21 @@
 # CubeDemo
 
+
 ## **萌新的OpenGL试炼**
 
 > 一个职中学历的没文化菜鸟刚学会C++编程后，使用OpenGL做的小游戏.
 
 ## How to Play
-下载好确保文件目录至少为以下结构所示：
-> 1
-> 2
-确认后运行`bin/Demo.exe`即可.
+<div style="page-break-after: always;"> </div>
+*下载好确保文件目录至少为以下结构所示：
+├── bin/
+│    └── Demo.exe
+
+└── res
+│    └── shaders/<着色器文件>
+│    └── models/<模型文件>
+│
+确认后运行`bin/Demo.exe`即可.*
 
 ## Key Description
 
