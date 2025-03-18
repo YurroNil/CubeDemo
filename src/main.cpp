@@ -9,7 +9,7 @@
 #include "core/camera.h"
 #include "core/inputHandler.h"
 #include "rendering/shader.h"
-#include "core/modelLoader.h"
+#include "rendering/modelLoader.h"
 #include "rendering/mesh.h"
 
 const unsigned int SCR_INIT_WIDTH = 1280;
@@ -28,8 +28,15 @@ int main() {
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     glEnable(GL_DEPTH_TEST);
 
+    //相机信息初始化
+    Camera camera(
+        glm::vec3(0.0f, 0.0f, 3.0f), // position
+        glm::vec3(0.0f, 1.0f, 0.0f), // up
+        -90.0f,                       // yaw
+        0.0f                         // pitch
+    );
+
     // 初始化系统
-    Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
     InputHandler::Initialize(&camera, window);
 
     //添加窗口大小回调来更新window

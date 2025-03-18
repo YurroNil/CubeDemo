@@ -1,5 +1,5 @@
 #include "rendering/shader.h"
-#include "core/shaderLoader.h"
+#include "rendering/shaderLoader.h"
 #include "tplib/glad/glad.h"
 #include <iostream>
 
@@ -7,8 +7,8 @@
 Shader::Shader(const char* vertexPath, const char* fragmentPath) {
 
     // 加载着色器
-    std::string vertexCode = ShaderLoader::Load("../res/shaders/general.vsh");
-    std::string fragmentCode = ShaderLoader::Load("../res/shaders/general.fsh");
+    std::string vertexCode = ShaderLoader::Load(vertexPath);
+    std::string fragmentCode = ShaderLoader::Load(fragmentPath);
     
     // 编译顶点着色器
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);

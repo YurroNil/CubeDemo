@@ -1,4 +1,4 @@
-#include "core/modelLoader.h"
+#include "rendering/modelLoader.h"
 #include <fstream>
 
 using json = nlohmann::json;

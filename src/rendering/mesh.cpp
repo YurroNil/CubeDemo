@@ -2,7 +2,7 @@
 
 #include "rendering/mesh.h"
 #include "tplib/glad/glad.h"
-#include "core/modelLoader.h"
+#include "rendering/modelLoader.h"
 
 Mesh::Mesh(const ModelData& modelData) 
     : _vertices(modelData.vertices),

@@ -10,21 +10,24 @@
 │     ├── core/ (用于存放核心代码的头文件)
 │     │     └── camera.h
 │     │     └── inputHandler.h
-│     │     └── shaderLoader.h
 │     │     └── windowManager.h
 │     │
-│     └── rendering/ (用于存放图形渲染代码相关的头文件)
+│     └── rendering/ (用于存放图形渲染相关的头文件)
 │          └── mesh.h
 │          └── shader.h
+│          └── shaderLoader.h
+│          └── modelLoader.h
 │
 ├── src/
 │     ├── core/ (用于存放核心代码)
 │     │     └── inputHandler.cpp
 │     │     └── windowManager.cpp
+│     │     └── camera.cpp
 │     │
 │     ├── rendering/ (用于存放图形渲染代码相关)
 │     │     └── mesh.cpp
 │     │     └── shader.cpp
+│     │     └── modelLoader.cpp
 │     │
 │     ├── glad.cpp
 │     └── main.cpp(主文件)
@@ -37,4 +40,7 @@
 │     │     └── <.vsh和.fsh文件>
 │     │
 │     └── models/ (用于存放渲染模型的数据文件)
-            └── <.json文件>
+│     │     └── cube.json
+│     │
+│     └── textures/ (用于存放纹理的文件)
+│           └── <.jpg和.png文件>

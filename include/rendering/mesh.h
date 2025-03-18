@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "core/modelLoader.h" // 必须包含ModelData定义
+#include "rendering/modelLoader.h"
 
 class Mesh {
 public:
