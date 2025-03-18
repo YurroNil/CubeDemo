@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "tplib/json.hpp"
+#include "3rd-lib/json.hpp"
 
 struct ModelData {
     std::string name;

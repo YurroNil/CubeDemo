@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include "core/camera.h"
-#include "tplib/glm/glm.hpp"
+#include "3rd-lib/glm/glm.hpp"
 
 class Shader {
 public:

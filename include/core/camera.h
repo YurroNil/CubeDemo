@@ -1,6 +1,6 @@
 #pragma once
-#include <tplib/glm/glm.hpp>
-#include <tplib/glm/gtc/matrix_transform.hpp>
+#include <3rd-lib/glm/glm.hpp>
+#include <3rd-lib/glm/gtc/matrix_transform.hpp>
 
 class Camera {
 public:

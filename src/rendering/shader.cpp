@@ -1,6 +1,6 @@
 #include "rendering/shader.h"
 #include "rendering/shaderLoader.h"
-#include "tplib/glad/glad.h"
+#include "3rd-lib/glad/glad.h"
 #include <iostream>
 
 //创建着色器program

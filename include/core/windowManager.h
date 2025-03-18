@@ -1,5 +1,5 @@
 #pragma once
-#include <tplib/GLFW/glfw3.h>
+#include <3rd-lib/GLFW/glfw3.h>
 
 class windowManager {
 public:

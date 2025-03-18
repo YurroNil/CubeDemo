@@ -1,9 +1,9 @@
 #include <iostream>
-#include "tplib/glad/glad.h"
-#include "tplib/GLFW/glfw3.h"
-#include "tplib/glm/glm.hpp"
-#include "tplib/glm/gtc/matrix_transform.hpp"
-#include "tplib/glm/gtc/type_ptr.hpp"
+#include "3rd-lib/glad/glad.h"
+#include "3rd-lib/GLFW/glfw3.h"
+#include "3rd-lib/glm/glm.hpp"
+#include "3rd-lib/glm/gtc/matrix_transform.hpp"
+#include "3rd-lib/glm/gtc/type_ptr.hpp"
 
 #include "core/windowManager.h"
 #include "core/camera.h"

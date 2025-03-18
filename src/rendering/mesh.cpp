@@ -1,7 +1,7 @@
 #include <cstddef>
 
 #include "rendering/mesh.h"
-#include "tplib/glad/glad.h"
+#include "3rd-lib/glad/glad.h"
 #include "rendering/modelLoader.h"
 
 Mesh::Mesh(const ModelData& modelData) 

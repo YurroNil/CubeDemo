@@ -1,7 +1,7 @@
 #pragma once
 #include "Camera.h"
 #include "WindowManager.h"
-#include <tplib/GLFW/glfw3.h>
+#include <3rd-lib/GLFW/glfw3.h>
 
 class InputHandler {
 public:

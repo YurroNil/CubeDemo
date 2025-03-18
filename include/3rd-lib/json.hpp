@@ -177,7 +177,7 @@ inline bool operator<(const value_t lhs, const value_t rhs) noexcept
 
 
 #include <utility> // declval, pair
-// #include <nlohmann/tplib/hedley/hedley.hpp>
+// #include <nlohmann/3rd-lib/hedley/hedley.hpp>
 
 
 /* Hedley - https://nemequ.github.io/hedley
@@ -21934,7 +21934,7 @@ inline nlohmann::json::json_pointer operator "" _json_pointer(const char* s, std
 #undef JSON_EXPLICIT
 #undef NLOHMANN_CAN_CALL_STD_FUNC_IMPL
 
-// #include <nlohmann/tplib/hedley/hedley_undef.hpp>
+// #include <nlohmann/3rd-lib/hedley/hedley_undef.hpp>
 
 
 #undef JSON_HEDLEY_ALWAYS_INLINE
