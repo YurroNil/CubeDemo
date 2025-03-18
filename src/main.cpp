@@ -1,3 +1,4 @@
+#include <iostream>
 #include "tplib/glad/glad.h"
 #include "tplib/GLFW/glfw3.h"
 #include "tplib/glm/glm.hpp"
@@ -8,62 +9,11 @@
 #include "core/camera.h"
 #include "core/inputHandler.h"
 #include "rendering/shader.h"
+#include "core/modelLoader.h"
 #include "rendering/mesh.h"
 
 const unsigned int SCR_INIT_WIDTH = 1280;
 const unsigned int SCR_INIT_HEIGHT = 720;
-
-float CUBE_VERTICES[] = {
-     //正面(front)
-    -0.5f, -0.5f,  0.5f,
-     0.5f, -0.5f,  0.5f,
-     0.5f,  0.5f,  0.5f,
-
-     0.5f,  0.5f,  0.5f,
-    -0.5f,  0.5f,  0.5f,
-    -0.5f, -0.5f,  0.5f,
-
-    //左面(right)
-    0.5f, -0.5f, -0.5f,
-    0.5f, -0.5f,  0.5f,
-    0.5f,  0.5f,  0.5f,
-    0.5f,  0.5f,  0.5f,
-    0.5f,  0.5f, -0.5f,
-    0.5f, -0.5f, -0.5f,
-    
-    //后面(back)
-    -0.5f, -0.5f, -0.5f,
-     0.5f, -0.5f, -0.5f,
-     0.5f,  0.5f, -0.5f,
-     0.5f,  0.5f, -0.5f,
-    -0.5f,  0.5f, -0.5f,
-    -0.5f, -0.5f, -0.5f,
-
-    //右面(left)
-    -0.5f, -0.5f, -0.5f,
-    -0.5f,  0.5f, -0.5f,
-    -0.5f,  0.5f,  0.5f,
-    -0.5f,  0.5f,  0.5f,
-    -0.5f, -0.5f,  0.5f,
-    -0.5f, -0.5f, -0.5f,
-    
-    //底面(bottom)
-    -0.5f, -0.5f, -0.5f,
-     0.5f, -0.5f, -0.5f,
-     0.5f, -0.5f,  0.5f,
-     0.5f, -0.5f,  0.5f,
-    -0.5f, -0.5f,  0.5f,
-    -0.5f, -0.5f, -0.5f,
-
-    //顶面(top)
-    -0.5f, 0.5f, -0.5f,
-     0.5f, 0.5f, -0.5f,
-     0.5f, 0.5f,  0.5f,
-     0.5f, 0.5f,  0.5f,
-    -0.5f, 0.5f,  0.5f,
-    -0.5f, 0.5f, -0.5f,
-
-};
 
 
 int main() {
@@ -87,8 +37,25 @@ int main() {
         glViewport(0, 0, width, height);
     });
 
-    Shader shader("../shaders/general.vsh", "../shaders/general.fsh");
-    Mesh cubeMesh(CUBE_VERTICES, sizeof(CUBE_VERTICES));
+     // 加载模型
+    ModelData cubeData;
+     try {
+        cubeData = ModelLoader::LoadFromJson(
+            "../res/models/cube.json"
+        );
+
+    } catch (const std::exception& e) {
+        std::cerr << "模型加载失败：" << e.what() << std::endl;
+        return -1;
+    }
+
+     // 创建着色器
+    Shader shader(
+        ("../res/shaders/" + cubeData.shaders.vertexShader).c_str(),
+        ("../res/shaders/" + cubeData.shaders.fragmentShader).c_str()
+    );
+    // 创建网格
+    Mesh cubeMesh(cubeData);
 
     while (!glfwWindowShouldClose(window)) {
         // 输入处理
