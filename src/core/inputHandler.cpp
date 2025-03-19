@@ -45,7 +45,7 @@ void InputHandler::ScrollCallback(GLFWwindow* window, double& xoffset, double& y
 }
 
 
-void InputHandler::ProcessKeyboard(GLFWwindow* window, float deltaTime) {
+void InputHandler::ProcessKeyboard(GLFWwindow* window, float& deltaTime) {
     // ESC 退出程序
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);

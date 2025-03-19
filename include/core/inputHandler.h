@@ -6,7 +6,7 @@
 class InputHandler {
 public:
     static void Initialize(Camera* camera, GLFWwindow* window);
-    static void ProcessKeyboard(GLFWwindow* window, float deltaTime);
+    static void ProcessKeyboard(GLFWwindow* window, float& deltaTime);
 
 private:
     // 静态成员
