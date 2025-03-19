@@ -10,18 +10,18 @@
 * After Downloading make sure the file directory has the following Structure at least:  
     > ├── bin/  
     > │    └── Demo.exe  
-    > │    └── <DLL Libraries Files>  
+    > │    └── (DLL Libraries Files)  
     > │  
     > └── res  
-    > │    └── shaders/<Shader Files>  
-    > │    └── models/<Model Files>  
+    > │    └── shaders/ (Shader Files)  
+    > │    └── models/ (Model Files)  
     > │  
 * Then just run it `bin/Demo.exe` is OK.  
 
 ## Key Description
 
 * [**WASD**] - Move
-* [**Space/Shift**] - GO Up/Down
+* [**Space/Shift**] - Go Up/Down
 * [**Alt**] - Call the pointer
 * [**F11**] - Toggle Fullscreen Mode
 * [**Mouse Wheel**] - FOV Zoom
