@@ -12,8 +12,8 @@
 #include "rendering/modelLoader.h"
 #include "rendering/mesh.h"
 
-const unsigned int SCR_INIT_WIDTH = 1280;
-const unsigned int SCR_INIT_HEIGHT = 720;
+const unsigned int& SCR_INIT_WIDTH = 1280;
+const unsigned int& SCR_INIT_HEIGHT = 720;
 
 
 int main() {
@@ -27,6 +27,7 @@ int main() {
     glfwMakeContextCurrent(window);
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     glEnable(GL_DEPTH_TEST);
+
 
     //相机信息初始化
     Camera camera(
@@ -66,10 +67,10 @@ int main() {
 
     while (!glfwWindowShouldClose(window)) {
         // 输入处理
-        static float lastFrame = 0.0f;
+        static float s_lastFrame = 0.0f;
         float currentFrame = glfwGetTime();
-        float deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
+        float deltaTime = currentFrame - s_lastFrame;
+        s_lastFrame = currentFrame;
         InputHandler::ProcessKeyboard(window, deltaTime);
 
         // 渲染
@@ -79,14 +80,15 @@ int main() {
         // 获取当前窗口尺寸
         int width, height;
         glfwGetWindowSize(window, &width, &height);
-        float aspectRatio = static_cast<float>(width) / height;
+
+        float aspectRatio = (height == 0) ? 1.0f :(static_cast<float>(width) / height);
 
         // 更新渲染指令
         shader.Use();
         // 传入宽高比
         shader.ApplyCamera(
             camera,
-            (height == 0) ? 1.0f : aspectRatio//避免最小化窗口除以0的错误
+            &aspectRatio//避免最小化窗口除以0的错误
         );
         
         shader.SetMat4("model", glm::mat4(1.0f));
