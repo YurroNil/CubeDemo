@@ -18,6 +18,6 @@ private:
     inline static bool s_AltPressed = false;
 
     // 静态回调实现
-    static void MouseCallback(GLFWwindow* window, double xpos, double ypos);
-    static void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
+    static void MouseCallback(GLFWwindow* window, double& xpos, double& ypos);
+    static void ScrollCallback(GLFWwindow* window, double& xoffset, double& yoffset);
 };

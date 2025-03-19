@@ -1,11 +1,12 @@
 #include "core/camera.h"
+using vec3 = glm::vec3;
 
-Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch)
+Camera::Camera(vec3 position, vec3 up, float yaw, float pitch)
     : Position(position),
       WorldUp(up),
       Yaw(yaw),
       Pitch(pitch),
-      Front(glm::vec3(0.0f, 0.0f, -1.0f)), // 默认前向量
+      Front(vec3(0.0f, 0.0f, -1.0f)), // 默认前向量
       MovementSpeed(2.5f),
       MouseSensitivity(0.1f),
       Zoom(45.0f)
@@ -20,7 +21,7 @@ glm::mat4 Camera::GetViewMatrix() const {
 }
 
 // 处理键盘输入
-void Camera::ProcessKeyboard(int direction, float deltaTime)  {
+void Camera::ProcessKeyboard(int& direction, float& deltaTime)  {
     float velocity = MovementSpeed * deltaTime;
     if (direction == 0) // W
         Position += Front * velocity;
@@ -33,7 +34,7 @@ void Camera::ProcessKeyboard(int direction, float deltaTime)  {
 }
 
 // 处理鼠标移动
-void Camera::ProcessMouseMovement(float xoffset, float yoffset) {
+void Camera::ProcessMouseMovement(float& xoffset, float& yoffset) {
     xoffset *= MouseSensitivity;
     yoffset *= MouseSensitivity;
 
@@ -48,21 +49,21 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset) {
 }
 
 // 处理滚轮
-void Camera::ProcessMouseScroll(float yoffset) {
+void Camera::ProcessMouseScroll(float& yoffset) {
     Zoom -= yoffset;
     if (Zoom < 1.0f) Zoom = 1.0f;
     if (Zoom > 45.0f) Zoom = 45.0f;
 }
 
 //跳跃(未时装)
-void Camera::Jump(float velocity) {
+void Camera::Jump(float& velocity) {
         Position.y += velocity;
     }
 
 
 void Camera::updateCameraVectors() {
     // 根据欧拉角计算前向量
-    glm::vec3 front;
+    vec3 front;
     front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
     front.y = sin(glm::radians(Pitch));
     front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));

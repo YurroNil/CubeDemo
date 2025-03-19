@@ -24,7 +24,7 @@ void InputHandler::Initialize(Camera* camera, GLFWwindow* window) {
 }
 
 // 静态回调方法
-void InputHandler::MouseCallback(GLFWwindow* window, double xpos, double ypos) {
+void InputHandler::MouseCallback(GLFWwindow* window, double& xpos, double& ypos) {
     if (s_FirstMouse) {
         s_LastX = xpos;
         s_LastY = ypos;
@@ -39,8 +39,9 @@ void InputHandler::MouseCallback(GLFWwindow* window, double xpos, double ypos) {
     s_Camera->ProcessMouseMovement(xoffset, yoffset);
 }
 
-void InputHandler::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
-    s_Camera->ProcessMouseScroll(yoffset);
+void InputHandler::ScrollCallback(GLFWwindow* window, double& xoffset, double& yoffset) {
+    float temp = static_cast<float>(yoffset);
+    s_Camera->ProcessMouseScroll(temp);
 }
 
 

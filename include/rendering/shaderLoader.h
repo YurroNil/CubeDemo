@@ -7,7 +7,7 @@ using namespace std;
 
 class ShaderLoader {
 public:
-    static string Load(const char* path) {
+    static string Load(const std::string& path) {
         string code;
         ifstream file;
         
