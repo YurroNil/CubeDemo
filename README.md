@@ -3,34 +3,43 @@
 
 ## **萌新的OpenGL试炼**
 
-> 一个职中学历的没文化菜鸟刚学会C++编程后，使用OpenGL做的小游戏.
+> This is a 3D game engine made by an __uneducated__ noob who just learned C++ and used the OpenGL library. It is under development currently.
 
 ## How to Play
 
-* 下载好确保文件目录至少为以下结构所示：
-    >* ├── bin/
-    >* │    └── Demo.exe
-    >* │    └── libgcc_s_seh-1.dll (程序依赖的动态库文件)
-    >* │
-    >* └── res
-    >* │    └── shaders/<着色器文件>
-    >* │    └── models/<模型文件>
-    >* │
-* 确认后运行`bin/Demo.exe`即可.*
+* After Downloading make sure the file directory has the following Structure at least:  
+    > ├── bin/  
+    > │    └── Demo.exe  
+    > │    └── <DLL Libraries Files>  
+    > │  
+    > └── res  
+    > │    └── shaders/<Shader Files>  
+    > │    └── models/<Model Files>  
+    > │  
+* Then just run it `bin/Demo.exe` is OK.  
 
 ## Key Description
 
-* [**WASD**] - 移动(*会跟随视角朝向来改变Y轴)
-* [**Space/Shift**] - 上升/下降
-* [**Alt**] - 呼出鼠标
-* [**F11**] - 全屏
-* [**鼠标滚轮**] - 视角缩放
-* [**ESC**] 退出游戏
+* [**WASD**] - Move
+* [**Space/Shift**] - GO Up/Down
+* [**Alt**] - Call out Pointer
+* [**F11**] - Toggle Fullscreen Mode
+* [**鼠标滚轮**] - FOV Zoom
+* [**ESC**] Quit the game
+
+## How to Compile
+First you need to prepare the following 4 libraries into `include/` : `GLFW/`(<a href="https://github.com/glfw/glfw" target="_blank">[Link]</a>), `glad/`(<a href="https://glad.dav1d.de/" target="_blank">[Link]</a>), `glm/`(<a href="https://github.com/g-truc/glm" target="_blank">[Link]</a>), `json.hpp`(<a href="https://github.com/nlohmann/json" target="_blank">[Link]</a>), `stb_image.h`(<a href="https://github.com/nothings/stb" target="_blank">[Link]</a>), and Then put the `libglfw3.a`(<a href="https://github.com/glfw/glfw" target="_blank">[Link]</a>) into the `lib/`.  
+Finally, in the root directory of the workspace Run Command(Here take GCC as an example) ```
+
+g++.exe -fexec-charset=utf-8 -g src/*.cpp src/core/*.cpp src/rendering/*.cpp -o ./bin/Demo.exe -I"./include" -L"./lib" -lglfw3 -lopengl32 -lgdi32
+
+```
+to compile successfully.
 
 
 ## Changelog
 * [**1.0.2 ~ 1.0.3**]
-     - *(2025.3.19) 完成了json导入系统(modelLoader.cpp). 添加了texture.cpp与camera.cpp*
+     - (2025.3.19) 完成了json导入系统(modelLoader.cpp). 添加了texture.cpp与camera.cpp.
      
 * [**1.0 ~ 1.0.1**] 
-     - *(2025.3.17) 花了一个凌晨完成了v1.0. 热修了一波依赖库丢失的问题.*
+     - (2025.3.17) 花了一个凌晨完成了v1.0. 热修了一波依赖库丢失的问题.
