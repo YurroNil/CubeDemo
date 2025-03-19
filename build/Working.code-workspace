@@ -1,7 +1,12 @@
 {
 	"folders": [
 		{
-			"path": ".."
+			"path": "..",
+			"name": "workspace"
+		},
+		{
+			"path": "D:\\_devKits",
+			"name": "includePath"
 		}
 	],
 	"settings": {
