@@ -1,6 +1,6 @@
 #include "rendering/shader.h"
 #include "rendering/shaderLoader.h"
-#include "3rd-lib/glad/glad.h"
+#include "glad/glad.h"
 #include <iostream>
 
 using string = std::string;

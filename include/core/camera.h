@@ -1,6 +1,6 @@
 #pragma once
-#include <3rd-lib/glm/glm.hpp>
-#include <3rd-lib/glm/gtc/matrix_transform.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 using vec3 = glm::vec3;
 
 class Camera {
