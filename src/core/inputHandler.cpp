@@ -4,10 +4,11 @@ namespace {
     InputHandler* s_CurrentHandler = nullptr;
 }
 
-void InputHandler::Initialize(Camera* camera, GLFWwindow* window) {
+void InputHandler::Initialize(Camera* camera, GLFWwindow* &window) {
     s_Camera = camera;
     s_Window = window;
-
+    s_lastFrame = 0.0f;
+    
     int width, height;
     glfwGetWindowSize(window, &width, &height);
     s_LastX = width / 2.0f;
@@ -22,6 +23,15 @@ void InputHandler::Initialize(Camera* camera, GLFWwindow* window) {
     });
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
+
+//输入处理
+void InputHandler::Handling(GLFWwindow* window) {
+    float currentFrame = glfwGetTime();
+    float deltaTime = currentFrame - s_lastFrame;
+    s_lastFrame = currentFrame;
+    ProcessKeyboard(window, deltaTime);
+}
+
 
 // 静态回调方法
 void InputHandler::MouseCallback(GLFWwindow* window, double& xpos, double& ypos) {
@@ -45,7 +55,7 @@ void InputHandler::ScrollCallback(GLFWwindow* window, double& xoffset, double& y
 }
 
 
-void InputHandler::ProcessKeyboard(GLFWwindow* window, float& deltaTime) {
+void InputHandler::ProcessKeyboard(GLFWwindow* &window, float deltaTime) {
     // ESC 退出程序
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);

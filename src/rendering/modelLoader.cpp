@@ -2,6 +2,7 @@
 #include <fstream>
 
 using json = nlohmann::json;
+using string = std::string;
 
 //验证模型文件
 void ModelLoader::ValidateJson(const json& j) {
@@ -10,7 +11,7 @@ void ModelLoader::ValidateJson(const json& j) {
     }
 }
 
-ModelData ModelLoader::LoadFromJson(const std::string& filePath) {
+ModelData ModelLoader::LoadFromJson(const string& filePath) {
     //获取
     std::ifstream file(filePath);
     if (!file.is_open()) {
@@ -22,7 +23,7 @@ ModelData ModelLoader::LoadFromJson(const std::string& filePath) {
         file >> data;
         ValidateJson(data);
     } catch (const json::exception& e) {
-        throw std::runtime_error("JSON粘贴错误：" + std::string(e.what()));
+        throw std::runtime_error("JSON粘贴错误：" + string(e.what()));
     }
 
     //解析
@@ -32,8 +33,8 @@ ModelData ModelLoader::LoadFromJson(const std::string& filePath) {
     model.name = data["meta"].value("name", "unnamed");
     
     // 解析着色器
-    model.shaders.vertexShader = data["shaders"]["vertex"].get<std::string>();
-    model.shaders.fragmentShader = data["shaders"]["fragment"].get<std::string>();
+    model.shaders.vertexShader = data["shaders"]["vertex"].get<string>();
+    model.shaders.fragmentShader = data["shaders"]["fragment"].get<string>();
 
     // 解析顶点数据
     const auto& unif = data["uniforms"];

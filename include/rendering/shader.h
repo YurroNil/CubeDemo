@@ -11,7 +11,7 @@ public:
     
     void Use() const;
     void SetMat4(const std::string& name, const glm::mat4& mat) const;
-    void ApplyCamera(const Camera& camera, float* aspectRatio);
+    void ApplyCamera(const Camera& camera, float aspectRatio) const;
 
 private:
     unsigned int ID;

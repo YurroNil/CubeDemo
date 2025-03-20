@@ -2,6 +2,7 @@
 #include "rendering/shaderLoader.h"
 #include "glad/glad.h"
 #include <iostream>
+#include <GLFW/glfw3.h>
 
 using string = std::string;
 
@@ -47,11 +48,11 @@ void Shader::SetMat4(const string& name, const glm::mat4& mat) const {
     glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }
 
-void Shader::ApplyCamera(const Camera& camera, float* aspectRatio) {
+void Shader::ApplyCamera(const Camera& camera, float aspectRatio) const {
     glm::mat4 projection = glm::perspective(
         glm::radians(camera.Zoom),
         // 使用宽高比而不是固定分辨率
-        *aspectRatio,
+        aspectRatio,
         0.1f, 100.0f
     );
     SetMat4("projection", projection);
