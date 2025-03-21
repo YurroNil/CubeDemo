@@ -19,7 +19,7 @@ Camera::Camera(vec3 position, vec3 up, float yaw, float pitch)
 
 // 获取视图矩阵
 glm::mat4 Camera::GetViewMatrix() const {
-    return glm::lookAt(Position, Position + Front, Up);
+    return glm::lookAt(Position, Position+Front, Up);
 }
 
 // 处理键盘输入

@@ -37,7 +37,6 @@ void InputHandler::ProcessKeyboard(GLFWwindow* &window, float deltaTime) {
     // ESC 退出程序
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-
     // WASD 移动
     float velocity = s_Camera->MovementSpeed * deltaTime;
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
@@ -48,7 +47,6 @@ void InputHandler::ProcessKeyboard(GLFWwindow* &window, float deltaTime) {
         s_Camera->Position -= s_Camera->Right * velocity;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         s_Camera->Position += s_Camera->Right * velocity;
-
     // 空格上升
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
         s_Camera->Position.y += velocity;
