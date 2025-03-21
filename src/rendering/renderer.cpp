@@ -1,3 +1,4 @@
+// src/rendering/renderer.cpp
 
 #include "rendering/renderer.h"
 #include <glad/glad.h>
@@ -23,7 +24,7 @@ void Renderer::Submit(
     mesh.Draw();
 }
 
-void Renderer::ApplyCamera(const Shader& shader, const Camera& camera, float aspectRatio) {
+void Renderer::ApplyCamera(const Shader& shader, const Camera camera, float aspectRatio) {
     shader.ApplyCamera(camera, aspectRatio);
 }
 

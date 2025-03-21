@@ -1,42 +1,47 @@
 文件目录结构展示：
 
 ├── include/
-│     ├── 第三方库 (glad/, glm/, GLFW/json.hpp, stb_image.h)
-│     │
-│     ├── core/ (用于存放核心代码的头文件)
+│     ├── core/
 │     │     └── camera.h
 │     │     └── inputHandler.h
 │     │     └── windowManager.h
-│     │
-│     └── rendering/ (用于存放图形渲染相关的头文件)
-│          └── mesh.h
-│          └── shader.h
-│          └── shaderLoader.h
-│          └── modelLoader.h
-│
+│     │     └── renderer.h
+│     ├── rendering/
+│     │    └── mesh.h
+│     │    └── shader.h
+│     │    └── shaderLoader.h
+│     │    └── modelLoader.h
+│     │    └── textRenderer.h
+│     └── ui/
+│          └── uiManager.h
+│       
 ├── src/
-│     ├── core/ (用于存放核心代码)
+│     ├── core/ (核心代码)
 │     │     └── inputHandler.cpp
 │     │     └── windowManager.cpp
 │     │     └── camera.cpp
-│     │
-│     ├── rendering/ (用于存放图形渲染代码相关)
+│     ├── rendering/ (图形渲染相关)
 │     │     └── mesh.cpp
 │     │     └── shader.cpp
 │     │     └── modelLoader.cpp
-│     │
+│     │     └── textRenderer.cpp
+│     │     └── renderer.cpp
+│     ├── ui/ (界面相关)
+│     │    └── uiManager.cpp
 │     ├── glad.cpp
-│     └── main.cpp(主文件)
+│     └── main.cpp(主程序)
 │
-├── lib/
-│     └── <.a文件>
-│
-└── res/
-│     └── shaders/ (用于存放着色器源码文件)
-│     │     └── <.vsh和.fsh文件>
-│     │
-│     └── models/ (用于存放渲染模型的数据文件)
+├── res/
+│     ├── animations/ (动画文件)
+│     │     └── (json文件)
+│     ├── shaders/ (着色器源码文件)
+│     │     └── (vsh和fsh文件)
+│     ├── fonts/ (字体文件)
+│     │     └── (ttf文件)
+│     ├── models/ (渲染模型的元数据)
 │     │     └── cube.json
-│     │
-│     └── textures/ (用于存放纹理的文件)
-│           └── <.jpg和.png文件>
+│     ├── textures/ (纹理文件)
+│     │     └── terrain (地形纹理, 暂未使用)
+│     │     └── ui (界面纹理, 暂未使用)
+│     └── sounds/ (声音文件)
+│           └── (暂无内容)

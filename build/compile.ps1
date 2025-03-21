@@ -1,2 +1,2 @@
 cd ../
-g++.exe -fexec-charset=utf-8 -g src/*.cpp src/core/*.cpp src/rendering/*.cpp -o ./bin/Demo.exe -I"./include" -I"D:/_devKits/include" -L"D:/_devKits/lib" -lglfw3 -lopengl32 -lgdi32
+g++.exe -fexec-charset=utf-8 -g src/*.cpp src/core/*.cpp src/rendering/*.cpp src/ui/*.cpp -o ./bin/Demo.exe -I"./include" -I"D:/MSYS2/mingw64/include" -I"D:/MSYS2/mingw64/include/freetype2" -L"D:/MSYS2/mingw64/lib" -lglfw3 -lopengl32 -lgdi32 -lfreetype

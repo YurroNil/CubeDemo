@@ -1,3 +1,5 @@
+// src/rendering/shader.cpp
+
 #include "rendering/shader.h"
 #include "rendering/shaderLoader.h"
 #include "glad/glad.h"
@@ -46,6 +48,10 @@ void Shader::Use() const {
 
 void Shader::SetMat4(const string& name, const glm::mat4& mat) const {
     glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+}
+
+void Shader::SetVec3(const std::string& name, const glm::vec3& value) {
+    glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
 }
 
 void Shader::ApplyCamera(const Camera& camera, float aspectRatio) const {

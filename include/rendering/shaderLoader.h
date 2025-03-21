@@ -1,3 +1,5 @@
+// include/rendering/shaderLoader.h
+
 #pragma once
 #include <string>
 #include <fstream>
