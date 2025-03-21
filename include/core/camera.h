@@ -1,3 +1,5 @@
+// include/core/camera.h
+
 #pragma once
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -30,13 +32,13 @@ public:
 
     glm::mat4 GetViewMatrix() const;
 
-    void ProcessKeyboard(int& direction, float& deltaTime);
+    void ProcessKeyboard(int direction, float deltaTime);
 
-    void ProcessMouseMovement(float& xoffset, float& yoffset);
+    void ProcessMouseMovement(float xoffset, float yoffset);
 
-    void ProcessMouseScroll(float& yoffset);
+    void ProcessMouseScroll(float yoffset);
 
-    void Jump(float& velocity);
+    void Jump(float velocity);
 
 private:
     void updateCameraVectors();

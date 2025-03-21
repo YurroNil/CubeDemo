@@ -1,5 +1,6 @@
-#include <cstddef>
+// src/rendering/mesh.cpp
 
+#include <cstddef>
 #include "rendering/mesh.h"
 #include "glad/glad.h"
 #include "rendering/modelLoader.h"

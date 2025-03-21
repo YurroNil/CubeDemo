@@ -1,3 +1,5 @@
+// src/core/camera.cpp
+
 #include "core/camera.h"
 using vec3 = glm::vec3;
 
@@ -21,20 +23,27 @@ glm::mat4 Camera::GetViewMatrix() const {
 }
 
 // 处理键盘输入
-void Camera::ProcessKeyboard(int& direction, float& deltaTime)  {
+void Camera::ProcessKeyboard(int direction, float deltaTime)  {
     float velocity = MovementSpeed * deltaTime;
-    if (direction == 0) // W
-        Position += Front * velocity;
-    if (direction == 1) // S
-        Position -= Front * velocity;
-    if (direction == 2) // A
-        Position -= Right * velocity;
-    if (direction == 3) // D
-        Position += Right * velocity;
+    switch (direction)
+    {
+    case 0:
+        Position += Front * velocity; // W
+    case 1:
+        Position -= Front * velocity; // S
+    case 2:
+        Position -= Right * velocity; // A
+    case 3:
+        Position += Right * velocity; // D
+    break;
+    
+    default:break;
+    }
 }
 
 // 处理鼠标移动
-void Camera::ProcessMouseMovement(float& xoffset, float& yoffset) {
+void Camera::ProcessMouseMovement(float xoffset, float yoffset) {
+
     xoffset *= MouseSensitivity;
     yoffset *= MouseSensitivity;
 
@@ -49,14 +58,14 @@ void Camera::ProcessMouseMovement(float& xoffset, float& yoffset) {
 }
 
 // 处理滚轮
-void Camera::ProcessMouseScroll(float& yoffset) {
+void Camera::ProcessMouseScroll(float yoffset) {
     Zoom -= yoffset;
     if (Zoom < 1.0f) Zoom = 1.0f;
     if (Zoom > 45.0f) Zoom = 45.0f;
 }
 
 //跳跃(未时装)
-void Camera::Jump(float& velocity) {
+void Camera::Jump(float velocity) {
         Position.y += velocity;
     }
 

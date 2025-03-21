@@ -37,6 +37,9 @@ to compile successfully.
 
 
 ## Changelog
+* [**1.0.4**]
+     - (2025.3.21) 为了拓展性使项目模块化. 完成了字体渲染类. 打开F3能显示调试面板.
+
 * [**1.0.2 ~ 1.0.3**]
      - (2025.3.19) 完成了json导入系统(modelLoader.cpp). 添加了texture.cpp与camera.cpp.
      
