@@ -12,10 +12,9 @@
     > │    └── Demo.exe  
     > │    └── (DLL Libraries Files)  
     > │  
-    > └── res  
-    > │    └── shaders/ (Shader Files)  
-    > │    └── models/ (Model Files)  
-    > │  
+    > └── res/  
+    >     └── (Animations, Fonts, Shaders, Models, Textures... etc)  
+    >   
 * Then just run it `bin/Demo.exe` is OK.  
 
 ## Key Description
@@ -25,13 +24,14 @@
 * [**Alt**] - Call the pointer
 * [**F11**] - Toggle Fullscreen Mode
 * [**Mouse Wheel**] - FOV Zoom
-* [**ESC**] Quit the game
+* [**ESC**] - Quit the game
+* [**F3**] - Open/Close the Debuginfo
 
 ## How to Compile
-First you need to prepare the following some libraries into `include/` : `GLFW/`(<a href="https://github.com/glfw/glfw" target="_blank">Link</a>), `glad/`(<a href="https://glad.dav1d.de/" target="_blank">Link</a>), `glm/`(<a href="https://github.com/g-truc/glm" target="_blank">Link</a>), `json.hpp`(<a href="https://github.com/nlohmann/json" target="_blank">Link</a>), `stb_image.h`(<a href="https://github.com/nothings/stb" target="_blank">Link</a>), and Then put the `libglfw3.a`(<a href="https://github.com/glfw/glfw" target="_blank">Link</a>) into the `lib/`.  
+First you need to prepare the following some libraries into `include/` : `GLFW/` (<a href="https://github.com/glfw/glfw" target="_blank">Link</a>) , `glad/` (<a href="https://glad.dav1d.de/" target="_blank">Link</a>) , `glm/` (<a href="https://github.com/g-truc/glm" target="_blank">Link</a>) , `json.hpp` (<a href="https://github.com/nlohmann/json" target="_blank">Link</a>) , `stb_image.h` (<a href="https://github.com/nothings/stb" target="_blank">Link</a>) , `freetype/` (<a href="https://download.savannah.gnu.org/releases/freetype/" target="_blank">Link</a>) and Then put the `libglfw3.a` (<a href="https://github.com/glfw/glfw" target="_blank">Link</a>) into the `lib/`.  
 Finally, in the root directory of the workspace Run command (Here take GCC as an example) :
 ```
-g++.exe -fexec-charset=utf-8 -g src/*.cpp src/core/*.cpp src/rendering/*.cpp -o ./bin/Demo.exe -I"./include" -L"./lib" -lglfw3 -lopengl32 -lgdi32
+g++.exe -fexec-charset=utf-8 -g src/*.cpp src/core/*.cpp src/rendering/*.cpp -o ./bin/Demo.exe -Iinclude -Llib -lglfw3 -lopengl32 -lgdi32 -lfreetype
 ```
 to compile successfully.
 
