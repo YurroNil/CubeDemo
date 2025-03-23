@@ -15,6 +15,7 @@ void InputHandler::Init(Camera* camera) {
 // 静态回调方法
 void InputHandler::MouseCallback(double xpos, double ypos) {
     if (s_FirstMouse) {
+        if(!s_Camera) {return;} //防止空指针
         s_LastX = xpos;
         s_LastY = ypos;
         s_FirstMouse = false;

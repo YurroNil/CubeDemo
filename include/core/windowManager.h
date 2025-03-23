@@ -1,7 +1,7 @@
 // include/core/windowManager.h
 
 #pragma once
-#include <GLFW/glfw3.h>
+#include "GLFW/glfw3.h"
 
 class WindowManager {
 public:

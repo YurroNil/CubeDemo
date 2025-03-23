@@ -2,7 +2,7 @@
 #include <functional>
 #include <vector>
 #include <sstream>
-#include "rendering/textRenderer.h"
+#include "renderer/text.h"
 
 using string = std::string;
 

@@ -5,13 +5,14 @@
 │     │     └── camera.h
 │     │     └── inputHandler.h
 │     │     └── windowManager.h
-│     │     └── renderer.h
 │     ├── rendering/
 │     │    └── mesh.h
-│     │    └── shader.h
 │     │    └── shaderLoader.h
 │     │    └── modelLoader.h
-│     │    └── textRenderer.h
+│     ├── renderer/
+│     │    └── main.h
+│     │    └── text.h
+│     │    └── shader.h
 │     └── ui/
 │          └── uiManager.h
 │       
@@ -22,10 +23,11 @@
 │     │     └── camera.cpp
 │     ├── rendering/ (图形渲染相关)
 │     │     └── mesh.cpp
-│     │     └── shader.cpp
 │     │     └── modelLoader.cpp
-│     │     └── textRenderer.cpp
-│     │     └── renderer.cpp
+│     ├── renderer/ (专门存放渲染器类)
+│     │     └── main.cpp
+│     │     └── text.cpp
+│     │     └── shader.cpp
 │     ├── ui/ (界面相关)
 │     │    └── uiManager.cpp
 │     ├── glad.cpp
