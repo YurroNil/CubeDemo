@@ -51,6 +51,13 @@
         0.5, 0.5,  0.5,
         -0.5, 0.5,  0.5,
         -0.5, 0.5, -0.5
-        ]
+        ],
+        "normals": [],
+        "material": {
+            "ambient":[],
+            "diffuse": [],
+            "specular": [],
+            "shininess": 32.0
+        }
     }
 }

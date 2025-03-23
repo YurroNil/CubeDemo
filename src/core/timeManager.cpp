@@ -1,7 +1,7 @@
 // src/core/timeManager.cpp
 
 #include "core/timeManager.h"
-#include <GLFW/glfw3.h>
+#include "GLFW/glfw3.h"
 #include <glm/common.hpp>
 
 void TimeManager::Update() {

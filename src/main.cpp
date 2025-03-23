@@ -1,24 +1,16 @@
 // src/main.cpp
-
-#define GLM_ENABLE_EXPERIMENTAL
-
-#include <glm/gtx/string_cast.hpp>
-#include <glm/gtx/dual_quaternion.hpp>
-
 #include <iostream>
+
+// 第三方库
+#define GLM_ENABLE_EXPERIMENTAL
+#include "glm/gtx/string_cast.hpp"
+#include "glm/gtx/dual_quaternion.hpp"
 #include "glad/glad.h"
-#include "GLFW/glfw3.h"
-#include "glm/glm.hpp"
 
-
-#include "core/camera.h"
+// 项目包含的头文件
 #include "core/inputHandler.h"
-#include "rendering/shader.h"
 #include "rendering/modelLoader.h"
-#include "rendering/mesh.h"
-#include "rendering/renderer.h"
-#include "rendering/textRenderer.h"
-#include "core/windowManager.h"
+#include "renderer/main.h"
 #include "ui/uiManager.h"
 #include "core/timeManager.h"
 
@@ -42,8 +34,8 @@ int main() {
 
     // 相机信息初始化
     Camera camera(
-        glm::vec3(0.0f, 0.0f, 3.0f), // position
-        glm::vec3(0.0f, 1.0f, 0.0f), // up
+        vec3(0.5f, 3.0f, 3.0f), // position
+        vec3(0.0f, 1.0f, 0.0f), // up
         -90.0f,                       // yaw
         0.0f                         // pitch
     );
@@ -59,9 +51,9 @@ int main() {
     ModelData cubeData;
     ModelLoader modelLoader;
     try {
-        cubeData = modelLoader.LoadFromJson(  // 通过实例调用成员函数
-            "../res/models/cube.json"
-        );
+        cubeData = modelLoader.LoadFromJson("res/models/lit_cube.json");
+        //cubeData = modelLoader.LoadFromJson("res/models/" + cubeData.name + ".json");
+
     } catch (const std::exception& e) {
         std::cerr << "模型加载失败：" << e.what() << std::endl;
         return -1;
@@ -69,8 +61,8 @@ int main() {
 
      // 创建着色器
     Shader shader(
-        ("../res/shaders/" + cubeData.shaders.vertexShader) .c_str(),
-        ("../res/shaders/" + cubeData.shaders.fragmentShader) .c_str()
+        ("res/shaders/" + cubeData.shaders.vertexShader).c_str(),
+        ("res/shaders/" + cubeData.shaders.fragmentShader).c_str()
     );
 
     Mesh cubeMesh(cubeData);  //创建网格
@@ -94,6 +86,7 @@ int main() {
         );
 
         WindowManager::FullscreenTrigger(window);  // F11全屏检测
+        Renderer::SetLitParameter(shader, camera, cubeData);
         Renderer::Submit(shader, cubeMesh);  // 提交渲染对象
         UIManager::RenderUI();  // 渲染调试信息
         Renderer::EndFrame(window);  // 结束帧

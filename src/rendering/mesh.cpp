@@ -5,10 +5,7 @@
 #include "glad/glad.h"
 #include "rendering/modelLoader.h"
 
-Mesh::Mesh(const ModelData& modelData) 
-    : _vertices(modelData.vertices),
-      _vertexComponents(modelData.vertexComponents) 
-{
+void Mesh::BindArrayBuffer(const ModelData& modelData) {
     // 绑定 VAO/VBO
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -31,8 +28,30 @@ Mesh::Mesh(const ModelData& modelData)
         _vertexComponents * sizeof(float),
         (void*)0
     );
+}
 
+Mesh::Mesh(const ModelData& modelData) 
+    : _vertices(modelData.vertices),
+      _vertexComponents(modelData.vertexComponents) 
+{
+    
+    BindArrayBuffer(modelData);
     glEnableVertexAttribArray(0);
+
+
+    // 添加法线缓冲
+    glGenBuffers(1, &NBO);
+    glBindBuffer(GL_ARRAY_BUFFER, NBO);
+    glBufferData(
+        GL_ARRAY_BUFFER,
+        modelData.normals.size()*sizeof(float), 
+        modelData.normals.data(),
+        GL_STATIC_DRAW
+    );
+
+    // 设置属性指针
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
 }
 
 
@@ -41,7 +60,7 @@ void Mesh::Draw() const {
     glBindVertexArray(VAO);
     // 动态计算顶点数量
     int vertexCount = _vertices.size() / _vertexComponents;
-    glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, vertexCount);
 }
 
 Mesh::~Mesh() {

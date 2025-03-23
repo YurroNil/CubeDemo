@@ -6,8 +6,9 @@
 #include <sstream>
 #include <iostream>
 
+using string = std::string;
 
 class ShaderLoader {
 public:
-    static std::string Load(const std::string& path);
+    static string Load(const string& path);
 };

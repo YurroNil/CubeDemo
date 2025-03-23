@@ -76,7 +76,13 @@
 			"windowmanager.h": "c",
 			"camera.h": "c",
 			"inputhandler.h": "c",
-			"keymapper.h": "c"
+			"keymapper.h": "c",
+			"stack": "cpp",
+			"glm.hpp": "c",
+			"matrix_transform.hpp": "c",
+			"glfw3.h": "c",
+			"modelloader.h": "c",
+			"json.hpp": "c"
 		}
 	}
 }

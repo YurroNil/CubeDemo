@@ -17,7 +17,7 @@ void UIManager::RenderUI() {
     
     // 动态计算坐标
     float x = 20.0f;
-    float y = winHeight - 30.0f;
+    float y = winHeight - 100.0f;
 
     // 收集所有调试信息
     std::stringstream ss;
@@ -26,7 +26,7 @@ void UIManager::RenderUI() {
     }
     
     // 渲染
-    TextRenderer::RenderText(ss.str(), x, y, 0.5f, glm::vec3(1.0f));
+    TextRenderer::RenderText(ss.str(), x, y, 0.7f, glm::vec3(1.0f));
 }
 
 void UIManager::AddDebugInfo(std::function<std::string()> callback) {

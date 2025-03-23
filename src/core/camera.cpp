@@ -1,7 +1,6 @@
 // src/core/camera.cpp
 
 #include "core/camera.h"
-using vec3 = glm::vec3;
 
 Camera::Camera(vec3 position, vec3 up, float yaw, float pitch)
     : Position(position),
@@ -18,7 +17,7 @@ Camera::Camera(vec3 position, vec3 up, float yaw, float pitch)
 }
 
 // 获取视图矩阵
-glm::mat4 Camera::GetViewMatrix() const {
+mat4 Camera::GetViewMatrix() const {
     return glm::lookAt(Position, Position+Front, Up);
 }
 
@@ -29,13 +28,16 @@ void Camera::ProcessKeyboard(int direction, float deltaTime)  {
     {
     case 0:
         Position += Front * velocity; // W
+        break;
     case 1:
         Position -= Front * velocity; // S
+        break;
     case 2:
         Position -= Right * velocity; // A
+        break;
     case 3:
         Position += Right * velocity; // D
-    break;
+        break;
     
     default:break;
     }

@@ -1,7 +1,7 @@
 // src/core/fpsCounter.cpp
 
 #include "core/fpsCounter.h"
-#include <GLFW/glfw3.h>
+#include "GLFW/glfw3.h"
 
 void FPSCounter::Update() {
     float currentTime = glfwGetTime();
