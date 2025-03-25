@@ -1,16 +1,16 @@
 // src/renderer/text.cpp
 
-#include <freetype2/ft2build.h>
+#include <ft2build.h>
+#include FT_FREETYPE_H
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
-#include FT_FREETYPE_H
 #include <iostream>
 #include "renderer/text.h"
 
 
 void TextRenderer::Init() {
     // 初始化着色器
-    s_TextShader = new Shader("./res/shaders/text.vsh", "./res/shaders/text.fsh");
+    s_TextShader = new Shader("../res/shaders/text.vsh", "../res/shaders/text.fsh");
     
     // 加载字体
     FT_Library ft;
@@ -18,7 +18,7 @@ void TextRenderer::Init() {
         std::cerr << "FreeType初始化失败" << std::endl;
 
     FT_Face face;
-    if (FT_New_Face(ft, "./res/fonts/JetBrainsMono-Regular-2.ttf", 0, &face))
+    if (FT_New_Face(ft, "../res/fonts/JetBrainsMono-Regular-2.ttf", 0, &face))
         std::cerr << "字体加载失败" << std::endl;
 
     FT_Set_Pixel_Sizes(face, 0, 48); // 字号48

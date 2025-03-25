@@ -82,7 +82,11 @@
 			"matrix_transform.hpp": "c",
 			"glfw3.h": "c",
 			"modelloader.h": "c",
-			"json.hpp": "c"
-		}
+			"json.hpp": "c",
+			"string.h": "c",
+			"any": "cpp",
+			"ranges": "cpp"
+		},
+		"powershell.cwd": "workspace"
 	}
 }

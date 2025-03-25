@@ -1,8 +1,5 @@
 // src/rendering/modelLoader.cpp
 
-#include "rendering/modelLoader.h"
-#include <fstream>
-
 //验证模型文件
 #include "rendering/modelLoader.h"
 #include <fstream>
@@ -76,6 +73,7 @@ ModelData ModelLoader::LoadFromJson(const string& filePath) {
     }
 
     json data;
+
     try {
         file >> data;
         ValidateJson(data);
