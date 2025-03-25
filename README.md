@@ -9,12 +9,12 @@
 
 * After Downloading make sure the file directory has the following Structure at least:  
     > ├── bin/  
+    > │    └── Demo.exe  
     > │    └── (DLL Libraries Files)  
     > │  
     > ├── res/  
-    > │   └── (Animations, Fonts, Shaders, Models, Textures... etc)  
-    > │  
-    > └── Demo.exe  
+    >     └── (Animations, Fonts, Shaders, Models, Textures... etc)  
+ 
 * Then just run it `Demo.exe` is OK.  
 
 ## Key Description

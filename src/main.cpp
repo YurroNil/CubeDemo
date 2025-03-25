@@ -51,8 +51,8 @@ int main() {
     ModelData cubeData;
     ModelLoader modelLoader;
     try {
-        cubeData = modelLoader.LoadFromJson("res/models/lit_cube.json");
-        //cubeData = modelLoader.LoadFromJson("res/models/" + cubeData.name + ".json");
+        cubeData = modelLoader.LoadFromJson("../res/models/lit_cube.json");
+        //cubeData = modelLoader.LoadFromJson("../res/models/" + cubeData.name + ".json");
 
     } catch (const std::exception& e) {
         std::cerr << "模型加载失败：" << e.what() << std::endl;
@@ -61,8 +61,8 @@ int main() {
 
      // 创建着色器
     Shader shader(
-        ("res/shaders/" + cubeData.shaders.vertexShader).c_str(),
-        ("res/shaders/" + cubeData.shaders.fragmentShader).c_str()
+        ("../res/shaders/" + cubeData.shaders.vertexShader).c_str(),
+        ("../res/shaders/" + cubeData.shaders.fragmentShader).c_str()
     );
 
     Mesh cubeMesh(cubeData);  //创建网格

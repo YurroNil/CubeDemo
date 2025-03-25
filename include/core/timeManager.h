@@ -1,11 +1,13 @@
 // include/core/timeManager.h
 
 #pragma once
+#include "GLFW/glfw3.h"
+#include <glm/common.hpp>
 
 class TimeManager {
 public:
     static void Update();
-    static float FPS();
+    static int FPS();
     static float DeltaTime();
     
 private:
