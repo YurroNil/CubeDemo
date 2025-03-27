@@ -2,7 +2,8 @@
 #include <functional>
 #include <vector>
 #include <sstream>
-#include "renderer/text.h"
+#include "renderer/textRenderer.h"
+#include "ui/systemMonitor.h"
 
 using string = std::string;
 
@@ -13,7 +14,8 @@ public:
 
     // 注册调试信息回调
     static void AddDebugInfo(std::function<string()> callback);
-
+    
 private:
-    inline static std::vector<std::function<string()>> s_DebugCallbacks;
+    static SystemMonitor m_SystemMonitor;
+    inline static std::vector<std::function<std::string()>> s_DebugCallbacks = {};
 };

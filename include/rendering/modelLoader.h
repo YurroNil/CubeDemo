@@ -7,7 +7,7 @@
 #include "glm/glm.hpp"
 struct ModelData;
 using string = std::string;
-using json = nlohmann::json;
+using n_json = nlohmann::json;
 using vec3 = glm::vec3;
 
 class ModelLoader {

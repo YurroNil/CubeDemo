@@ -1,6 +1,6 @@
 // src/core/windowManager.cpp
 #include <iostream>
-#include "glad/glad.h"
+#include <glad/glad.h>
 #include "core/inputHandler.h"
 
 
@@ -55,7 +55,7 @@ void WindowManager::ToggleFullscreen(GLFWwindow* window) {
         // 保存窗口位置和尺寸
         glfwGetWindowPos(window, &s_WindowPosX, &s_WindowPosY);
         glfwGetWindowSize(window, &s_WindowWidth, &s_WindowHeight);
-    
+
         // 切换到全屏
         GLFWmonitor* monitor = glfwGetPrimaryMonitor();
         const GLFWvidmode* mode = glfwGetVideoMode(monitor);
