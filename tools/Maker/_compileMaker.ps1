@@ -1,1 +1,0 @@
-g++.exe -fexec-charset=utf-8 -g main.cpp -o ../../Maker.exe

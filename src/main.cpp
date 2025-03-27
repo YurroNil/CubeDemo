@@ -13,6 +13,7 @@
 #include "renderer/main.h"
 #include "ui/uiManager.h"
 #include "core/timeManager.h"
+#include "ui/systemMonitor.h"
 
 
 int main() {
@@ -44,7 +45,7 @@ int main() {
     
     // 注册调试信息
     UIManager::AddDebugInfo([&]{
-    return "FPS: " + std::to_string(TimeManager::FPS()) + "  X: " + std::to_string(camera.Position.x) + ", Y: " + std::to_string(camera.Position.y) + ", Z: " + std::to_string(camera.Position.z);
+    return "帧数FPS: " + std::to_string(TimeManager::FPS()) + "  X: " + std::to_string(camera.Position.x) + ", Y: " + std::to_string(camera.Position.y) + ", Z: " + std::to_string(camera.Position.z);
     });
 
      // 加载模型
@@ -89,8 +90,8 @@ int main() {
         Renderer::SetLitParameter(shader, camera, cubeData);
         Renderer::Submit(shader, cubeMesh);  // 提交渲染对象
         UIManager::RenderUI();  // 渲染调试信息
-        Renderer::EndFrame(window);  // 结束帧
 
+        Renderer::EndFrame(window);  // 结束帧
         glfwPollEvents();
     }
 
