@@ -1,29 +1,19 @@
 // include/core/camera.h
 
 #pragma once
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-using vec3 = glm::vec3;
-using mat4 = glm::mat4;
+#include "root.h"
 
 
 class Camera {
 public:
     // 相机属性
-    vec3 Position;
-    vec3 Front;
-    vec3 Up;
-    vec3 Right;
-    vec3 WorldUp;
+    vec3 Position; vec3 Front; vec3 Up; vec3 Right; vec3 WorldUp;
 
     // 欧拉角
-    float Yaw;
-    float Pitch;
+    float Yaw; float Pitch;
 
     // 相机选项
-    float MovementSpeed;
-    float MouseSensitivity;
-    float Zoom;
+    float MovementSpeed; float MouseSensitivity; float Zoom;
 
     Camera(
         vec3 position, 

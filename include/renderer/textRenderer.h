@@ -2,8 +2,6 @@
 
 #pragma once
 #include <map>
-#include <glm/glm.hpp>
-#include <string>
 #include "renderer/shader.h"
 
 struct Character {
@@ -16,7 +14,7 @@ struct Character {
 class TextRenderer {
 public:
     static void Init();
-    static void RenderText(const std::wstring& text, float x, float y, float scale, const glm::vec3& color);
+    static void RenderText(const std::wstring& text, float x, float y, float scale, const vec3& color);
     
 private:
     inline static std::map<uint32_t, Character> s_Characters;

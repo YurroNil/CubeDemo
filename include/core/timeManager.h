@@ -1,7 +1,7 @@
 // include/core/timeManager.h
 
 #pragma once
-#include "GLFW/glfw3.h"
+#include "root.h"
 #include <glm/common.hpp>
 
 class TimeManager {

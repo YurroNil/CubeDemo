@@ -1,7 +1,5 @@
 // src/ui/systemMonitor.cpp
 #include "ui/systemMonitor.h"
-#include <iostream>
-#include <vector>
 #include <intrin.h>
 
 SystemMonitor::SystemMonitor() {

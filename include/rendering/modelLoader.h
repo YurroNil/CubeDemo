@@ -1,14 +1,12 @@
 // include/rendering/modelLoader.h
 
 #pragma once
-#include <string>
-#include <vector>
+#include "root.h"
 #include "nlohmann/json.hpp"
-#include "glm/glm.hpp"
+
 struct ModelData;
-using string = std::string;
 using n_json = nlohmann::json;
-using vec3 = glm::vec3;
+
 
 class ModelLoader {
 public:

@@ -1,7 +1,6 @@
 // include/rendering/mesh.h
 
 #pragma once
-#include <vector>
 #include "rendering/modelLoader.h"
 
 class Mesh {
