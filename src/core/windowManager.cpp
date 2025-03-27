@@ -1,6 +1,5 @@
 // src/core/windowManager.cpp
-#include <iostream>
-#include <glad/glad.h>
+#include "streams.h"
 #include "core/inputHandler.h"
 
 

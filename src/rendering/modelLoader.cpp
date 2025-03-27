@@ -3,6 +3,7 @@
 //验证模型文件
 #include "rendering/modelLoader.h"
 #include <fstream>
+
 using namespace std;
 using n_json = nlohmann::json;
 
@@ -103,19 +104,19 @@ ModelData ModelLoader::LoadFromJson(const string& filePath) {
  
     // 材质数据（增加索引检查）
     const auto& material = unif["material"];
-    model.material.ambient = glm::vec3(
+    model.material.ambient = vec3(
         material["ambient"][0].get<float>(),
         material["ambient"][1].get<float>(),
         material["ambient"][2].get<float>()
     );
     
-    model.material.diffuse = glm::vec3(
+    model.material.diffuse = vec3(
         material["diffuse"][0].get<float>(),
         material["diffuse"][1].get<float>(),
         material["diffuse"][2].get<float>()
     );
     
-    model.material.specular = glm::vec3(
+    model.material.specular = vec3(
         material["specular"][0].get<float>(),
         material["specular"][1].get<float>(),
         material["specular"][2].get<float>()

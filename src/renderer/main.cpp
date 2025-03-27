@@ -1,8 +1,7 @@
 // src/renderer/main.cpp
 
 #include "renderer/main.h"
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+
 
 void Renderer::Init() {
     // 初始化时设置深度测试

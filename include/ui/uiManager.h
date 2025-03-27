@@ -1,11 +1,6 @@
 #pragma once
-#include <functional>
-#include <vector>
-#include <sstream>
 #include "renderer/textRenderer.h"
 #include "ui/systemMonitor.h"
-
-using string = std::string;
 
 class UIManager {
 public:
@@ -17,5 +12,5 @@ public:
     
 private:
     static SystemMonitor m_SystemMonitor;
-    inline static std::vector<std::function<std::string()>> s_DebugCallbacks = {};
+    inline static std::vector<std::function<string()>> s_DebugCallbacks = {};
 };

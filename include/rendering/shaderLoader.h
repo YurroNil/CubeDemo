@@ -1,12 +1,8 @@
 // include/rendering/shaderLoader.h
 
 #pragma once
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-
-using string = std::string;
+#include "root.h"
+#include "streams.h"
 
 class ShaderLoader {
 public:

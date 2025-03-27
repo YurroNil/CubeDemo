@@ -2,11 +2,7 @@
 
 #include "renderer/shader.h"
 #include "rendering/shaderLoader.h"
-#include "glad/glad.h"
-#include <iostream>
-#include <GLFW/glfw3.h>
 
-using string = string;
 
 //创建着色器program
 Shader::Shader(const string& vertexPath, const string& fragmentPath) {
@@ -52,7 +48,7 @@ void Shader::SetMat4(const string& name, const mat4& mat) const {
     );
 }
 
-void Shader::SetVec3(const string& name, const glm::vec3& value) {
+void Shader::SetVec3(const string& name, const vec3& value) {
     glUniform3fv(
         glGetUniformLocation(ID, name.c_str()), 1, &value[0]
     );

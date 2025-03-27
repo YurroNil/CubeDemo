@@ -1,7 +1,8 @@
 // include/ui/systemMonitor.h
 #pragma once
+#include "root.h"
+#include "streams.h"
 #include <windows.h>
-#include <string>
 
 class SystemMonitor {
 public:

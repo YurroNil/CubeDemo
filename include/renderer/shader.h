@@ -1,10 +1,7 @@
 // include/renderer/main
 
 #pragma once
-#include <string>
 #include "core/camera.h"
-#include "glm/glm.hpp"
-using string = std::string;
 
 class Shader {
 public:

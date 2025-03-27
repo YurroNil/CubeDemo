@@ -1,13 +1,14 @@
 // src/main.cpp
-#include <iostream>
 
+
+#include "root.h"
 // 第三方库
 #define GLM_ENABLE_EXPERIMENTAL
 #include "glm/gtx/string_cast.hpp"
 #include "glm/gtx/dual_quaternion.hpp"
-#include "glad/glad.h"
 
 // 项目包含的头文件
+
 #include "core/inputHandler.h"
 #include "rendering/modelLoader.h"
 #include "renderer/main.h"
