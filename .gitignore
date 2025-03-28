@@ -4,7 +4,8 @@ logs/
 
 
 # Editor directories and files
-.vscode/*
+/.vscode/
+/.vscode/*
 !.vscode/extensions.json
 
 .DS_Store
@@ -16,12 +17,10 @@ logs/
 
 
 # Build Tools
-.tools/
-.tools/*
+/.tools/
+/.tools/*
 build/
 build/*
 
 # Text files
-doc/
-.doc/*
 *.txt
