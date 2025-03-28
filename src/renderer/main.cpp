@@ -8,9 +8,17 @@ void Renderer::Init() {
     glEnable(GL_DEPTH_TEST);
 }
 
+
+// 渲染循环开始帧
 void Renderer::BeginFrame() {
+    // 清空缓冲区代码
     glClearColor(0.8f, 0.94f, 0.98f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // ImGui新帧
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
 }
 
 void Renderer::SetLitParameter(Shader& shader, Camera& camera, ModelData& cubeData) {
@@ -43,6 +51,15 @@ void Renderer::ApplyCamera(const Shader& shader, const Camera camera, float aspe
     shader.ApplyCamera(camera, aspectRatio);
 }
 
+// 渲染循环结束帧
 void Renderer::EndFrame(GLFWwindow* window) {
+
+    ImGui::End();   // ImGui结束帧
+    // 渲染ImGui
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    
+    
+    // 交换缓冲区
     glfwSwapBuffers(window);
 }
