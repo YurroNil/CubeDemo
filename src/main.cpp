@@ -9,12 +9,10 @@
 
 // 项目包含的头文件
 
-#include "core/inputHandler.h"
 #include "rendering/modelLoader.h"
 #include "renderer/main.h"
-#include "ui/uiManager.h"
+#include "ui/debugInfoManager.h"
 #include "core/timeManager.h"
-#include "ui/systemMonitor.h"
 
 
 int main() {
@@ -32,6 +30,7 @@ int main() {
     WindowManager::Init(1280, 720, "Cube Demo");
     Renderer::Init();
     UIManager::Init();
+    DebugInfoManager::Init();
     TextRenderer::Init();
 
     // 相机信息初始化
@@ -45,7 +44,7 @@ int main() {
     InputHandler::Init(&camera);
     
     // 注册调试信息
-    UIManager::AddDebugInfo([&]{
+    DebugInfoManager::AddDebugInfo([&]{
     return "帧数FPS: " + std::to_string(TimeManager::FPS()) + "  X: " + std::to_string(camera.Position.x) + ", Y: " + std::to_string(camera.Position.y) + ", Z: " + std::to_string(camera.Position.z);
     });
 
@@ -90,13 +89,23 @@ int main() {
         WindowManager::FullscreenTrigger(window);  // F11全屏检测
         Renderer::SetLitParameter(shader, camera, cubeData);
         Renderer::Submit(shader, cubeMesh);  // 提交渲染对象
-        UIManager::RenderUI();  // 渲染调试信息
+
+        UIManager::RenderLoop(window, camera);  // GUI界面管理
+        DebugInfoManager::DisplayDebugInfo(camera);  // 渲染调试信息
+
+        
+
+        
+
 
         Renderer::EndFrame(window);  // 结束帧
         glfwPollEvents();
     }
 
     std::cout << "程序正常退出" << std::endl;
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
     glfwDestroyWindow(window);
     glfwTerminate();
     return 0;

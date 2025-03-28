@@ -9,13 +9,12 @@ public:
     SystemMonitor();
     ~SystemMonitor();
 
-    // 获取操作系统版本
+    // 获取设备信息
     std::wstring GetOSVersion();
     
     // 获取内存使用率（百分比）
     DWORD GetMemoryUsage();
     
-    // 获取CPU型号
     std::wstring GetProcessorName();
 
 
