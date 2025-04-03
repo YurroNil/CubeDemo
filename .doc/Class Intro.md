@@ -54,7 +54,7 @@ TextureManager类
     处理窗口焦点事件
 
 
-*rendering/mesh
+*graphics/mesh
     作用：网格对象管理器
     功能：
     管理VAO/VBO/EBO
@@ -63,7 +63,7 @@ TextureManager类
     支持动态/静态网格类型
 
 
-*rendering/modelLoader
+*graphics/modelLoader
     作用：模型加载器
     功能：
     解析cube.json等模型文件
@@ -72,7 +72,7 @@ TextureManager类
     关联着色器程序
 
 
-*rendering/shader
+*graphics/shader
     作用：着色器管理器
     功能：
     编译GLSL着色器
@@ -81,7 +81,7 @@ TextureManager类
     错误检查与日志输出
 
 
-*rendering/textureLoader
+*graphics/textureLoader
     作用：纹理加载器
     功能：
     加载PNG/JPG等图片文件

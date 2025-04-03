@@ -74,7 +74,7 @@ bool KeyMapper::IsControlPressed(GLFWwindow* window) {
     return glfwGetKey(window, GLFW_KEY_LEFT_CONTROL)  == GLFW_PRESS ||
            glfwGetKey(window, GLFW_KEY_RIGHT_CONTROL) == GLFW_PRESS;
 }
-
+// 点击Alt键
 bool KeyMapper::IsAltPressed(GLFWwindow* window) {
     return glfwGetKey(window, GLFW_KEY_LEFT_ALT)  == GLFW_PRESS ||
            glfwGetKey(window, GLFW_KEY_RIGHT_ALT) == GLFW_PRESS;
