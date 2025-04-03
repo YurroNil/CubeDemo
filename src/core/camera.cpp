@@ -84,3 +84,12 @@ void Camera::updateCameraVectors() {
     Right = glm::normalize(glm::cross(Front, WorldUp));
     Up = glm::normalize(glm::cross(Right, Front));
 }
+
+void Camera::SaveCamera(Camera* c) { SaveCameraPtr = c; }
+
+Camera* Camera::GetCamera() { return SaveCameraPtr; }
+
+void Camera::Delete(Camera* c) {
+    delete c;
+    SaveCameraPtr = nullptr;
+}

@@ -1,7 +1,7 @@
 // include/core/windowManager.h
 
 #pragma once
-#include "root.h"
+#include "utils/root.h"
 
 class WindowManager {
 public:
@@ -16,14 +16,18 @@ public:
     static void FullscreenTrigger(GLFWwindow* window);
     static bool ShouldClose();
 
+    static void UpdateWindowSize(GLFWwindow* window);
+    static void UpdateWindowPos(GLFWwindow* window);
+
+    inline static int s_WindowWidth = 800;
+    inline static int s_WindowHeight = 600;
+    inline static int s_WindowPosX = 0;
+    inline static int s_WindowPosY = 0;
+
 private:
     inline static GLFWwindow* s_Window = nullptr;
 
     inline static bool s_IsFullscreen = false;
-    inline static int s_WindowPosX = 0;
-    inline static int s_WindowPosY = 0;
-    inline static int s_WindowWidth = 800;
-    inline static int s_WindowHeight = 600;
     
     inline static float s_InitMouseX = 0.0f;
     inline static float s_InitMouseY = 0.0f;

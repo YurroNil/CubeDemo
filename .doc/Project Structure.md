@@ -2,12 +2,12 @@
 
 ├── include/
 │     ├── root.h (用于包含glad、glfw、glm、string、vector、functional等高频用到的库文件)
-│     ├── streams.h (用于包含常用的流文件，如io、f、s)
+│     ├── streams.h (用于包含常用的流文件)
 │     ├── core/
 │     │     └── camera.h
 │     │     └── inputHandler.h
 │     │     └── windowManager.h
-│     ├── rendering/
+│     ├── graphics/
 │     │    └── mesh.h
 │     │    └── shaderLoader.h
 │     │    └── modelLoader.h
@@ -17,15 +17,15 @@
 │     │    └── shader.h
 │     ├── 3rd_party/  
 │     │    └── (第三方依赖库所需的头文件)
-│     └── ui/
-│          └── uiManager.h
+│     ├── ui/
+│     │    └── uiManager.h
 │       
 ├── src/
 │     ├── core/ (核心代码)
 │     │     └── inputHandler.cpp
 │     │     └── windowManager.cpp
 │     │     └── camera.cpp
-│     ├── rendering/ (图形渲染相关)
+│     ├── graphics/ (图形渲染相关)
 │     │     └── mesh.cpp
 │     │     └── modelLoader.cpp
 │     ├── renderer/ (专门存放渲染器类)
@@ -36,6 +36,7 @@
 │     │    └── uiManager.cpp
 │     ├── 3rd_party/ (第三方依赖库所需的源文件)
 │     │    └── glad.c
+│     │
 │     └── main.cpp(主程序)
 │
 ├── res/
