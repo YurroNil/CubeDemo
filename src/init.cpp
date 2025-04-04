@@ -39,8 +39,8 @@ GLFWwindow* CubeDemo::Init() {
     ModelManager::Register(
         "cube",
         "../res/models/primitives/cube.json",
-        "../res/shaders/core/lit.vsh",
-        "../res/shaders/core/lit.fsh"
+        ShaderLoader::s_vshPath + "lit.glsl",
+        ShaderLoader::s_fshPath + "lit.glsl"
     );
 
     return WindowManager::GetWindow();

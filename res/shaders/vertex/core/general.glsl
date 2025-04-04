@@ -1,4 +1,4 @@
-// res/shaders/core/general.fsh
+// res/shaders/core/general_vert.glsl
 
 #version 330 core
 

@@ -14,6 +14,7 @@
 #include "ui/debugInfoManager.h"
 #include "core/timeManager.h"
 #include "resources/modelManager.h"
+#include "graphics/shaderLoader.h"
 
 // 命名空间
 

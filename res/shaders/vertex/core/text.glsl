@@ -1,4 +1,4 @@
-//res/shaders/core/text.vsh
+//res/shaders/core/text_vert.glsl
 
 #version 330 core
 

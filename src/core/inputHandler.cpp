@@ -35,7 +35,7 @@ void InputHandler::MouseCallback(double xpos, double ypos) {
 }
 
 void InputHandler::ScrollCallback(double yoffset) {
-    //ImGui_ImplGlfw_ScrollCallback(WindowManager::GetWindow(), 0.0, yoffset);
+
     s_Camera->ProcessMouseScroll(static_cast<float>(yoffset));
 }
 

@@ -1,5 +1,7 @@
-//res/shaders/core/lit.vsh
+//res/shaders/core/lit_vert.glsl
 #version 330 core
+
+
 // 顶点属性输入（从VBO获取）
 layout (location = 0) in vec3 aPos;    // 顶点位置
 layout (location = 1) in vec3 aNormal; // 顶点法线

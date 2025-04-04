@@ -1,11 +1,11 @@
 {
     "meta": {
-        "name": "lit_cube",
+        "name": "cube",
         "version": 1.0
     },
     "shaders": {
-        "vertex": "lit.vsh",
-        "fragment": "lit.fsh"
+        "vertex": "lit",
+        "fragment": "lit"
     },
     "uniforms": {
         "vertex_size": 3,

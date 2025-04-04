@@ -1,4 +1,4 @@
-//res/shaders/core/text.fsh
+//res/shaders/core/text_frag.glsl
 
 #version 330 core
 
