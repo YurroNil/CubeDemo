@@ -4,12 +4,15 @@
 #include FT_FREETYPE_H
 #include "utils/streams.h"
 #include "graphics/textRenderer.h"
-
+#include "graphics/shaderLoader.h"
 
 // 文本渲染器初始化
 void TextRenderer::Init() {
     // 初始化着色器程序（顶点/片段着色器）
-    s_TextShader = new Shader("../res/shaders/core/text.vsh", "../res/shaders/core/text.fsh");
+    s_TextShader = new Shader(
+        ShaderLoader::s_vshPath + "text.glsl",
+        ShaderLoader::s_fshPath + "text.glsl"
+    );
     
     // 初始化FreeType库
     FT_Library ft;

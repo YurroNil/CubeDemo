@@ -6,7 +6,6 @@
 // 初始化静态成员
 SystemMonitor DebugInfoManager::m_SystemMonitor;  // 初始化系统监控实例
 
-
 // 初始化
 void DebugInfoManager::Init() {}
 

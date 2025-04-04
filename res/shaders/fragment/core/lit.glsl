@@ -1,5 +1,7 @@
-//res/shaders/core/lit.fsh
+//res/shaders/core/lit_frag.glsl
 #version 330 core
+
+
 out vec4 FragColor;
  
 // Blinn-Phong近似

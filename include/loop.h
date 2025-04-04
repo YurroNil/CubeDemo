@@ -8,7 +8,7 @@
 
 namespace CubeDemo {
 
-    // 程序主循环
+    // 程序主循环模块
     void MainLoop(WIN, CAM);
     void BeginFrame(CAM);
     void HandleInput(WIN);
