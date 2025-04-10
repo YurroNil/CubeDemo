@@ -1,9 +1,13 @@
 // src/loop.cpp
 
 #include "loop.h"
+#include "mainProgramInc.h"
+#include "core/timeMng.h"
 
-void CubeDemo::MainLoop(WIN, CAM) {
-    while (!WindowManager::ShouldClose()) {
+namespace CubeDemo {
+
+void MainLoop(WIN, CAM) {
+    while (!WindowMng::ShouldClose()) {
         BeginFrame(camera);    // 开始帧
         HandleInput(window);    // 输入管理
         if (!InputHandler::isGamePaused) { UpdateModels(); }    // 模型渲染
@@ -14,14 +18,14 @@ void CubeDemo::MainLoop(WIN, CAM) {
 }
 
 // 开始帧
-void CubeDemo::BeginFrame(CAM) {
+void BeginFrame(CAM) {
     Renderer::BeginFrame();
-    TimeManager::Update();
-    UIManager::RenderLoop(WindowManager::GetWindow(), *camera);
+    TimeMng::Update();
+    UIMng::RenderLoop(WindowMng::GetWindow(), *camera);
 }
 
 // 输入管理
-void CubeDemo::HandleInput(WIN) {
+void HandleInput(WIN) {
     static float lastEscPressTime = 0.0f;
     const float currentTime = glfwGetTime();
     
@@ -35,47 +39,48 @@ void CubeDemo::HandleInput(WIN) {
     }
 
     if (!InputHandler::isGamePaused) {
-        InputHandler::ProcessKeyboard(window, TimeManager::DeltaTime());
+        InputHandler::ProcessKeyboard(window, TimeMng::DeltaTime());
     }
 }
 
 // 模型更新
-void CubeDemo::UpdateModels() {
+void UpdateModels() {
 
     // 立方体
     static float rotation = 0.0f;
-    rotation += TimeManager::DeltaTime() * 50.0f;
-    ModelManager::SetRotation("cube", vec3(0.0f, rotation, 0.0f));
+    rotation += TimeMng::DeltaTime() * 50.0f;
+    ModelMng::SetRotation("cube", vec3(0.0f, rotation, 0.0f));
 
 }
 
 // 输入窗口设置
-void CubeDemo::HandleWindowSettings(WIN) {
-    WindowManager::UpdateWindowSize(window);
-
+void HandleWindowSettings(WIN) {
+    WindowMng::UpdateWindowSize(window);    // 更新窗口尺寸
     float aspectRatio = CalculateAspectRatio(
-        WindowManager::s_WindowWidth, 
-        WindowManager::s_WindowHeight
-    );
-    WindowManager::FullscreenTrigger(window);
-    DebugInfoManager::DisplayDebugInfo(window);
+        WindowMng::s_WindowWidth, 
+        WindowMng::s_WindowHeight
+    );  // 计算纵横比
+    WindowMng::FullscreenTrigger(window);   // 全屏 
 }
 
 // 计算纵横比
-float CubeDemo::CalculateAspectRatio(int w, int h) {
+float CalculateAspectRatio(int w, int h) {
     return (h == 0) ? 1.0f : static_cast<float>(w) / h;
 }
 
 // 渲染场景
-void CubeDemo::RenderScene(WIN, CAM) {
-    WindowManager::UpdateWindowSize(window);
+void RenderScene(WIN, CAM) {
+    WindowMng::UpdateWindowSize(window);
 
-    const float aspectRatio = CalculateAspectRatio(WindowManager::s_WindowWidth, WindowManager::s_WindowHeight);
+    const float aspectRatio = CalculateAspectRatio(WindowMng::s_WindowWidth, WindowMng::s_WindowHeight);
     
-    ModelManager::Render("cube", *camera, aspectRatio);
+    ModelMng::Render("cube", *camera, aspectRatio);
 }
 
-void CubeDemo::EndFrameHandling(WIN) {
+void EndFrameHandling(WIN) {
     Renderer::EndFrame(window);
     glfwPollEvents();
+}
+
+
 }

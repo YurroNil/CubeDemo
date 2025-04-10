@@ -1,23 +1,28 @@
 // src/cleanup.cpp
-
+#include <iostream>
 #include "cleanup.h"
-#include "resources/modelManager.h"
+#include "utils/imguiKits.h"
+#include "resources/modelMng.h"
+namespace CubeDemo {
 
-
-void CubeDemo::Cleanup(GLFWwindow* window, Camera* camera) {
+void Cleanup(GLFWwindow* window, Camera* camera) {
 
     // 堆内存创建的对象清理
-    ModelManager::Delete("cube");
+    ModelMng::Delete("cube");
     Camera::Delete(camera);
+
 
     // ImGui清理
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
     
+    
     // GLFW清理
     glfwDestroyWindow(window);
     glfwTerminate();
     
     std::cout << "程序正常退出" << std::endl;
+}
+
 }

@@ -1,8 +1,13 @@
 // src/init.cpp
-
 #include "init.h"
+#include "mainProgramInc.h"
+#include "core/camera.h"
 
-GLFWwindow* CubeDemo::Init() {
+namespace CubeDemo {
+
+
+
+GLFWwindow* Init() {
     if (!glfwInit()) {
         std::cerr << "GLFW初始化失败" << std::endl;
         exit(EXIT_FAILURE);
@@ -11,11 +16,9 @@ GLFWwindow* CubeDemo::Init() {
         std::cerr << "GLFW错误 " << error << ": " << description << std::endl;
     });
 
-    WindowManager::Init(1280, 720, "Cube Demo");
+    WindowMng::Init(1280, 720, "Cube Demo");
     Renderer::Init();
-    UIManager::Init();
-    DebugInfoManager::Init();
-    TextRenderer::Init();
+    UIMng::Init();
 
     Camera* camera = new Camera(
         vec3(0.5f, 3.0f, 3.0f),
@@ -23,25 +26,23 @@ GLFWwindow* CubeDemo::Init() {
         -90.0f,
         0.0f
     );
+    if (!camera) {
+        glfwTerminate();
+        glfwDestroyWindow(WindowMng::GetWindow());
+        throw std::runtime_error("[Error] 窗口创建失败");
+    }
+
     Camera::SaveCamera(camera);
 
     InputHandler::Init(camera);
-    
-    DebugInfoManager::AddDebugInfo([&]{
-
-        return "帧数FPS: " + std::to_string(TimeManager::FPS()) + 
-                "  X: " + std::to_string(camera->Position.x) + 
-                ", Y: " + std::to_string(camera->Position.y) + 
-                ", Z: " + std::to_string(camera->Position.z);
-    });
-
-
-    ModelManager::Register(
+    ModelMng::Register(
         "cube",
         "../res/models/primitives/cube.json",
         ShaderLoader::s_vshPath + "lit.glsl",
         ShaderLoader::s_fshPath + "lit.glsl"
     );
 
-    return WindowManager::GetWindow();
+    return WindowMng::GetWindow();
+}
+
 }

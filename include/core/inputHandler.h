@@ -1,8 +1,10 @@
 // include/core/inputHandler.h
 
 #pragma once
+#include "utils/glfwKits.h"
 #include "core/camera.h"
-#include "core/windowManager.h"
+#include <iostream>
+namespace CubeDemo {
 
 class InputHandler {
 public:
@@ -21,6 +23,8 @@ public:
     static constexpr float escCoolDown = 0.1f;  // 冷却时间100ms
     static void PauseTheGame(GLFWwindow* &window);
 
+    static bool s_isDebugVisible;   // 调试信息面板状态
+
 
 private:
     inline static Camera* s_Camera = nullptr;
@@ -30,3 +34,6 @@ private:
     inline static bool s_AltPressed = false;
 
 };
+
+
+}

@@ -20,7 +20,7 @@ TextRenderer类
     支持动态生成字形纹理
     TODO: 可添加文本缓存机制（如使用纹理图集）
 
-TextureManager类
+TextureMng类
     统一管理纹理资源
 
 

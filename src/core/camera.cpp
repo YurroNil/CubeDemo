@@ -1,6 +1,7 @@
 // src/core/camera.cpp
 
 #include "core/camera.h"
+namespace CubeDemo {
 
 Camera::Camera(vec3 position, vec3 up, float yaw, float pitch)
     : Position(position),
@@ -92,4 +93,7 @@ Camera* Camera::GetCamera() { return SaveCameraPtr; }
 void Camera::Delete(Camera* c) {
     delete c;
     SaveCameraPtr = nullptr;
+}
+
+
 }

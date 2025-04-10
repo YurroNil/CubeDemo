@@ -2,6 +2,7 @@
 
 #pragma once
 #include "resources/modelLoader.h"
+namespace CubeDemo {
 
 class Mesh {
 public:
@@ -19,3 +20,6 @@ private:
     std::vector<float> _vertices;
     int _vertexComponents;
 };
+
+
+}

@@ -2,7 +2,8 @@
 
 #pragma once
 
-#include "init.h"
+#include "utils/glfwKits.h"
+#include "core/camera.h"
 
 namespace CubeDemo {
     // 程序清理

@@ -1,6 +1,10 @@
 #pragma once
 #include <unordered_map>
+#include <functional>
 #include "core/camera.h"
+#include "utils/glfwKits.h"
+
+namespace CubeDemo {
 
 class KeyMapper {
 public:
@@ -27,3 +31,5 @@ private:
     static bool IsSuperPressed(GLFWwindow* window);
 
 };
+
+}

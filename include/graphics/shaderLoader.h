@@ -1,8 +1,8 @@
 // include/graphics/shaderLoader.h
 
 #pragma once
-#include "utils/root.h"
-#include "utils/streams.h"
+#include "utils/stringsKits.h"
+namespace CubeDemo {
 
 class ShaderLoader {
 public:
@@ -10,3 +10,5 @@ public:
     static const string s_vshPath;
     static const string s_fshPath;
 };
+
+}

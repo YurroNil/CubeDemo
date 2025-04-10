@@ -1,8 +1,8 @@
 // renderer/shader.cpp
 
 #include "graphics/shader.h"
-#include "graphics/shaderLoader.h"
-
+#include "utils/glfwKits.h"
+namespace CubeDemo {
 
 //创建着色器program
 Shader::Shader(const string& vertexPath, const string& fragmentPath) {
@@ -66,4 +66,6 @@ void Shader::ApplyCamera(const Camera& camera, float aspectRatio) const {
     );
     SetMat4("projection", projection);
     SetMat4("view", camera.GetViewMatrix());
+}
+
 }

@@ -1,7 +1,9 @@
 // src/graphics/mainRenderer.cpp
 
 #include "graphics/mainRenderer.h"
+#include "utils/imguiKits.h"
 
+namespace CubeDemo {
 
 void Renderer::Init() {
     // 初始化时设置深度测试
@@ -27,8 +29,10 @@ void Renderer::EndFrame(GLFWwindow* window) {
     // 渲染ImGui
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-    
-    
+
     // 交换缓冲区
     glfwSwapBuffers(window);
+}
+
+
 }
