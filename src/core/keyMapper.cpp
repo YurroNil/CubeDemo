@@ -1,5 +1,5 @@
 #include "core/keyMapper.h"
-
+namespace CubeDemo {
 // KeyMapper类说明：
 // 该类用于管理键盘输入与游戏动作的绑定，支持组合键和持续按键检测
 // 当前实现支持：基础按键绑定、修饰键组合、持续触发动作
@@ -125,4 +125,7 @@ void KeyMapper::Init(KeyMapper& keyMapper, GLFWwindow* window, Camera* camera) {
     keyMapper.RegisterAction(GLFW_KEY_W, GLFW_MOD_CONTROL, [camera](float velocity) {
         camera->Position += camera->Front * (velocity * 3.0f);  // 速度乘以3
     });
+}
+
+
 }

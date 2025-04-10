@@ -1,17 +1,14 @@
 // include/resources/modelLoader.h
 
 #pragma once
-#include "utils/root.h"
 #include "nlohmann/json.hpp"
+#include "utils/stringsKits.h"
+#include "utils/glmKits.h"
 
-struct ModelData;
+
 using n_json = nlohmann::json;
+namespace CubeDemo {
 
-
-class ModelLoader {
-public:
-    static ModelData* LoadFromJson(const string& filePath);
-};
 
 struct ModelData {
     string name;   // 模型名
@@ -30,6 +27,13 @@ struct ModelData {
         vec3 specular;
         float shininess;
     } material;
-
-
 };
+
+class ModelLoader {
+public:
+    static ModelData* LoadFromJson(const string& filePath);
+};
+
+
+
+}

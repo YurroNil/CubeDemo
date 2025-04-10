@@ -1,8 +1,8 @@
 // include/loop.h
 
 #pragma once
-
-#include "init.h"
+#include "utils/glfwKits.h"
+#include "core/camera.h"
 #define WIN GLFWwindow* window
 #define CAM Camera* camera
 

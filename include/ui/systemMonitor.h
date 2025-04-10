@@ -1,8 +1,9 @@
 // include/ui/systemMonitor.h
+
 #pragma once
-#include "utils/root.h"
 #include "utils/streams.h"
 #include <windows.h>
+namespace CubeDemo {
 
 class SystemMonitor {
 public:
@@ -14,11 +15,12 @@ public:
     
     // 获取内存使用率（百分比）
     DWORD GetMemoryUsage();
-    
-    std::wstring GetProcessorName();
 
 
 private:
     void Init();
     static BOOL CALLBACK MonitorEnumProc(HWND hwnd, LPARAM lParam);
 };
+
+
+}

@@ -1,11 +1,11 @@
 // src/graphics/modelLoader.cpp
 
 //验证模型文件
-#include "resources/modelLoader.h"
 #include <fstream>
-
+#include "resources/modelLoader.h"
+#include "utils/glmKits.h"
 using namespace std;
-using n_json = nlohmann::json;
+
 
 void ValidateJson(const n_json& j) {
 
@@ -68,6 +68,7 @@ void ValidateJson(const n_json& j) {
     }
 }
 
+namespace CubeDemo {
 ModelData* ModelLoader::LoadFromJson(const string& filePath) {
 
     //获取
@@ -126,4 +127,6 @@ ModelData* ModelLoader::LoadFromJson(const string& filePath) {
     model->material.shininess = material["shininess"].get<float>();
 
     return model;
+}
+
 }

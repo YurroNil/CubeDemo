@@ -1,10 +1,14 @@
 // src/core/inputHandler.cpp
 
 #include "core/inputHandler.h"
-#include "core/timeManager.h"
-#include <iostream>
+#include "utils/imguiKits.h"
+
+namespace CubeDemo {
 
 namespace { InputHandler* s_CurrentHandler = nullptr; }
+bool InputHandler::s_isDebugVisible = false;
+
+
 void InputHandler::Init(Camera* camera) {
     s_Camera = camera;
 }
@@ -91,7 +95,7 @@ void InputHandler::ProcessKeyboard(GLFWwindow* &window, float deltaTime) {
     static bool f3LastState = false;
     bool f3CurrentState = glfwGetKey(window, GLFW_KEY_F3);
     if (f3CurrentState && !f3LastState) {
-        showDebugInfo = !showDebugInfo;
+        s_isDebugVisible = !s_isDebugVisible;
     }
     f3LastState = f3CurrentState;
 }
@@ -101,4 +105,6 @@ void InputHandler::ProcessKeyboard(GLFWwindow* &window, float deltaTime) {
 void InputHandler::ResumeTheGame(GLFWwindow* &window) {
     isGamePaused = false;
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
 }

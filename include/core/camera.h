@@ -1,8 +1,9 @@
 // include/core/camera.h
 
 #pragma once
-#include "utils/root.h"
+#include "utils/glmKits.h"
 
+namespace CubeDemo {
 
 class Camera {
 public:
@@ -13,12 +14,12 @@ public:
     // 相机选项
     float MovementSpeed; float MouseSensitivity; float Zoom;
     Camera(
-        vec3 position, 
+        vec3 position,
         vec3 up,
         float yaw, 
         float pitch
     );
-    mat4 GetViewMatrix() const;
+    mat4 GetViewMatrix() const;     // 获取视图矩阵
     void ProcessKeyboard(int direction, float deltaTime);
     void ProcessMouseMovement(float xoffset, float yoffset);
     void ProcessMouseScroll(float yoffset);
@@ -33,3 +34,6 @@ private:
     void updateCameraVectors();
     inline static Camera* SaveCameraPtr = nullptr;
 };
+
+
+}

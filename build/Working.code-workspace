@@ -74,7 +74,8 @@
 			"typeinfo": "cpp",
 			"valarray": "cpp",
 			"variant": "cpp",
-			"locale": "cpp"
+			"locale": "cpp",
+			"filesystem": "cpp"
 		},
 		"powershell.cwd": "workspace"
 	}

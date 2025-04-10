@@ -3,7 +3,8 @@
 #include <cstddef>
 #include "graphics/mesh.h"
 #include "glad/glad.h"
-#include "resources/modelLoader.h"
+
+namespace CubeDemo {
 
 // 绑定顶点缓冲对象并配置顶点属性
 void Mesh::BindArrayBuffer(const ModelData& modelData) {
@@ -71,4 +72,6 @@ Mesh::~Mesh() {
     glDeleteBuffers(1, &VBO);        // 删除VBO
     // 注意：这里没有删除NBO！会导致内存泄漏
     // 建议添加：glDeleteBuffers(1, &NBO);
+}
+
 }

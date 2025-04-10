@@ -2,6 +2,8 @@
 
 #pragma once
 #include "core/camera.h"
+#include "graphics/shaderLoader.h"
+namespace CubeDemo {
 
 class Shader {
 public:
@@ -17,3 +19,6 @@ public:
 private:
     unsigned int ID;
 };
+
+
+}
