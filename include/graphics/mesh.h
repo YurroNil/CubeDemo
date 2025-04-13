@@ -1,25 +1,36 @@
 // include/graphics/mesh.h
 
 #pragma once
-#include "resources/modelLoader.h"
+#include <vector>
+#include "graphics/shader.h"
+#include "resources/texture.h"
+
+
 namespace CubeDemo {
+
+struct Vertex {
+    vec3 Position;
+    vec3 Normal;
+    glm::vec2 TexCoords;
+    vec3 Tangent;
+};
+
 
 class Mesh {
 public:
-    void BindArrayBuffer(const ModelData& modelData);
-    Mesh(const float* vertices, size_t size);
-    //添加explicit防止构造函数被用作类型隐式转换
-    explicit Mesh(const ModelData& modelData);
+    std::vector<Texture> textures;
     
-    ~Mesh();
-    
-    void Draw() const;
+
+    Mesh(const std::vector<Vertex>& vertices, 
+         const std::vector<unsigned>& indices,
+         const std::vector<std::shared_ptr<Texture>>& textures);
+     
+    void Draw(Shader& shader) const;
 
 private:
-    unsigned int VAO, VBO, NBO;
-    std::vector<float> _vertices;
-    int _vertexComponents;
+    unsigned VAO, VBO, EBO;
+    size_t indexCount;
+    std::vector<std::shared_ptr<Texture>> m_textures;
 };
-
 
 }

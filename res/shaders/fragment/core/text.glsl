@@ -1,4 +1,4 @@
-//res/shaders/core/text_frag.glsl
+// freetype专用着色器. 暂时还用不到
 
 #version 330 core
 

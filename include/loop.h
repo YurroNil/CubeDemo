@@ -7,7 +7,7 @@
 #define CAM Camera* camera
 
 namespace CubeDemo {
-
+    
     // 程序主循环模块
     void MainLoop(WIN, CAM);
     void BeginFrame(CAM);

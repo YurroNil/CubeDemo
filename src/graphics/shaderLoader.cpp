@@ -3,10 +3,9 @@
 #include "graphics/shaderLoader.h"
 #include "utils/streams.h"
 using namespace std;
+
 namespace CubeDemo {
 
-const string ShaderLoader::s_vshPath = "../res/shaders/vertex/core/";
-const string ShaderLoader::s_fshPath = "../res/shaders/fragment/core/";
 
 
 string ShaderLoader::Load(const string& path) {
