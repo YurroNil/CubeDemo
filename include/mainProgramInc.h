@@ -11,8 +11,7 @@
 // graphics模块
 #include "graphics/mainRenderer.h"
 #include "graphics/shader.h"
-#include "graphics/shaderLoader.h"
 // resources模块
-#include "resources/modelMng.h"
+#include "resources/model.h"
 // ui模块
 #include "ui/uiMng.h"

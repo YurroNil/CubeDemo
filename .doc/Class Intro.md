@@ -15,11 +15,6 @@ Renderer类
     实现基本的渲染管线提交
     TODO: 添加多光源支持、阴影映射等高级渲染特性
 
-TextRenderer类
-    使用FreeType实现文本渲染
-    支持动态生成字形纹理
-    TODO: 可添加文本缓存机制（如使用纹理图集）
-
 TextureMng类
     统一管理纹理资源
 

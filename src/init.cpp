@@ -1,10 +1,10 @@
 // src/init.cpp
 #include "init.h"
-#include "mainProgramInc.h"
 #include "core/camera.h"
 
 namespace CubeDemo {
 
+std::vector<Model*> ModelPointers;
 
 
 GLFWwindow* Init() {
@@ -12,8 +12,8 @@ GLFWwindow* Init() {
         std::cerr << "GLFW初始化失败" << std::endl;
         exit(EXIT_FAILURE);
     }
-    glfwSetErrorCallback([](int error, const char* description) {
-        std::cerr << "GLFW错误 " << error << ": " << description << std::endl;
+    glfwSetErrorCallback([](int error, const char* what) {
+        std::cerr << "GLFW错误 " << error << ": " << what << std::endl;
     });
 
     WindowMng::Init(1280, 720, "Cube Demo");
@@ -33,14 +33,13 @@ GLFWwindow* Init() {
     }
 
     Camera::SaveCamera(camera);
-
     InputHandler::Init(camera);
-    ModelMng::Register(
-        "cube",
-        "../res/models/primitives/cube.json",
-        ShaderLoader::s_vshPath + "lit.glsl",
-        ShaderLoader::s_fshPath + "lit.glsl"
+
+    std::cout << "创建模型中..." << std::endl;
+    ModelPointers.push_back(
+        new Model("../res/models/sample/sample.obj")
     );
+    std::cout << "模型创建任务结束" << std::endl;
 
     return WindowMng::GetWindow();
 }

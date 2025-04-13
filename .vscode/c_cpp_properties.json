@@ -8,7 +8,9 @@
                 "D:/PDT-C/include/freetype2",
                 "D:/WindowsSDK/Include/10.0.26100.0",
                 "D:/PDT-C/include",
-                "D:/PDT-C/include/imgui"
+                "D:/PDT-C/include/imgui",
+                "D:/PDT-C/include/assimp",
+                "D:/PDT-C/include/stb"
             ],
             "defines": [
                 "_DEBUG",

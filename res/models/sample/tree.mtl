@@ -1,0 +1,42 @@
+# Blender 4.4.0 MTL File: 'tree.blend'
+# www.blender.org
+
+newmtl Grid
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+Pr 0.500000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+map_Kd textures/FloorGrid3.png
+
+newmtl Leaf_Small
+Kd 0.270497 0.679542 0.111933
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+illum 1
+Pr 1.000000
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+map_d textures/TreeLeaves-01.png
+
+newmtl Trunk
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+Pm 0.000000
+Ps 0.000000
+Pc 0.000000
+Pcr 0.030000
+map_Kd textures/Stylized_Elm_BaseColor.png
+map_Pr textures/Stylized_Elm_Roughness.png
+map_Bump textures/Stylized_Elm_NRM.png

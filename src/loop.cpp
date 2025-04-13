@@ -1,10 +1,11 @@
 // src/loop.cpp
-
+#include "init.h"
 #include "loop.h"
 #include "mainProgramInc.h"
 #include "core/timeMng.h"
 
 namespace CubeDemo {
+extern std::vector<Model*> ModelPointers;
 
 void MainLoop(WIN, CAM) {
     while (!WindowMng::ShouldClose()) {
@@ -43,13 +44,8 @@ void HandleInput(WIN) {
     }
 }
 
-// 模型更新
+// 模型变换(如旋转)
 void UpdateModels() {
-
-    // 立方体
-    static float rotation = 0.0f;
-    rotation += TimeMng::DeltaTime() * 50.0f;
-    ModelMng::SetRotation("cube", vec3(0.0f, rotation, 0.0f));
 
 }
 
@@ -73,8 +69,20 @@ void RenderScene(WIN, CAM) {
     WindowMng::UpdateWindowSize(window);
 
     const float aspectRatio = CalculateAspectRatio(WindowMng::s_WindowWidth, WindowMng::s_WindowHeight);
-    
-    ModelMng::Render("cube", *camera, aspectRatio);
+
+    // 
+    Shader modelShader(
+        "../res/shaders/vertex/core/model.glsl",
+        "../res/shaders/fragment/core/model.glsl"
+    );
+    modelShader.Use();
+
+    modelShader.ApplyCamera(*camera, CalculateAspectRatio(WindowMng::s_WindowWidth, WindowMng::s_WindowHeight));
+
+    for(auto* thisModel : ModelPointers) {
+        thisModel->Draw(modelShader);
+
+    }
 }
 
 void EndFrameHandling(WIN) {

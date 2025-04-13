@@ -53,9 +53,11 @@ void Shader::SetVec3(const string& name, const vec3& value) {
         glGetUniformLocation(ID, name.c_str()), 1, &value[0]
     );
 }
-
 void Shader::SetFloat(const string& name, float value) {
     glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+}
+void Shader::SetInt(const std::string& name, int value) const {
+        glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }
 
 void Shader::ApplyCamera(const Camera& camera, float aspectRatio) const {

@@ -7,8 +7,6 @@ namespace CubeDemo {
 class ShaderLoader {
 public:
     static string Load(const string& path);
-    static const string s_vshPath;
-    static const string s_fshPath;
 };
 
 }

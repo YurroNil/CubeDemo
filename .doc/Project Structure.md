@@ -12,15 +12,15 @@
 │     │    └── mainRenderer, mesh, shader, shaderLoader
 │     │
 │     ├── resources/ (资源模块)
-│     │    └── modelLoader, modelMng, textureMng
+│     │    └── model, texture
 │     │
 │     ├── ui/ (UI模块)
-│     │    └── systemMonitor, uiMng
+│     │    └── systemMonitor, uiMng, debugPanel
 │     │
 │     ├── utils/ (工具模块)
-│     │    └── root, streams (root用于包含glad、glfw、glm、string、vector、functional等高频用到的库文件; streams用于包含常用的流文件), stringConvertor
+│     │    └── streams, stringConvertor, glfwKits, glmKits, imguiKits
 │     │
-│     └── init, loop, cleanup
+│     └── init, loop, cleanup, mainProgramInc
 │
 ├── src/    (以下全部文件后缀都为.cpp文件)
 │     │
@@ -34,19 +34,20 @@
 │     │
 │     ├── shaders/ (着色器源码文件)
 │     │     └── fragment/core/ (存放片段着色器的glsl源码文件)
-│     │     └── fragment/post/ (后处理部分, 暂无内容)
 │     │     └── vertex/core/ (存放顶点着色器的glsl源码文件)
-│     │     └── vertex/post/ (后处理部分, 暂无内容)
 │     │
 │     ├── fonts/ (字体文件)
 │     │     └── (ttf文件)
 │     │
-│     ├── models/ (渲染模型的元数据)
-│     │     └── primitives/cube.json
+│     ├── models/ (模型文件)
+│     │     └── (obj/fbx 文件)
 │     │
-│     ├── textures/ (纹理文件)
-│     │     └── terrain (地形纹理, 暂无内容)
-│     │     └── ui (界面纹理, 暂无内容)
-│     │
-│     └── sounds/ (音频文件)
-│           └── (储存ogg音频文件, 暂无内容)
+
+
+
+└── res/
+      └── models/
+            └── scene/
+                    └── scene.obj, scene.mtl
+                    └── textures/
+                            └── 各种各样的纹理文件，共计405个项目，占用空间 1.56GB

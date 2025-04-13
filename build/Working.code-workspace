@@ -75,7 +75,11 @@
 			"valarray": "cpp",
 			"variant": "cpp",
 			"locale": "cpp",
-			"filesystem": "cpp"
+			"filesystem": "cpp",
+			"types.h": "c",
+			"defs.h": "c",
+			"unordered_set": "cpp",
+			"list": "cpp"
 		},
 		"powershell.cwd": "workspace"
 	}
