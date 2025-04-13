@@ -24,3 +24,11 @@ build/*
 
 # Text files
 *.txt
+
+#Bin and Resources files
+/bin/*
+/res/*
+/resource/*
+/resources/*
+/asset/*
+/assets/*
