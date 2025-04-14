@@ -7,5 +7,5 @@
 操作说明：WASD移动，Space/Shift上升/下降，鼠标滚轮调整FOV，按住ALT呼出鼠标，F11切换全屏模式，F3打开调试面板，ESC退出游戏。
 
 
+
 项目链接：https://github.com/YurroNil/CubeDemo
-CubeDemo最新下载链接：https://github.com/YurroNil/CubeDemo/releases/download/1.0.5/1.0.5.Release.zip
