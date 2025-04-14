@@ -19,7 +19,7 @@ TextureMng类
     统一管理纹理资源
 
 
-2. 源代码说明(h/cpp/c)
+2. 源代码说明(h/hpp/c/cpp)
 
 *core/camera
     作用：摄像机控制器

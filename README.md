@@ -12,7 +12,7 @@
     > │    └── Demo.exe  
     > │    └── (DLL Libraries Files)  
     > │  
-    > ├── res/  
+    > ├── resources/  
     >     └── (Animations, Fonts, Shaders, Models, Textures... etc)  
  
 * Then just run it `Demo.exe` is OK.  
@@ -21,17 +21,24 @@
 
 * [**WASD**] - Move
 * [**Space/Shift**] - Go Up/Down
-* [**Alt**] - Call the pointer
+* [**Alt (Holding)**] - Call the Cursor
 * [**F11**] - Toggle Fullscreen Mode
 * [**Mouse Wheel**] - FOV Zoom
 * [**ESC**] - Open/Close the Menu
 * [**F3**] - Open/Close the Debuginfo
 
 ## How to Compile
-First you need to prepare the following some libraries into `include/` : `GLFW/` (<a href="https://github.com/glfw/glfw" target="_blank">Link</a>) , `glad/` (<a href="https://glad.dav1d.de/" target="_blank">Link</a>) , `glm/` (<a href="https://github.com/g-truc/glm" target="_blank">Link</a>) , `json.hpp` (<a href="https://github.com/nlohmann/json" target="_blank">Link</a>) , `stb_image.h` (<a href="https://github.com/nothings/stb" target="_blank">Link</a>) , `freetype/` (<a href="https://download.savannah.gnu.org/releases/freetype/" target="_blank">Link</a>) and Then put the `libglfw3.a` (<a href="https://github.com/glfw/glfw" target="_blank">Link</a>) into the `lib/`.  
+First you need to prepare the following some libraries into `include/` : `GLFW` (<a href="https://github.com/glfw/glfw" target="_blank">Link</a>) , `glad` (<a href="https://glad.dav1d.de/" target="_blank">Link</a>) , `glm` (<a href="https://github.com/g-truc/glm" target="_blank">Link</a>) , `json` (<a href="https://github.com/nlohmann/json" target="_blank">Link</a>) , `stb` (<a href="https://github.com/nothings/stb" target="_blank">Link</a>) and `assimp` (<a href="https://github.com/assimp/assimp" target="_blank">Link</a>).  
 Finally, in the root directory of the workspace Run command (Here take GCC as an example) :
 ```
-g++.exe -fexec-charset=utf-8 -g src/*.cpp src/core/*.cpp src/graphics/*.cpp src/renderer/*.cpp -o ./bin/Demo.exe -Iinclude -Llib -lglfw3 -lopengl32 -lgdi32 -lfreetype
+g++.exe -g\
+     "../src/core"\
+     "../src/graphics"\
+     "../src/resources"\
+     "../src/ui"\
+     "../src/utils"\
+-o ./bin/Demo.exe\
+     -Iinclude -Llib -lglfw3 -lopengl32 -lassimp
 ```
 to compile successfully.
 
