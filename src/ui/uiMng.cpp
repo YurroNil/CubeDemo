@@ -1,8 +1,9 @@
 #include <filesystem>
 #include "ui/uiMng.h"
-#include "core/inputHandler.h"
-#include "ui/debugPanel.h"
-#include "core/windowMng.h"
+#include "core/inputs.h"
+#include "core/window.h"
+#include "core/monitor.h"
+#include "core/time.h"
 namespace CubeDemo {
 
 // 初始化UI管理器
@@ -16,9 +17,9 @@ void UIMng::Init() {
 void UIMng::RenderLoop(GLFWwindow* window, Camera camera) {
     HandlePauseMenu(window);    // 处理暂停菜单逻辑
 
-    if (InputHandler::s_isDebugVisible) {
+    if (Inputs::s_isDebugVisible) {
         RenderControlPanel(camera); // 渲染控制面板
-        DebugPanel::Render(camera);   // 渲染调试面板
+        RenderDebugPanel(camera);   // 渲染调试面板
     }
 }
 
@@ -26,7 +27,7 @@ void UIMng::RenderLoop(GLFWwindow* window, Camera camera) {
 void UIMng::InitImGui() {
     IMGUI_CHECKVERSION(); // 检查ImGui版本
     ImGui::CreateContext(); // 创建ImGui上下文
-    ImGui_ImplGlfw_InitForOpenGL(WindowMng::GetWindow(), true); // 初始化ImGui的GLFW后端
+    ImGui_ImplGlfw_InitForOpenGL(Window::GetWindow(), true); // 初始化ImGui的GLFW后端
     ImGui_ImplOpenGL3_Init("#version 330"); // 初始化ImGui的OpenGL3后端，指定着色器版本
 }
 
@@ -42,8 +43,8 @@ void UIMng::ConfigureImGuiStyle() {
 
 // 加载自定义字体
 void UIMng::LoadFonts() {
-    if (!std::filesystem::exists("../res/fonts/simhei.ttf")) {
-        std::cerr << "字体文件不存在: " << "../res/fonts/simhei.ttf" << std::endl;
+    if (!std::filesystem::exists("../resources/fonts/simhei.ttf")) {
+        std::cerr << "字体文件不存在: " << "../resources/fonts/simhei.ttf" << std::endl;
         return;
     }
 
@@ -67,7 +68,7 @@ void UIMng::LoadFonts() {
 
     // 合并加载中文字体
     io.Fonts->AddFontFromFileTTF(
-        "../res/fonts/simhei.ttf",
+        "../resources/fonts/simhei.ttf",
         30.0f,
         nullptr,
         ranges // 添加字符范围参数
@@ -83,14 +84,14 @@ void UIMng::RenderControlPanel(Camera& camera) {
     ImGui::SliderFloat("移动速度", &camera.MovementSpeed, 0.1f, 10.0f); // 添加一个滑动条，用于调整相机移动速度
     
     if (ImGui::Button("全屏")) { // 添加一个按钮，用于切换全屏模式
-        WindowMng::ToggleFullscreen(WindowMng::GetWindow());
+        Window::ToggleFullscreen(Window::GetWindow());
     }
     ImGui::End(); // 结束ImGui窗口
 }
 
 // 处理暂停菜单逻辑
 void UIMng::HandlePauseMenu(GLFWwindow* window) {
-    if (!InputHandler::isGamePaused) return; // 如果游戏未暂停，则直接返回
+    if (!Inputs::isGamePaused) return; // 如果游戏未暂停，则直接返回
 
     const ImVec2 pauseMenuSize(400, 350); // 暂停菜单的尺寸
     const ImVec2 windowCenter = GetWindowCenter(window); // 获取窗口中心位置
@@ -119,9 +120,9 @@ void UIMng::HandlePauseMenu(GLFWwindow* window) {
 
 // 获取窗口中心位置
 ImVec2 UIMng::GetWindowCenter(GLFWwindow* window) {
-    WindowMng::UpdateWindowSize(window); // 更新窗口尺寸
+    Window::UpdateWindowSize(window); // 更新窗口尺寸
 
-    return ImVec2(WindowMng::s_WindowWidth/2.0f, WindowMng::s_WindowHeight/2.0f); // 返回窗口中心位置
+    return ImVec2(Window::s_WindowWidth/2.0f, Window::s_WindowHeight/2.0f); // 返回窗口中心位置
 }
 
 // 渲染暂停菜单内容
@@ -134,13 +135,43 @@ void UIMng::RenderPauseMenuContent(GLFWwindow* window) {
     // 按钮布局
     const ImVec2 buttonSize(280, 60); // 按钮的尺寸
     if (ImGui::Button("回到游戏", buttonSize)) { // 添加"回到游戏"按钮
-        InputHandler::ResumeTheGame(window); // 恢复游戏
+        Inputs::ResumeTheGame(window); // 恢复游戏
         ImGui::CloseCurrentPopup(); // 关闭弹出窗口
     }
 
     if (ImGui::Button("退出到桌面", buttonSize)) { // 添加"退出到桌面"按钮
         glfwSetWindowShouldClose(window, true); // 设置窗口关闭标志
     }
+}
+
+// 渲染调试面板
+void UIMng::RenderDebugPanel(const Camera& camera) {
+   const ImGuiWindowFlags windowFlags = 
+        ImGuiWindowFlags_NoTitleBar |
+        ImGuiWindowFlags_NoResize |
+        ImGuiWindowFlags_AlwaysAutoResize |
+        ImGuiWindowFlags_NoFocusOnAppearing |
+        ImGuiWindowFlags_NoNav;
+    
+    ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_Always);
+    ImGui::SetNextWindowBgAlpha(0.35f); // 半透明背景
+    
+    if (ImGui::Begin("调试面板", nullptr, windowFlags)) {
+        // FPS显示
+        ImGui::Text("FPS: %d", Time::FPS());
+        
+        // 摄像机坐标
+        const auto& pos = camera.Position;
+        ImGui::Text("位置 X: %.1f, Y: %.1f, Z: %.1f)", pos.x, pos.y, pos.z);
+        
+        // 内存使用
+        float memUsage = Monitor::GetMemoryUsageMB();
+        if(memUsage >= 0) {
+            ImGui::Text("内存用量: %.1f MB", memUsage);
+        }
+    }
+    ImGui::End();
+
 }
 
 }

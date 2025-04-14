@@ -2,7 +2,7 @@
 
 #pragma once
 #include "core/camera.h"
-#include "graphics/shaderLoader.h"
+#include "utils/stringsKits.h"
 
 namespace CubeDemo {
 
@@ -19,6 +19,7 @@ public:
     void SetFloat(const string& name, float value);
     void SetInt(const string& name, int value) const;
 
+    static string Load(const string& path);
 private:
     unsigned int ID; 
 };

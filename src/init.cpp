@@ -4,8 +4,8 @@
 
 namespace CubeDemo {
 
-std::vector<Model*> ModelPointers;
-
+std::vector<Model*> MODEL_POINTERS;
+Shader* MODEL_SHADER;
 
 GLFWwindow* Init() {
     if (!glfwInit()) {
@@ -16,7 +16,7 @@ GLFWwindow* Init() {
         std::cerr << "GLFW错误 " << error << ": " << what << std::endl;
     });
 
-    WindowMng::Init(1280, 720, "Cube Demo");
+    Window::Init(1280, 720, "Cube Demo");
     Renderer::Init();
     UIMng::Init();
 
@@ -28,20 +28,30 @@ GLFWwindow* Init() {
     );
     if (!camera) {
         glfwTerminate();
-        glfwDestroyWindow(WindowMng::GetWindow());
+        glfwDestroyWindow(Window::GetWindow());
         throw std::runtime_error("[Error] 窗口创建失败");
     }
 
     Camera::SaveCamera(camera);
-    InputHandler::Init(camera);
+    Inputs::Init(camera);
 
-    std::cout << "创建模型中..." << std::endl;
-    ModelPointers.push_back(
-        new Model("../res/models/sample/sample.obj")
-    );
-    std::cout << "模型创建任务结束" << std::endl;
+    // 测试模型
+    string sampleModelData[] = {
+        MODEL_PATH + string("sample/sample.obj"),
+        VSH_PATH + string("model.glsl"),
+        FSH_PATH + string("model.glsl")
+    };
 
-    return WindowMng::GetWindow();
+std::cout << "创建模型中..." << std::endl;
+
+    // 模型指针
+    MODEL_POINTERS.push_back( new Model(sampleModelData[0]) );
+    // 模型着色器指针
+    MODEL_SHADER = new Shader(sampleModelData[1], sampleModelData[2]);
+
+std::cout << "模型创建任务结束" << std::endl;
+
+    return Window::GetWindow();
 }
 
 }

@@ -4,6 +4,7 @@
 #include <vector>
 #include "utils/glfwKits.h"
 #include "mainProgramInc.h"
+#include "utils/defines.h"
 
 namespace CubeDemo {
     // 程序初始化

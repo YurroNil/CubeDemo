@@ -2,14 +2,39 @@
 
 #include "graphics/shader.h"
 #include "utils/glfwKits.h"
+#include "utils/streams.h"
+using ifs = std::ifstream;
+
 namespace CubeDemo {
+
+string Shader::Load(const string& path) {
+    string code;
+    ifs file;
+    
+    file.exceptions(ifs::failbit | ifs::badbit);
+    
+    // 调试
+    try {
+        file.open(path);
+        std::stringstream stream;
+        stream << file.rdbuf(); 
+        file.close();
+        code = stream.str();
+    } catch (ifs::failure& e) {
+        std::cerr << "[ERROR_SHADER] 文件读取失败" << path << std::endl;
+        std::cerr << "错误信息: " << e.what() << std::endl;
+    }
+    
+    return code;
+}
+
 
 //创建着色器program
 Shader::Shader(const string& vertexPath, const string& fragmentPath) {
 
     // 加载着色器
-    string vertexCode = ShaderLoader::Load(vertexPath);
-    string fragmentCode = ShaderLoader::Load(fragmentPath);
+    string vertexCode = Load(vertexPath);
+    string fragmentCode = Load(fragmentPath);
     
     // 编译顶点着色器
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -56,7 +81,7 @@ void Shader::SetVec3(const string& name, const vec3& value) {
 void Shader::SetFloat(const string& name, float value) {
     glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
-void Shader::SetInt(const std::string& name, int value) const {
+void Shader::SetInt(const string& name, int value) const {
         glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }
 

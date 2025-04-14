@@ -40,7 +40,7 @@ TextureMng类
     可能集成帧率限制器
 
 
-*inputHandler
+*inputs
     作用：输入管理系统
     功能：
     监听键盘/鼠标事件

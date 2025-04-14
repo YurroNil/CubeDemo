@@ -4,13 +4,12 @@
 #include "utils/stringsKits.h"
 #include "graphics/mesh.h"
 
-
 namespace CubeDemo {
 
 Mesh::Mesh(
-    const std::vector<Vertex>& vertices,
+    const VertexArray& vertices,
     const std::vector<unsigned>& indices,
-    const std::vector<std::shared_ptr<Texture>>& textures) 
+    const TexturePtrArray& textures) 
     : indexCount(indices.size()) 
 {
     glGenVertexArrays(1, &VAO);
@@ -54,8 +53,8 @@ void Mesh::Draw(Shader& shader) const {
         glActiveTexture(GL_TEXTURE0 + i);
         
         const auto& tex = m_textures[i];
-        std::string name = tex->Type;
-        std::string number;
+        string name = tex->Type;
+        string number;
         
         if (name == "texture_diffuse") {
             number = std::to_string(diffuseNr++);

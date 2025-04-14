@@ -27,8 +27,10 @@ build/*
 
 #Bin and Resources files
 /bin/*
-/res/*
-/resource/*
-/resources/*
-/asset/*
-/assets/*
+/models/*
+/textures/*
+/fonts/*
+
+#Libraries
+/.3rdParty/
+/.3rdParty/*

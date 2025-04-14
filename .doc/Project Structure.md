@@ -2,20 +2,17 @@
 
 ├── include/    (以下全部文件后缀都为.h文件)
 │     │
-│     ├── 3rd_party/  
-│     │    └── (第三方依赖库所需的头文件)
-│     │
 │     ├── core/ (核心模块)
-│     │     └── camera, inputHandler, keyMapper, timeMng, windowMng
+│     │     └── camera, inputs, keys, time, Window
 │     │
 │     ├── graphics/ (图形渲染模块)
-│     │    └── mainRenderer, mesh, shader, shaderLoader
+│     │    └── renderer, mesh, shader
 │     │
 │     ├── resources/ (资源模块)
 │     │    └── model, texture
 │     │
 │     ├── ui/ (UI模块)
-│     │    └── systemMonitor, uiMng, debugPanel
+│     │    └── monitor, uiMng
 │     │
 │     ├── utils/ (工具模块)
 │     │    └── streams, stringConvertor, glfwKits, glmKits, imguiKits
@@ -28,7 +25,7 @@
 │     │
 │     └── main.cpp (唯一与include不同的是src有一个main.cpp的主程序文件)
 │
-├── res/
+├── resources/
 │     ├── animations/ (动画文件)
 │     │     └── (动画元数据文件, 暂无内容)
 │     │
@@ -39,15 +36,8 @@
 │     ├── fonts/ (字体文件)
 │     │     └── (ttf文件)
 │     │
-│     ├── models/ (模型文件)
-│     │     └── (obj/fbx 文件)
-│     │
-
-
-
-└── res/
-      └── models/
-            └── scene/
-                    └── scene.obj, scene.mtl
+└─────└── models/ (模型文件，如obj, fbx文件)
+            └── sample/
+                    └── sample.obj, sample.mtl
                     └── textures/
-                            └── 各种各样的纹理文件，共计405个项目，占用空间 1.56GB
+                            └── 各种各样的纹理文件

@@ -79,7 +79,11 @@
 			"types.h": "c",
 			"defs.h": "c",
 			"unordered_set": "cpp",
-			"list": "cpp"
+			"list": "cpp",
+			"condition_variable": "cpp",
+			"future": "cpp",
+			"mutex": "cpp",
+			"*.rh": "cpp"
 		},
 		"powershell.cwd": "workspace"
 	}
