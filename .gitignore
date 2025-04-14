@@ -27,9 +27,9 @@ build/*
 
 #Bin and Resources files
 /bin/*
-/models/*
+/resources/models/*
 /textures/*
-/fonts/*
+/resources/fonts/*
 
 #Libraries
 /.3rdParty/
