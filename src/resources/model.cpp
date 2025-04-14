@@ -2,10 +2,12 @@
 #include "resources/model.h"
 #include "utils/streams.h"
 #include <filesystem>
+
+
 namespace fs = std::filesystem;
-
-
 namespace CubeDemo {
+
+
 Model::Model(const string& path) {
     LoadModel(path);
 }
@@ -27,7 +29,6 @@ void Model::LoadModel(const string& path) {
     m_directory = path.substr(0, path.find_last_of('/'));
     ProcessNode(scene->mRootNode, scene);
 
-
 }
 
 void Model::ProcessNode(aiNode* node, const aiScene* scene) {
@@ -44,29 +45,29 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene) {
 }
 
 Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
-    std::vector<Vertex> vertices;
+    VertexArray vertices;
     std::vector<unsigned> indices;
-    std::vector<std::shared_ptr<Texture>> textures;
+    TexturePtrArray textures;
     
     // 处理顶点数据
     for (unsigned i = 0; i < mesh->mNumVertices; i++) {
         Vertex vertex;
         // 位置
-        vertex.Position = glm::vec3(
+        vertex.Position = vec3(
             mesh->mVertices[i].x,
             mesh->mVertices[i].y,
             mesh->mVertices[i].z
         );
         // 法线
         if (mesh->mNormals)
-            vertex.Normal = glm::vec3(
+            vertex.Normal = vec3(
                 mesh->mNormals[i].x,
                 mesh->mNormals[i].y,
                 mesh->mNormals[i].z
             );
         // 纹理坐标（仅处理第一组）
         if (mesh->mTextureCoords[0]) {
-            vertex.TexCoords = glm::vec2(
+            vertex.TexCoords = vec2(
                 mesh->mTextureCoords[0][i].x,
                 mesh->mTextureCoords[0][i].y
             );
@@ -121,13 +122,13 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 }
 
 
-std::vector<std::shared_ptr<Texture>> Model::LoadMaterialTextures(
+TexturePtrArray Model::LoadMaterialTextures(
     aiMaterial* mat, 
     aiTextureType type,
     const string& typeName) 
 {
 
-    std::vector<std::shared_ptr<Texture>> textures;
+    TexturePtrArray textures;
     const unsigned textureCount = mat->GetTextureCount(type);
 
     string tempPath;
@@ -136,7 +137,7 @@ std::vector<std::shared_ptr<Texture>> Model::LoadMaterialTextures(
         mat->GetTexture(type, i, &str);
         
         // 处理Blender的特殊参数
-        std::string path(str.C_Str());
+        string path(str.C_Str());
 
         const string fullPath = m_directory + "/textures/" + fs::path(path).filename().string();
         tempPath = fullPath;

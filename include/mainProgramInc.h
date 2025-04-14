@@ -6,10 +6,10 @@
 #include "utils/streams.h"
 #include "utils/stringsKits.h"
 // core模块
-#include "core/windowMng.h"
-#include "core/inputHandler.h"
+#include "core/window.h"
+#include "core/inputs.h"
 // graphics模块
-#include "graphics/mainRenderer.h"
+#include "graphics/renderer.h"
 #include "graphics/shader.h"
 // resources模块
 #include "resources/model.h"

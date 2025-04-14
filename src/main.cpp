@@ -5,7 +5,7 @@
 
 int main() {
 
-       // 程序初始化
+    // 程序初始化
     GLFWwindow* window = CubeDemo::Init();
     CubeDemo::Camera* camera = CubeDemo::Camera::GetCamera(); // 加载摄像机的指针
 

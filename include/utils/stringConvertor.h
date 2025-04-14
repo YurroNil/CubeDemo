@@ -2,7 +2,10 @@
 
 #pragma once
 #include "utils/stringsKits.h"
+
 using wstring = std::wstring;
+
+
 namespace CubeDemo {
 
 class StringConvertor {

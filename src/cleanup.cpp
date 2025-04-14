@@ -5,14 +5,14 @@
 #include "resources/model.h"
 
 namespace CubeDemo {
-extern std::vector<Model*> ModelPointers;
+extern std::vector<Model*> MODEL_POINTERS;
 
 void Cleanup(GLFWwindow* window, Camera* camera) {
 
     // 堆内存创建的对象清理
     Camera::Delete(camera);
 
-    for(auto* thisModel : ModelPointers) {
+    for(auto* thisModel : MODEL_POINTERS) {
         delete thisModel;
         thisModel = nullptr;
     }

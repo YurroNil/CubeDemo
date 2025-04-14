@@ -6,19 +6,21 @@
 #include "resources/texture.h"
 #include "glad/glad.h"
 #include <filesystem>
+
 namespace fs = std::filesystem;
+
 
 namespace CubeDemo {
 
-std::unordered_map<string, std::weak_ptr<Texture>> Texture::s_TexturePool;
+TexturePtrHashMap Texture::s_TexturePool;
 
 
-std::shared_ptr<Texture> Texture::Create(const string& path, const string& type) {
+TexturePtr Texture::Create(const string& path, const string& type) {
     std::cout << "当前检查的纹理路径是: " << path << std::endl;
     // 更严格的路径验证
     if (!fs::exists(path)) {
         // 尝试在父目录中查找
-        std::string altPath = "../" + path;
+        string altPath = "../" + path;
         if (!fs::exists(altPath)) {
             throw std::runtime_error("纹理文件不存在: " + path);
         }
@@ -31,7 +33,7 @@ std::shared_ptr<Texture> Texture::Create(const string& path, const string& type)
     }
 
     // 创建新纹理
-    auto tex = std::shared_ptr<Texture>(new Texture(path, type));
+    auto tex = TexturePtr(new Texture(path, type));
     s_TexturePool[path] = tex;
     
     std::cout << "当前进程创建的新纹理为: " << tex << std::endl;

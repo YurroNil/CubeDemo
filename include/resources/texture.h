@@ -5,11 +5,15 @@
 #include "utils/stringsKits.h"
 #include <memory>
 
-namespace CubeDemo {
 
+namespace CubeDemo {
+// 乱七八糟的前置声明
+class Texture;using TexturePtrHashMap = std::unordered_map<string, std::weak_ptr<Texture>>; using TexturePtr = std::shared_ptr<Texture>;
+
+// 声明Texture类
 class Texture {
 public:
-    static std::shared_ptr<Texture> Create(const string& path, const string& type);
+    static TexturePtr Create(const string& path, const string& type);
     
     unsigned int ID;
     string Type;
@@ -23,7 +27,8 @@ public:
 
 private:
     Texture(const string& path, const string& type); // 构造函数私有化
-    static std::unordered_map<string, std::weak_ptr<Texture>> s_TexturePool; // 使用weak_ptr防止内存泄漏
+    static TexturePtrHashMap s_TexturePool;    // 使用weak_ptr防止内存泄漏
+
 };
 
 }
