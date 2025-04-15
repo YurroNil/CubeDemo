@@ -40,10 +40,7 @@ void Window::Init(int width, int height, const char* title) {
 
 }
 
-
-bool Window::ShouldClose() {
-    return glfwWindowShouldClose(s_Window);
-}
+bool Window::ShouldClose() { return glfwWindowShouldClose(s_Window); }
 
 void Window::ToggleFullscreen(GLFWwindow* window) {
     if(!window) return; // 防止空指针

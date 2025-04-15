@@ -5,17 +5,16 @@
 #include "resources/model.h"
 
 namespace CubeDemo {
-extern std::vector<Model*> MODEL_POINTERS;
+extern std::vector<Model*> MODEL_POINTERS; extern Shader* MODEL_SHADER;
 
 void Cleanup(GLFWwindow* window, Camera* camera) {
 
-    // 堆内存创建的对象清理
+    // 摄像机清理
     Camera::Delete(camera);
-
-    for(auto* thisModel : MODEL_POINTERS) {
-        delete thisModel;
-        thisModel = nullptr;
-    }
+    // 模型清理
+    for(auto* thisModel : MODEL_POINTERS) { delete thisModel; thisModel = nullptr; } MODEL_POINTERS.clear();
+    // 着色器清理
+    delete MODEL_SHADER; MODEL_SHADER = nullptr;
 
     // ImGui清理
     ImGui_ImplOpenGL3_Shutdown();

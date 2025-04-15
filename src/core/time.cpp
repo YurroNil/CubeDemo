@@ -29,13 +29,8 @@ void Time::Update() {
     }
 }
 
-int Time::FPS() {
-    return s_CachedFPS;
-}
+int Time::FPS() { return s_CachedFPS; }
 
-float Time::DeltaTime() {
-    return s_DeltaTime;
-}
-
+float Time::DeltaTime() { return s_DeltaTime; }
 
 }

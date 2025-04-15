@@ -14,7 +14,6 @@ namespace CubeDemo {
 
 TexturePtrHashMap Texture::s_TexturePool;
 
-
 TexturePtr Texture::Create(const string& path, const string& type) {
     std::cout << "当前检查的纹理路径是: " << path << std::endl;
     // 更严格的路径验证

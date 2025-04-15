@@ -7,39 +7,29 @@ namespace CubeDemo {
 
 namespace { Inputs* s_CurrentHandler = nullptr; }
 bool Inputs::s_isDebugVisible = false;
-
-
-void Inputs::Init(Camera* camera) {
-    s_Camera = camera;
-}
 float Inputs::lastEscPressTime = 0.0f;
+
+void Inputs::Init(Camera* camera) { s_Camera = camera; }
 
 // 静态回调方法
 void Inputs::MouseCallback(double xpos, double ypos) {
 
-     if (isGamePaused || ImGui::GetIO().WantCaptureMouse) {
-        s_FirstMouse = true;
-        return;
-    }
-
+    if (isGamePaused || ImGui::GetIO().WantCaptureMouse) { s_FirstMouse = true; return; }
+    // 调试输出验证
     if (s_FirstMouse) {
-        // 调试输出验证
         s_LastX = xpos;
         s_LastY = ypos;
         s_FirstMouse = false;
     }
 
-    float xoffset = xpos - s_LastX;
-    float yoffset = s_LastY - ypos; // 注意Y轴方向
-    s_LastX = xpos;
-    s_LastY = ypos;
+    float xoffset = xpos - s_LastX; float yoffset = s_LastY - ypos; // 注意Y轴方向
+    s_LastX = xpos; s_LastY = ypos;
 
     if (s_Camera) { s_Camera->ProcessMouseMovement(xoffset, yoffset, true); }
 
 }
 
 void Inputs::ScrollCallback(double yoffset) {
-
     s_Camera->ProcessMouseScroll(static_cast<float>(yoffset));
 }
 
@@ -64,7 +54,6 @@ void Inputs::PauseTheGame(GLFWwindow* &window) {
 
 // 输入处理
 void Inputs::ProcessKeyboard(GLFWwindow* &window, float deltaTime) {
-    
     // WASD 移动
     float velocity = s_Camera->MovementSpeed * deltaTime;
 
@@ -99,7 +88,6 @@ void Inputs::ProcessKeyboard(GLFWwindow* &window, float deltaTime) {
     }
     f3LastState = f3CurrentState;
 }
-
 
 // 回到游戏(解除暂停状态)
 void Inputs::ResumeTheGame(GLFWwindow* &window) {
