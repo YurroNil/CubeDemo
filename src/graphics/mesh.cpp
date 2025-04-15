@@ -6,12 +6,8 @@
 
 namespace CubeDemo {
 
-Mesh::Mesh(
-    const VertexArray& vertices,
-    const std::vector<unsigned>& indices,
-    const TexturePtrArray& textures) 
-    : indexCount(indices.size()) 
-{
+Mesh::Mesh(const VertexArray& vertices, const std::vector<unsigned>& indices, const TexturePtrArray& textures) 
+    : indexCount(indices.size()) {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -43,7 +39,6 @@ Mesh::Mesh(
 
     glBindVertexArray(0);
 }
-
 
 void Mesh::Draw(Shader& shader) const {
     unsigned int diffuseNr = 1;

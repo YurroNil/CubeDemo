@@ -3,7 +3,6 @@
 #include "utils/streams.h"
 #include <filesystem>
 
-
 namespace fs = std::filesystem;
 namespace CubeDemo {
 
@@ -121,13 +120,8 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
     return Mesh(vertices, indices, textures);
 }
 
-
-TexturePtrArray Model::LoadMaterialTextures(
-    aiMaterial* mat, 
-    aiTextureType type,
-    const string& typeName) 
+TexturePtrArray Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, const string& typeName) 
 {
-
     TexturePtrArray textures;
     const unsigned textureCount = mat->GetTextureCount(type);
 
@@ -157,19 +151,13 @@ TexturePtrArray Model::LoadMaterialTextures(
             return {};  // 返回空集合
         }
         std::cout << "[DEBUG] 此纹理已被成功加载. " << std::endl;
-
     }
-
     return textures;
 }
 
-
-
-
 void Model::Draw(Shader& shader) {
-    for (auto& mesh : m_meshes) {
-        mesh.Draw(shader);
-    }
+    // 绘制模型的所有网格
+    for (auto& mesh : m_meshes) { mesh.Draw(shader); }
 }
 
 }

@@ -10,7 +10,6 @@ void Renderer::Init() {
     glEnable(GL_DEPTH_TEST);
 }
 
-
 // 渲染循环开始帧
 void Renderer::BeginFrame() {
     // 清空缓冲区代码

@@ -28,7 +28,6 @@ string Shader::Load(const string& path) {
     return code;
 }
 
-
 //创建着色器program
 Shader::Shader(const string& vertexPath, const string& fragmentPath) {
 

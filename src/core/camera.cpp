@@ -72,10 +72,7 @@ void Camera::ProcessMouseScroll(float yoffset) {
 }
 
 //跳跃(未时装)
-void Camera::Jump(float velocity) {
-    Position.y += velocity;
-}
-
+void Camera::Jump(float velocity) { Position.y += velocity; }
 
 void Camera::UpdateCameraVectors() {
     // 根据欧拉角计算前向量
@@ -94,13 +91,11 @@ void Camera::SaveCamera(Camera* c) { SaveCameraPtr = c; }
 
 Camera* Camera::GetCamera() { return SaveCameraPtr; }
 
-void Camera::Delete(Camera* c) {
-    delete c;
-    SaveCameraPtr = nullptr;
-}
+void Camera::Delete(Camera* c) { delete c; SaveCameraPtr = nullptr; }
 
  // 视锥体相关方法
 Camera::Frustum Camera::GetFrustum(float aspectRatio) const {
+
     Frustum frustum;
     const float halfVSide = FarPlane * tanf(glm::radians(Zoom) * 0.5f);
     const float halfHSide = halfVSide * aspectRatio;
@@ -115,7 +110,7 @@ Camera::Frustum Camera::GetFrustum(float aspectRatio) const {
 
     return frustum;
 }
-
+// 检查视椎体是否可见
 bool Camera::CheckSphereVisibility(const vec3& center, float radius) const {
     const Frustum frustum = GetFrustum(Window::GetAspectRatio());
     
