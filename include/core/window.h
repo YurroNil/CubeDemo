@@ -2,6 +2,7 @@
 
 #pragma once
 #include "utils/glfwKits.h"
+#include "utils/streams.h"
 
 namespace CubeDemo {
 
@@ -27,13 +28,13 @@ public:
     inline static int s_WindowPosY = 0;
     static float GetAspectRatio();
 
+
 private:
     inline static GLFWwindow* s_Window = nullptr;
-
     inline static bool s_IsFullscreen = false;
-    
     inline static float s_InitMouseX = 0.0f;
     inline static float s_InitMouseY = 0.0f;
+
 };
 
 

@@ -7,7 +7,7 @@
 
 namespace CubeDemo {
     // 乱七八糟的前置声明
-struct Vertex; using TexturePtrArray = std::vector< std::shared_ptr<Texture> >; using VertexArray = std::vector<Vertex>;
+struct Vertex; using TexPtrArray = std::vector< TexturePtr >; using VertexArray = std::vector<Vertex>;
 
 
 struct Vertex { // 声明Vertex结构体
@@ -19,16 +19,18 @@ struct Vertex { // 声明Vertex结构体
 
 class Mesh {    // Mesh类
 public:
+    VertexArray Vertices;
+
     Mesh(const VertexArray& vertices, 
          const std::vector<unsigned>& indices,
-         const TexturePtrArray& textures);
+         const TexPtrArray& textures);
      
     void Draw(Shader& shader) const;
 
 private:
     unsigned VAO, VBO, EBO;
     size_t indexCount;
-    TexturePtrArray m_textures;
+    TexPtrArray m_textures;
 };
 
 }

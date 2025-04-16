@@ -1,7 +1,8 @@
 // src/cleanup.cpp
 #include <iostream>
-#include "cleanup.h"
 #include "utils/imguiKits.h"
+
+#include "cleanup.h"
 #include "resources/model.h"
 
 namespace CubeDemo {

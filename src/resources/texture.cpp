@@ -1,18 +1,18 @@
 // src/resources/texture.cpp
 
 #include <iostream>
+#include <filesystem>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-#include "resources/texture.h"
 #include "glad/glad.h"
-#include <filesystem>
+
+#include "resources/texture.h"
+#include "core/window.h"
 
 namespace fs = std::filesystem;
-
-
 namespace CubeDemo {
 
-TexturePtrHashMap Texture::s_TexturePool;
+TexPtrHashMap Texture::s_TexturePool;
 
 TexturePtr Texture::Create(const string& path, const string& type) {
     std::cout << "当前检查的纹理路径是: " << path << std::endl;
@@ -76,4 +76,5 @@ void Texture::Bind(unsigned int slot) const {
     glBindTexture(GL_TEXTURE_2D, ID);
 }
 
-}
+
+}   // namespace CubeDemo

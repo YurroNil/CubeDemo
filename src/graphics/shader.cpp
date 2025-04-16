@@ -86,12 +86,12 @@ void Shader::SetInt(const string& name, int value) const {
 
 void Shader::ApplyCamera(const Camera& camera, float aspectRatio) const {
     mat4 projection = glm::perspective(
-        glm::radians(camera.Zoom),
+        glm::radians(camera.attribute.zoom),
         aspectRatio,    // 使用宽高比而不是固定分辨率
         0.1f, 100.0f
     );
     SetMat4("projection", projection);
-    SetMat4("view", camera.GetViewMatrix());
+    SetMat4("view", camera.GetViewMat());
 }
 
 }

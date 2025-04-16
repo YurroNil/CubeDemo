@@ -7,46 +7,46 @@ namespace CubeDemo {
 
 class Camera {
 public:
+    Camera(vec3 pos, vec3 up, float yaw, float pitch);
+    ~Camera() = default;
+    vec3 Position;
+    // Euler Angle
+    struct Rotation { float yaw, pitch; } rotation;
 
-    Camera(vec3 position, vec3 up, float yaw, float pitch);
+    struct Direction { vec3 front, up, right, worldUp; } direction;
 
-    // 相机属性
-    vec3 Position; vec3 Front; vec3 Up; vec3 Right; vec3 WorldUp;
-    // 欧拉角
-    float Yaw; float Pitch;
-    // 相机选项
-    float MovementSpeed; float MouseSensitivity; float Zoom;
-    
-    mat4 GetViewMatrix() const;
-    mat4 GetProjectionMatrix(float aspect) const;
-    void ProcessKeyboard(int direction, float deltaTime);
-    void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch);
-    void ProcessMouseScroll(float yoffset);
-    void Jump(float velocity);
-    // 保存摄像机对象的指针
-    static void SaveCamera(Camera* c);
-    // 获取摄像机对象的指针
-    static Camera* GetCamera();
-    static void Delete(Camera* c);
-
-    float NearPlane = 0.1f;
-    float FarPlane = 100.0f;
+    struct Attributes {
+        float movementSpeed, // 移动速度
+        mouseSensvty,        // Mouse Senstivity的简写, 即鼠标灵敏度
+        zoom;                // 缩放
+    } attribute;
 
     struct FrustumPlane {
-        vec3 normal;
-        vec3 distance;
-    };
+        vec3 normal, distance; float near{0.1f}, far{100.0f};
+    }frustumPlane;
+    // 顺序：左、右、下、上、近、远
+    struct Frustum { FrustumPlane planes[6]; };
 
-    struct Frustum {
-        FrustumPlane planes[6]; // 顺序：左、右、下、上、近、远
-    };
-
+/* Getters */
+    mat4 GetViewMat() const;
+    mat4 GetProjectionMat(float aspect) const;
+    static Camera* GetCamera();
     Frustum GetFrustum(float aspect) const;
-    bool CheckSphereVisibility(const vec3& center, float radius) const;
+    bool isSphereVisible(const vec3& center, float radius) const;
+
+/* Procors and Actions */
+    void ProcKeyboard(int directCase, float deltaTime);
+    void ProcMouseMovement(float xoffset, float yoffset, bool constrainPitch);
+    void ProcMouseScroll(float yoffset);
+    void Jump(float velocity);
+    
+    static void SaveCamera(Camera* c);  // 保存摄像机对象的指针
+    static void Delete(Camera* c);  // Cleanner
+
 
 private:
-    void UpdateCameraVectors();
-    inline static Camera* SaveCameraPtr = nullptr;
+    void UpdateCameraVec();
+    inline static Camera* m_SaveCameraPtr = nullptr;
 };
 
 

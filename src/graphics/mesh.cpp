@@ -6,14 +6,17 @@
 
 namespace CubeDemo {
 
-Mesh::Mesh(const VertexArray& vertices, const std::vector<unsigned>& indices, const TexturePtrArray& textures) 
+Mesh::Mesh(const VertexArray& vertices, const std::vector<unsigned>& indices, const TexPtrArray& textures) 
     : indexCount(indices.size()) {
+    
+    // 储存顶点数组
+    this->Vertices = vertices;
+
+    // 各种VAO、VBO和EBO的绑定
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
-
     glBindVertexArray(VAO);
-
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
 
@@ -44,7 +47,7 @@ void Mesh::Draw(Shader& shader) const {
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
     
-    for (size_t i = 0; i < m_textures.size(); ++i) {
+    for (size_t i = 0; i < m_textures.size(); i++) {
         glActiveTexture(GL_TEXTURE0 + i);
         
         const auto& tex = m_textures[i];

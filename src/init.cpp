@@ -43,13 +43,25 @@ GLFWwindow* Init() {
     };
 
 std::cout << "创建模型中..." << std::endl;
-
+try {
     // 模型指针
-    MODEL_POINTERS.push_back( new Model(sampleModelData[0]) );
+    auto* sample_model = new Model(sampleModelData[0]);
+    std::cout << "模型顶点数: " << sample_model->m_meshes[0].Vertices.size() << std::endl;
+    
+    MODEL_POINTERS.push_back(sample_model);
     // 模型着色器指针
     MODEL_SHADER = new Shader(sampleModelData[1], sampleModelData[2]);
+    // 检查包围球有效性
+    if (sample_model->bounds.Rad < 0.01f) {
+        std::cerr << "警告：模型包围球计算异常，可能未正确加载顶点数据" << std::endl;
+    }
 
-std::cout << "模型创建任务结束" << std::endl;
+    std::cout << "模型创建任务结束" << std::endl;
+
+} catch (const std::exception& e) {
+    std::cerr << "[FATAL] 初始化失败: " << e.what() << std::endl;
+    exit(EXIT_FAILURE);
+}
 
     return Window::GetWindow();
 }

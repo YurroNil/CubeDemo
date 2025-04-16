@@ -25,12 +25,12 @@ void Inputs::MouseCallback(double xpos, double ypos) {
     float xoffset = xpos - s_LastX; float yoffset = s_LastY - ypos; // 注意Y轴方向
     s_LastX = xpos; s_LastY = ypos;
 
-    if (s_Camera) { s_Camera->ProcessMouseMovement(xoffset, yoffset, true); }
+    if (s_Camera) { s_Camera->ProcMouseMovement(xoffset, yoffset, true); }
 
 }
 
 void Inputs::ScrollCallback(double yoffset) {
-    s_Camera->ProcessMouseScroll(static_cast<float>(yoffset));
+    s_Camera->ProcMouseScroll(static_cast<float>(yoffset));
 }
 
 // 游戏暂停
@@ -53,18 +53,18 @@ void Inputs::PauseTheGame(GLFWwindow* &window) {
 }
 
 // 输入处理
-void Inputs::ProcessKeyboard(GLFWwindow* &window, float deltaTime) {
+void Inputs::ProcKeyboard(GLFWwindow* &window, float deltaTime) {
     // WASD 移动
-    float velocity = s_Camera->MovementSpeed * deltaTime;
+    float velocity = s_Camera->attribute.movementSpeed * deltaTime;
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        s_Camera->Position += s_Camera->Front * velocity;
+        s_Camera->Position += s_Camera->direction.front * velocity;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        s_Camera->Position -= s_Camera->Front * velocity;
+        s_Camera->Position -= s_Camera->direction.front * velocity;
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        s_Camera->Position -= s_Camera->Right * velocity;
+        s_Camera->Position -= s_Camera->direction.right * velocity;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        s_Camera->Position += s_Camera->Right * velocity;
+        s_Camera->Position += s_Camera->direction.right * velocity;
     // 空格上升
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
         s_Camera->Position.y += velocity;
