@@ -10,6 +10,7 @@ extern Shader* MODEL_SHADER;
 
 void MainLoop(WIN, CAM) {
     while (!Window::ShouldClose()) {
+
         BeginFrame(camera);    // 开始帧
         HandleInput(window);    // 输入管理
         if (!Inputs::isGamePaused) { UpdateModels(); }    // 模型渲染
@@ -37,7 +38,7 @@ void HandleInput(WIN) {
         else if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) { Inputs::ResumeTheGame(window); }
     }
     
-    if (!Inputs::isGamePaused) { Inputs::ProcessKeyboard(window, Time::DeltaTime()); }
+    if (!Inputs::isGamePaused) { Inputs::ProcKeyboard(window, Time::DeltaTime()); }
 }
 
 // 模型变换(如旋转)
@@ -55,14 +56,19 @@ void HandleWindowSettings(WIN) {
 void RenderScene(WIN, CAM) {
     Window::UpdateWindowSize(window);
 
+/* ------应用模型着色器------ */
     MODEL_SHADER->Use();
-
+    // 到摄像机
     MODEL_SHADER->ApplyCamera(*camera, Window::GetAspectRatio());
-
+    // 到模型
     for(auto* thisModel : MODEL_POINTERS) {
-        thisModel->Draw(*MODEL_SHADER);
+        // thisModel->Draw(*MODEL_SHADER);
+        if (camera->isSphereVisible(thisModel->bounds.Center, thisModel->bounds.Rad)) {
+            thisModel->Draw(*MODEL_SHADER);
+        }
     }
-}
+
+}   // RenderScene
 
 void EndFrameHandling(WIN) {
     Renderer::EndFrame(window);

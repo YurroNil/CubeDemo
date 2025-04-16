@@ -9,7 +9,7 @@ namespace CubeDemo {
 class Inputs {
 public:
     static void Init(Camera* camera);
-    static void ProcessKeyboard(GLFWwindow* &window, float deltaTime);
+    static void ProcKeyboard(GLFWwindow* &window, float deltaTime);
     inline static bool showDebugInfo = false;
     inline static float frameTime = 0.0f;
 

@@ -1,5 +1,4 @@
 // src/core/Window.cpp
-#include "utils/streams.h"
 #include "core/window.h"
 #include "core/inputs.h"
 namespace CubeDemo {
@@ -38,6 +37,7 @@ void Window::Init(int width, int height, const char* title) {
     // 添加窗口大小回调来更新窗口
     glfwSetFramebufferSizeCallback(s_Window, [](GLFWwindow* window, int width, int height) { glViewport(0, 0, width, height); });
 
+    
 }
 
 bool Window::ShouldClose() { return glfwWindowShouldClose(s_Window); }

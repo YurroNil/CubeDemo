@@ -8,7 +8,7 @@
 
 namespace CubeDemo {
 // 乱七八糟的前置声明
-class Texture;using TexturePtrHashMap = std::unordered_map<string, std::weak_ptr<Texture>>; using TexturePtr = std::shared_ptr<Texture>;
+class Texture;using TexPtrHashMap = std::unordered_map<string, std::weak_ptr<Texture>>; using TexturePtr = std::shared_ptr<Texture>;
 
 // 声明Texture类
 class Texture {
@@ -27,7 +27,7 @@ public:
 
 private:
     Texture(const string& path, const string& type); // 构造函数私有化
-    static TexturePtrHashMap s_TexturePool;    // 使用weak_ptr防止内存泄漏
+    static TexPtrHashMap s_TexturePool;    // 使用weak_ptr防止内存泄漏
 
 };
 

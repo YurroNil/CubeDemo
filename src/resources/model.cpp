@@ -1,17 +1,20 @@
 // src/resources/model.cpp
-#include "resources/model.h"
 #include "utils/streams.h"
 #include <filesystem>
+#include "stb_image.h"
+
+#include "resources/model.h"
+#include "core/window.h"
 
 namespace fs = std::filesystem;
 namespace CubeDemo {
-
 
 Model::Model(const string& path) {
     LoadModel(path);
 }
 
 void Model::LoadModel(const string& path) {
+/* -------模型加载------- */
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path, 
         aiProcess_Triangulate | 
@@ -19,34 +22,35 @@ void Model::LoadModel(const string& path) {
         aiProcess_GenNormals |
         aiProcess_CalcTangentSpace // 生成切线数据
     );
-    
+
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-        std::cerr << "[Assimp Error] " << importer.GetErrorString() << std::endl;
-        return;
+        std::cerr << "[Assimp Error] " << importer.GetErrorString() << std::endl; return;
     }
-    
     m_directory = path.substr(0, path.find_last_of('/'));
-    ProcessNode(scene->mRootNode, scene);
+    ProcNode(scene->mRootNode, scene);
+
+/* -------计算包围球------- */
+    bounds.Calc(m_meshes);
 
 }
 
-void Model::ProcessNode(aiNode* node, const aiScene* scene) {
+void Model::ProcNode(aiNode* node, const aiScene* scene) {
     // 处理当前节点的所有网格
     for (unsigned i = 0; i < node->mNumMeshes; i++) {
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        m_meshes.push_back(ProcessMesh(mesh, scene));
+        m_meshes.push_back(ProcMesh(mesh, scene));
     }
     
     // 递归处理子节点
     for (unsigned i = 0; i < node->mNumChildren; i++) {
-        ProcessNode(node->mChildren[i], scene);
+        ProcNode(node->mChildren[i], scene);
     }
 }
 
-Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
+Mesh Model::ProcMesh(aiMesh* mesh, const aiScene* scene) {
     VertexArray vertices;
     std::vector<unsigned> indices;
-    TexturePtrArray textures;
+    TexPtrArray textures;
     
     // 处理顶点数据
     for (unsigned i = 0; i < mesh->mNumVertices; i++) {
@@ -87,50 +91,49 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 
 
         // 漫反射贴图
-        auto diffuseMaps = LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+        auto diffuseMaps = LoadMaterialTex(material, aiTextureType_DIFFUSE, "texture_diffuse");
         if (diffuseMaps.empty()) { // 如果未找到，尝试其他类型
-            diffuseMaps = LoadMaterialTextures(material, aiTextureType_BASE_COLOR, "texture_diffuse");
+            diffuseMaps = LoadMaterialTex(material, aiTextureType_BASE_COLOR, "texture_diffuse");
         }
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
 
          // 加载反射贴图
-        auto reflectionMaps = LoadMaterialTextures(material, aiTextureType_REFLECTION, "texture_reflection");
+        auto reflectionMaps = LoadMaterialTex(material, aiTextureType_REFLECTION, "texture_reflection");
         textures.insert(textures.end(), reflectionMaps.begin(), reflectionMaps.end());
 
 
         // 法线贴图（map_Bump）
-        auto normalMaps = LoadMaterialTextures(material, aiTextureType_NORMALS, "texture_normal");
+        auto normalMaps = LoadMaterialTex(material, aiTextureType_NORMALS, "texture_normal");
         textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 
 
         // 高光贴图（map_Ns）
-        auto specularMaps = LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+        auto specularMaps = LoadMaterialTex(material, aiTextureType_SPECULAR, "texture_specular");
         if (specularMaps.empty()) { // 如果未找到，尝试其他类型
-            specularMaps = LoadMaterialTextures(material, aiTextureType_SHININESS, "texture_diffuse");
+            specularMaps = LoadMaterialTex(material, aiTextureType_SHININESS, "texture_diffuse");
         }
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
-
         // 环境光遮蔽（map_Ka）
-        auto aoMaps = LoadMaterialTextures(material, aiTextureType_AMBIENT, "texture_ao");
+        auto aoMaps = LoadMaterialTex(material, aiTextureType_AMBIENT, "texture_ao");
         textures.insert(textures.end(), aoMaps.begin(), aoMaps.end());
     }
 
     return Mesh(vertices, indices, textures);
 }
 
-TexturePtrArray Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type, const string& typeName) 
+TexPtrArray Model::LoadMaterialTex(aiMaterial* mat, aiTextureType type, const string& typeName) 
 {
-    TexturePtrArray textures;
+    TexPtrArray textures;
     const unsigned textureCount = mat->GetTextureCount(type);
 
     string tempPath;
-    for (unsigned i = 0; i < textureCount; ++i) {
+    for (unsigned i = 0; i < textureCount; i++) {
         aiString str;
         mat->GetTexture(type, i, &str);
         
-        // 处理Blender的特殊参数
+
         string path(str.C_Str());
 
         const string fullPath = m_directory + "/textures/" + fs::path(path).filename().string();
@@ -139,25 +142,50 @@ TexturePtrArray Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type,
         
         // 使用纹理工厂方法
         try {
+            
             auto tex = Texture::Create(fullPath, typeName);
             textures.push_back(tex);
-            
-            // 缓存到模型层级
-            if (!m_textureCache.count(tex->Path)) {
-                m_textureCache[tex->Path] = tex;
-            }
+
         } catch (const std::exception& e) {
             std::cerr << "[ERROR] 材质加载失败: " << e.what() << std::endl;
             return {};  // 返回空集合
         }
         std::cout << "[DEBUG] 此纹理已被成功加载. " << std::endl;
     }
-    return textures;
+    return textures; // 返回的textures将持有纹理引用
 }
 
 void Model::Draw(Shader& shader) {
     // 绘制模型的所有网格
     for (auto& mesh : m_meshes) { mesh.Draw(shader); }
+}
+
+// 计算包围球
+void BoundingSphere::Calc(const MeshArray& meshes) {
+    if (meshes.empty()) {
+        Center = vec3(0.0f);
+        Rad = 0.0f;
+        return;
+    }
+    // 计算AABB
+    vec3 minVert(FLT_MAX), maxVert(-FLT_MAX);
+    for (const auto& mesh : meshes) {
+        for (const auto& vert : mesh.Vertices) {
+            minVert = glm::min(minVert, vert.Position);
+            maxVert = glm::max(maxVert, vert.Position);
+        }
+    }
+    // 中心点计算
+    Center = (minVert + maxVert) * 0.5f;
+    
+    // 计算最大半径
+    float maxDist = 0.0f;
+    for (const auto& mesh : meshes) {
+        for (const auto& vert : mesh.Vertices) {
+            maxDist = glm::max(maxDist, glm::length(vert.Position - Center));
+        }
+    }
+    Rad = maxDist;
 }
 
 }
