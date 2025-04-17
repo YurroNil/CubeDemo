@@ -1,9 +1,12 @@
 
 // include/resources/texture.h
 #pragma once
+
+// 标准库
 #include <unordered_map>
 #include "utils/stringsKits.h"
 #include <memory>
+#include <thread>
 
 
 namespace CubeDemo {
@@ -13,12 +16,16 @@ class Texture;using TexPtrHashMap = std::unordered_map<string, std::weak_ptr<Tex
 // 声明Texture类
 class Texture {
 public:
-    static TexturePtr Create(const string& path, const string& type);
-    
+
     unsigned int ID;
     string Type;
     string Path;
+    static std::atomic<size_t> s_TextureAliveCount;
+    static TexPtrHashMap s_TexturePool;
 
+    ~Texture();
+    static TexturePtr Create(const string& path, const string& type);
+    static TexturePtr CreateSync(const string& path, const string& type);
     void Bind(unsigned int slot = 0) const;
 
     // 删除拷贝构造函数和赋值运算符
@@ -27,7 +34,6 @@ public:
 
 private:
     Texture(const string& path, const string& type); // 构造函数私有化
-    static TexPtrHashMap s_TexturePool;    // 使用weak_ptr防止内存泄漏
 
 };
 

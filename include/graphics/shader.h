@@ -1,4 +1,4 @@
-// include/renderer/main
+// include/graphics/shader.h
 
 #pragma once
 #include "core/camera.h"
