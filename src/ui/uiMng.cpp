@@ -1,4 +1,4 @@
-#include <filesystem>
+#include "utils/fileSystemKits.h"
 #include "ui/uiMng.h"
 #include "core/inputs.h"
 #include "core/window.h"
@@ -33,17 +33,17 @@ void UIMng::InitImGui() {
 
 // 配置ImGui的样式
 void UIMng::ConfigureImGuiStyle() {
-    ImGuiStyle& style = ImGui::GetStyle(); // 获取ImGui样式对象
+    ImGuiStyle& style = ImGui::GetStyle();   // 获取ImGui样式对象
     style.WindowPadding = ImVec2(15, 15);    // 设置窗口内边距
     style.FramePadding = ImVec2(10, 10);     // 设置控件内边距
-    style.ItemSpacing = ImVec2(10, 15);     // 设置控件之间的间距
-    style.ScaleAllSizes(1.5f);              // 放大所有尺寸以适配高DPI屏幕
-    ImGui::StyleColorsDark();               // 使用深色主题
+    style.ItemSpacing = ImVec2(10, 15);      // 设置控件之间的间距
+    style.ScaleAllSizes(1.5f);               // 放大所有尺寸以适配高DPI屏幕
+    ImGui::StyleColorsDark();                // 使用深色主题
 }
 
 // 加载自定义字体
 void UIMng::LoadFonts() {
-    if (!std::filesystem::exists("../resources/fonts/simhei.ttf")) {
+    if (!fs::exists("../resources/fonts/simhei.ttf")) {
         std::cerr << "字体文件不存在: " << "../resources/fonts/simhei.ttf" << std::endl;
         return;
     }

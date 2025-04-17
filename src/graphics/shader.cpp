@@ -1,4 +1,4 @@
-// renderer/shader.cpp
+// src/graphics/shader.cpp
 
 #include "graphics/shader.h"
 #include "utils/glfwKits.h"

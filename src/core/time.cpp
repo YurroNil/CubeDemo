@@ -1,6 +1,9 @@
 // src/core/time.cpp
+
 #include "core/time.h"
 #include "utils/glfwKits.h"
+
+
 namespace CubeDemo {
 
 namespace {

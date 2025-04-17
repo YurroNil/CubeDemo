@@ -1,12 +1,15 @@
 // src/resources/model.cpp
-#include "utils/streams.h"
-#include <filesystem>
-#include "stb_image.h"
 
+// 标准库
+#include "utils/streams.h"
+#include "utils/fileSystemKits.h"
+// 第三方库
+#include "stb_image.h"
+// 项目头文件
 #include "resources/model.h"
 #include "core/window.h"
 
-namespace fs = std::filesystem;
+
 namespace CubeDemo {
 
 Model::Model(const string& path) {
@@ -123,32 +126,33 @@ Mesh Model::ProcMesh(aiMesh* mesh, const aiScene* scene) {
     return Mesh(vertices, indices, textures);
 }
 
-TexPtrArray Model::LoadMaterialTex(aiMaterial* mat, aiTextureType type, const string& typeName) 
-{
+TexPtrArray Model::LoadMaterialTex(aiMaterial* mat, aiTextureType type, const string& typeName) {
     TexPtrArray textures;
     const unsigned textureCount = mat->GetTextureCount(type);
 
     string tempPath;
     for (unsigned i = 0; i < textureCount; i++) {
-        aiString str;
-        mat->GetTexture(type, i, &str);
-        
 
-        string path(str.C_Str());
+        aiString str; mat->GetTexture(type, i, &str); string path(str.C_Str());
 
         const string fullPath = m_directory + "/textures/" + fs::path(path).filename().string();
         tempPath = fullPath;
-        std::cout << "[DEBUG] 正在处理纹理: " << fullPath << "(" << typeName << ", 数量: " << textureCount << "), aiTextureTyp枚举值: " << type << std::endl;
+        std::cout << "--------------------\n" << "[DEBUG] 正在处理纹理: " << fullPath << "(" << typeName << ", 数量: " << textureCount << "), aiTextureTyp枚举值: " << type << std::endl;
         
         // 使用纹理工厂方法
         try {
-            
+            // 修改为异步加载
             auto tex = Texture::Create(fullPath, typeName);
+
+            if(!tex || tex->ID == 0) { throw std::runtime_error("[ERROR] 纹理创建返回空对象"); }
             textures.push_back(tex);
+            // 实时引用计数检查
+        std::cout << "  当前纹理引用计数: " << tex.use_count() << ", 类型: " << typeName << ". " << std::endl;
 
         } catch (const std::exception& e) {
-            std::cerr << "[ERROR] 材质加载失败: " << e.what() << std::endl;
-            return {};  // 返回空集合
+            std::cerr << "[ERROR] 材质加载失败: " << e.what();
+            std::cerr << ", 当前处理文件: " << fullPath << ", 关联模型: " << m_directory << std::endl;
+            throw;
         }
         std::cout << "[DEBUG] 此纹理已被成功加载. " << std::endl;
     }

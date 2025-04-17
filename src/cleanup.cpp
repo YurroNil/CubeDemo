@@ -4,6 +4,7 @@
 
 #include "cleanup.h"
 #include "resources/model.h"
+#include "core/window.h"
 
 namespace CubeDemo {
 extern std::vector<Model*> MODEL_POINTERS; extern Shader* MODEL_SHADER;
@@ -21,6 +22,8 @@ void Cleanup(GLFWwindow* window, Camera* camera) {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
+
+    Window::CheckLeaks();
     
     // GLFW清理
     glfwDestroyWindow(window);
