@@ -5,11 +5,22 @@
 #include "cleanup.h"
 #include "resources/model.h"
 #include "core/window.h"
+#include "threads/resourceLoader.h"
 
 namespace CubeDemo {
 extern std::vector<Model*> MODEL_POINTERS; extern Shader* MODEL_SHADER;
+extern void DumpGLResources();
 
 void Cleanup(GLFWwindow* window, Camera* camera) {
+
+    // 确保资源释放顺序
+    ResourceLoader::Shutdown(); // 先关闭资源加载器
+    
+    // 等待3秒确保资源释放
+    TaskQueue::PushTaskSync([]{ 
+        glFinish();
+        DumpGLResources(); // 打印泄露资源
+    });
 
     // 摄像机清理
     Camera::Delete(camera);
@@ -22,8 +33,6 @@ void Cleanup(GLFWwindow* window, Camera* camera) {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
-
-    Window::CheckLeaks();
     
     // GLFW清理
     glfwDestroyWindow(window);

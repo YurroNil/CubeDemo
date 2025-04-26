@@ -4,7 +4,6 @@
 #include "utils/glfwKits.h"
 #include "utils/streams.h"
 #include "resources/texture.h"
-#include <functional>
 
 namespace CubeDemo {
 
@@ -26,27 +25,17 @@ public:
     static void UpdateWindowSize(GLFWwindow* window);
     static void UpdateWindowPos(GLFWwindow* window);
 
-    void ProcessTasks();
-    // 新增任务队列接口
-    static void PushTask(std::function<void()> task);
-
     // Getters
     static GLFWwindow* GetWindow() { return s_Window; }
     static float GetInitMouseX() { return s_InitMouseX; }
     static float GetInitMouseY() { return s_InitMouseY; }
     static float GetAspectRatio();
-    static bool IsMainThread();
-    static void CheckLeaks();
-
 
 private:
     inline static GLFWwindow* s_Window = nullptr;
     inline static bool s_IsFullscreen = false;
     inline static float s_InitMouseX = 0.0f;
     inline static float s_InitMouseY = 0.0f;
-    inline static std::thread::id s_MainThreadId = std::this_thread::get_id();
-
 };
-
 
 }

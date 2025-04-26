@@ -2,7 +2,6 @@
 
 #pragma once
 #include "utils/glfwKits.h"
-#include "resources/model.h"
 
 namespace CubeDemo {
 
