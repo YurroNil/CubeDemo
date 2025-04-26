@@ -1,33 +1,23 @@
 // src/core/Window.cpp
 
-// 标准库
-
 // 项目头文件
 #include "core/window.h"
 #include "core/inputs.h"
-#include "core/taskQueue.h"
+#include "threads/taskQueue.h"
 
 namespace CubeDemo {
-// 添加全局任务队列
-static TaskQueue s_MainThreadQueue;
 
 
 void Window::Init(int width, int height, const char* title) {
 
     // 在初始化时捕获主线程ID
-    s_MainThreadId = std::this_thread::get_id();
-
+    TaskQueue::s_MainThreadId = std::this_thread::get_id();
     // 初始化窗口
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
     s_Window = glfwCreateWindow(width, height, "Cube Demo", NULL, NULL);
-    if (!s_Window) {
-        glfwTerminate();
-        throw std::runtime_error("[Error] 窗口创建失败");
-    }
-
+    if (!s_Window) { glfwTerminate(); throw std::runtime_error("[Error] 窗口创建失败"); }
     // 设置OpenGL上下文
     glfwMakeContextCurrent(s_Window);
     if (gladLoadGLLoader((GLADloadproc)glfwGetProcAddress) == 0) {
@@ -36,21 +26,15 @@ void Window::Init(int width, int height, const char* title) {
         glfwTerminate();
     }
     
-    int winWidth, winHeight;
-    glfwGetFramebufferSize(s_Window, &winWidth, &winHeight);
-
-    s_InitMouseX = winWidth / 2.0f;
-    s_InitMouseY = winHeight / 2.0f;
-
+    int winWidth, winHeight; glfwGetFramebufferSize(s_Window, &winWidth, &winHeight);
+    s_InitMouseX = winWidth / 2.0f; s_InitMouseY = winHeight / 2.0f;
     // 设置GLFW回调（通过lambda转发到静态方法）
     glfwSetCursorPosCallback(s_Window, [](GLFWwindow* w, double x, double y) { Inputs::MouseCallback(x, y); });
     glfwSetScrollCallback(s_Window, [](GLFWwindow* w, double x, double y) { Inputs::ScrollCallback(y); });
     glfwSetInputMode(s_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // 添加窗口大小回调来更新窗口
-    glfwSetFramebufferSizeCallback(s_Window, [](GLFWwindow* window, int width, int height) { glViewport(0, 0, width, height); });
-
-    
+    glfwSetFramebufferSizeCallback(s_Window, [](GLFWwindow* window, int width, int height) { glViewport(0, 0, width, height); }); 
 }
 
 bool Window::ShouldClose() { return glfwWindowShouldClose(s_Window); }
@@ -58,11 +42,8 @@ bool Window::ShouldClose() { return glfwWindowShouldClose(s_Window); }
 void Window::ToggleFullscreen(GLFWwindow* window) {
     if(!window) return; // 防止空指针
     if (!s_IsFullscreen) {
-        
         // 保存窗口位置和尺寸
-        UpdateWindowSize(window);
-        UpdateWindowPos(window);
-
+        UpdateWindowSize(window); UpdateWindowPos(window);
         // 切换到全屏
         GLFWmonitor* monitor = glfwGetPrimaryMonitor();
         const GLFWvidmode* mode = glfwGetVideoMode(monitor);
@@ -77,7 +58,6 @@ void Window::ToggleFullscreen(GLFWwindow* window) {
 void Window::FullscreenTrigger(GLFWwindow* window) {
     static bool f11LastState = false;
     bool f11CurrentState = glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS;
-
     if (f11CurrentState && !f11LastState) { ToggleFullscreen(window); }
     f11LastState = f11CurrentState;
 }
@@ -94,28 +74,6 @@ void Window::UpdateWindowPos(GLFWwindow* window) {
 
 float Window::GetAspectRatio() {
     return (s_WindowHeight == 0) ? 1.0f : static_cast<float>(s_WindowWidth) / s_WindowHeight;
-}
-
-bool Window::IsMainThread() { return std::this_thread::get_id() == s_MainThreadId; }
-
-// Debug相关
-void Window::CheckLeaks() {
-    #ifdef _DEBUG
-    if(Texture::s_TextureAliveCount > 0) {
-        std::cerr << "⚠️ 检测到纹理泄漏: " << Texture::s_TextureAliveCount << "\n";
-    }
-    #endif
-}
-
-// 每帧任务处理
-void Window::ProcessTasks() {
-    while (!s_MainThreadQueue.Empty()) {
-        auto task = s_MainThreadQueue.Pop();
-        task();
-    }
-}
-void Window::PushTask(std::function<void()> task) {
-    s_MainThreadQueue.Push(std::move(task));
 }
 
 }

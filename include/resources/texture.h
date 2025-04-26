@@ -1,41 +1,70 @@
-
 // include/resources/texture.h
 #pragma once
 
-// 标准库
+#include <atomic>
+#include <mutex>
 #include <unordered_map>
-#include "utils/stringsKits.h"
 #include <memory>
-#include <thread>
+#include "utils/stringsKits.h"
 
 
 namespace CubeDemo {
-// 乱七八糟的前置声明
-class Texture;using TexPtrHashMap = std::unordered_map<string, std::weak_ptr<Texture>>; using TexturePtr = std::shared_ptr<Texture>;
 
-// 声明Texture类
+// 前向声明
+class Texture;
+using TexturePtr = std::shared_ptr<Texture>;
+using TexPtrHashMap = std::unordered_map<string, std::weak_ptr<Texture>>;
+
 class Texture {
 public:
+    explicit Texture();
 
-    unsigned int ID;
-    string Type;
-    string Path;
-    static std::atomic<size_t> s_TextureAliveCount;
-    static TexPtrHashMap s_TexturePool;
+    enum class LoadState {
+        Init,           // 初始化
+        Uninitialized,  // 初始状态
+        Placeholder,    // 使用占位纹理
+        Loading,        // 正在异步加载
+        Ready,          // 加载完成可用
+        Failed          // 最终加载失败
+    };
 
     ~Texture();
-    static TexturePtr Create(const string& path, const string& type);
-    static TexturePtr CreateSync(const string& path, const string& type);
-    void Bind(unsigned int slot = 0) const;
-
-    // 删除拷贝构造函数和赋值运算符
+    // 禁用构造函数拷贝
     Texture(const Texture&) = delete;
     Texture& operator=(const Texture&) = delete;
+    // 立即绑定纹理到指定纹理单元
+    void Bind(unsigned int slot) const;
 
-private:
-    Texture(const string& path, const string& type); // 构造函数私有化
 
+//------------------------ 成员变量 ------------------------//
+    std::atomic<bool> m_Valid{true};     // 有效性标志（原子）
+    std::atomic<int> m_RetryCount{0};    // 当前重试次数
+    string Type;                         //纹理类型（diffuse/normal等）
+    std::atomic<unsigned int> ID{0};     //OpenGL纹理ID
+    //加载任务数
+    std::atomic<LoadState> State{LoadState::Uninitialized}; // 当前状态
+    string Path;    // 原始文件路径
+
+}; }    // namespace CubeDemo
+
+
+// 关于LoadState结构体的枚举参数声明
+
+namespace std {
+using TLS = CubeDemo::Texture::LoadState; template<>
+
+struct formatter<TLS> : formatter<string_view> {
+    auto format(TLS state, format_context& ctx) {
+        string_view name = "Unknown";
+        switch(state) {
+            case TLS::Init: name = "Init"; break;
+            case TLS::Placeholder: name = "Placeholder"; break;
+            case TLS::Loading: name = "Loading"; break;
+            case TLS::Ready: name = "Ready"; break;
+            case TLS::Failed: name = "Failed"; break;
+        }
+        return formatter<string_view>::format(name, ctx);
+    }
 };
 
-}
-
+}   // namespace std

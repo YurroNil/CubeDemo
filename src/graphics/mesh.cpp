@@ -14,6 +14,7 @@ Mesh::Mesh(const VertexArray& vertices, const std::vector<unsigned>& indices, co
 
     // 各种VAO、VBO和EBO的绑定
     glGenVertexArrays(1, &VAO);
+    
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
     glBindVertexArray(VAO);
@@ -43,6 +44,11 @@ Mesh::Mesh(const VertexArray& vertices, const std::vector<unsigned>& indices, co
     glBindVertexArray(0);
 }
 
+void Mesh::UpdateTextures(const TexPtrArray& newTextures) {
+    std::lock_guard lock(m_TextureMutex);
+    m_textures = newTextures;
+}
+
 void Mesh::Draw(Shader& shader) const {
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
@@ -70,5 +76,12 @@ void Mesh::Draw(Shader& shader) const {
     
     glActiveTexture(GL_TEXTURE0);
 }
+
+void Mesh::ReleaseGLResources() {
+    if(VAO) glDeleteVertexArrays(1, &VAO);
+    if(VBO) glDeleteBuffers(1, &VBO);
+    if(EBO) glDeleteBuffers(1, &EBO);
+}
+
 
 }

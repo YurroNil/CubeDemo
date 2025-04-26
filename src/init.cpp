@@ -1,6 +1,8 @@
 // src/init.cpp
 #include "init.h"
 #include "core/camera.h"
+#include <chrono>
+#include <thread>
 
 namespace CubeDemo {
 
@@ -34,7 +36,6 @@ GLFWwindow* Init() {
 
     Camera::SaveCamera(camera);
     Inputs::Init(camera);
-
     // 测试模型
     string sampleModelData[] = {
         MODEL_PATH + string("sample/sample.obj"),
@@ -42,27 +43,43 @@ GLFWwindow* Init() {
         FSH_PATH + string("model.glsl")
     };
 
-std::cout << "[INITER] 创建模型中...\n" << std::endl;
+std::cout << "\n[INITER] 创建模型中..." << std::endl;
 try {
-    // 模型指针
-    auto* sample_model = new Model(sampleModelData[0]);
-    std::cout << "--------------------\n\n" << "[INITER] 模型顶点数: " << sample_model->m_meshes[0].Vertices.size() << ", ";
     
+    std::atomic<bool> modelLoaded{false};
+    Model* sample_model = new Model(sampleModelData[0]);
+    // 异步加载模型
+    sample_model->LoadAsync([&]{
+        modelLoaded.store(true);
+    });
+
+    while(!modelLoaded.load()) {
+
+        TaskQueue::ProcTasks();
+        
+        // 超时机制
+        static auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(3);
+        if(std::chrono::steady_clock::now() > deadline) { throw std::runtime_error("模型加载超时"); }
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+
+    }
+
     MODEL_POINTERS.push_back(sample_model);
+
     // 模型着色器指针
     MODEL_SHADER = new Shader(sampleModelData[1], sampleModelData[2]);
     // 检查包围球有效性
     if (sample_model->bounds.Rad < 0.01f) {
-        std::cerr << "[ERROR] 模型包围球计算异常，可能未正确加载顶点数据" << std::endl;
+        std::cerr << "[ERROR] 模型包围球计算异常，可能未正确加载顶点数据×" << std::endl;
     }
 
-    std::cout << "模型创建任务结束" << std::endl;
+std::cout << "[INITER] 模型创建任务结束" << std::endl;
 
 } catch (const std::exception& e) {
     std::cerr << "[FATAL] 初始化失败: " << e.what() << std::endl;
     exit(EXIT_FAILURE);
 }
-
+std::cout << "[INITER] 初始化阶段结束" << std::endl;
     return Window::GetWindow();
 }
 
