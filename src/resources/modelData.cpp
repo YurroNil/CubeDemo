@@ -6,6 +6,7 @@
 #include "threads/modelLoader.h"
 
 namespace CubeDemo {
+extern bool DEBUG_ASYNC_MODE;
 
 // ModelData类方法实现
 ModelData::ModelData(const string& path) : MaterialData(), Rawpath(path) {
@@ -21,15 +22,20 @@ void ModelData::LoadModel(const string& path) {
         aiProcess_GenNormals |
         aiProcess_CalcTangentSpace // 生成切线数据
     );
-    std::cout << "[断点A]" << std::endl;
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         std::cerr << "[Assimp Error] " << importer.GetErrorString() << std::endl; return;
     }
 
     Directory = path.substr(0, path.find_last_of('/'));
+
+     std::cout << "\n=== 模型加载诊断 ===" << "\n模型路径: " << path << "\n节点数量: " << scene->mRootNode->mNumChildren << "\n网格数量: " << scene->mNumMeshes << "\n材质数量: " << scene->mNumMaterials << std::endl;
+
+
     ProcNode(scene->mRootNode, scene);
-    std::cout << "[断点ZZZ]" << std::endl;
+
+     std::cout << "=== 加载完成 ===" << "\n总网格数: " << m_meshes.size() << "\n包围球半径: " << bounds.Rad << std::endl;
+
 /* -------计算包围球------- */
     bounds.Calc(m_meshes);
 
@@ -85,22 +91,28 @@ Mesh ModelData::ProcMesh(aiMesh* mesh, const aiScene* scene) {
             indices.push_back(face.mIndices[j]);
     }
 
-    // 处理材质
-     if (mesh->mMaterialIndex >= 0) {
-        MaterialData::ProcMaterial(mesh, scene, textures);
-    }
+    std::cout << "\n[网格信息]" << "\n顶点数: " << vertices.size() << "\n索引数: " << indices.size() << "\n材质索引: " << mesh->mMaterialIndex << "\n是否有切线数据: " << (mesh->mTangents ? "是" : "否") << std::endl;
 
+    // 处理材质
+     if (mesh->mMaterialIndex >= 0 && mesh->mMaterialIndex < scene->mNumMaterials) {
+
+        if (DEBUG_ASYNC_MODE == true) { MaterialData::ProcMaterial(mesh, scene, textures); } // 异步处理材质
+        else { MaterialData::ProcMaterialSync(mesh, scene, textures); } // 同步处理材质（调试专用）
+        std::cout << "[材质处理] 完成，加载纹理数: " << textures.size() << std::endl;
+    } else {
+        std::cerr << "无效材质索引: " << mesh->mMaterialIndex << "/" << scene->mNumMaterials << std::endl;
+    }
+    
     return Mesh(vertices, indices, textures);
 }
 
 // 渲染循环中绘制模型
 void ModelData::Draw(Shader& shader) {
+    shader.SetMat4("model", m_ModelMatrix);
+
     if(m_IsLoading.load()) return; // 加载中不绘制
     // 绘制模型的所有网格
-    for (auto& mesh : m_meshes) {
-        if(mesh.m_textures.empty()) return; // 无纹理不绘制
-        mesh.Draw(shader);
-        }
+    for (auto& mesh : m_meshes) { mesh.Draw(shader); }
 }
 
 // 计算包围球

@@ -6,7 +6,6 @@
 
 namespace CubeDemo {
 
-
 Camera::Camera(vec3 pos, vec3 up, float yaw, float pitch)
 : Position(pos) {
     direction.front = vec3(0.0f, 0.0f, -1.0f);

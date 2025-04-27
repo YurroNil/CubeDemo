@@ -12,16 +12,18 @@ std::atomic<bool> TaskQueue::s_Running{true};
 bool TaskQueue::IsMainThread() { return std::this_thread::get_id() == s_MainThreadId; }
 
 // 每帧任务处理
-void TaskQueue::ProcTasks() {
-    int processed = 0;
+void TaskQueue::ProcTasks(int& processed) {
+    processed = 0;
     while (!s_MainThreadQueue.Empty() && processed++ < MAX_TASKS_PER_PROCESS) {
         auto task = s_MainThreadQueue.Pop();
         task();
     }
 }
+
 // 发出任务指令
 void TaskQueue::AddTasks(std::function<void()> task, bool isHighPriority) {
     s_MainThreadQueue.Push(std::move(task), isHighPriority);
+    std::cout << "[Queue] 添加任务类型: " << typeid(task).name() << " 队列深度: " << sizeof(queue_) << std::endl;
 }
 // 任务优先级处理
 void TaskQueue::Push(Task task, bool isHighPriority) {
@@ -45,23 +47,20 @@ void TaskQueue::Push(Task task, bool isHighPriority) {
 }
 
 Task TaskQueue::Pop() {
-    std::unique_lock lock(mutex_);
+     std::unique_lock lock(mutex_);
     
-    // 修改为主动式等待，防止虚假唤醒
-    while(s_Running) {
+    // 主动轮询代替被动等待
+    for(int retry=0; retry<3; ++retry){
         if(!queue_.empty()) {
             Task task = std::move(queue_.front());
             queue_.pop_front();
-            std::cout << "[DEBUG] 取出任务，剩余: " << queue_.size() << std::endl;
             return task;
         }
-        
-        // 带超时的等待避免永久阻塞
-        condition_.wait_for(lock, std::chrono::milliseconds(100), [&]{
-            return !queue_.empty() || !s_Running;
-        });
+        lock.unlock();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1)); // 避免忙等待
+        lock.lock();
     }
-    return nullptr; // 正常关闭时返回空任务
+    return nullptr;
 }
 
 bool TaskQueue::Empty() const {

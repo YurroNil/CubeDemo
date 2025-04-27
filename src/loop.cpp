@@ -8,29 +8,13 @@
 namespace CubeDemo {
 extern std::vector<Model*> MODEL_POINTERS;
 extern Shader* MODEL_SHADER;
-constexpr int MAX_TASKS_PER_FRAME = 50; // 新增帧任务限制
-
-
 
 void MainLoop(WIN, CAM) {
 
-
     while (!Window::ShouldClose()) {
-        static int var = 0;
-        TaskQueue::ProcTasks(); // 任务处理
-
-         // 优化帧率控制（使用精确计时）
-        static auto lastTime = std::chrono::steady_clock::now();
-        auto now = std::chrono::steady_clock::now();
-        auto delta = now - lastTime;
-        
-        if(delta < std::chrono::microseconds(16667)) { // 60FPS
-            std::this_thread::sleep_for(
-                std::chrono::microseconds(16667) - delta
-            );
-        }
-        lastTime = std::chrono::steady_clock::now();
-
+        static int var = 0; int processed = 0;
+        TaskQueue::ProcTasks(processed); // 任务处理
+    
 
         BeginFrame(camera);    // 开始帧
         HandleInput(window);    // 输入管理
@@ -39,9 +23,6 @@ void MainLoop(WIN, CAM) {
         RenderScene(window, camera);
         EndFrameHandling(window);
 
-        std::cout << "当前活动纹理数: " << TextureLoader::s_TexturePool.size() << " 活动模型数: " << MODEL_POINTERS.size() << "\n";
-        var++;
-        std::cout << "[断点] 当前状态是第" << var << "次循环" << std::endl;
     }
 }
 
@@ -79,6 +60,7 @@ void HandleWindowSettings(WIN) {
 
 // 渲染场景
 void RenderScene(WIN, CAM) {
+
     Window::UpdateWindowSize(window);
 
 /* ------应用模型着色器------ */
@@ -87,7 +69,11 @@ void RenderScene(WIN, CAM) {
     MODEL_SHADER->ApplyCamera(*camera, Window::GetAspectRatio());
     // 到模型
     for(auto* thisModel : MODEL_POINTERS) {
-        // thisModel->Draw(*MODEL_SHADER);
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // 线框模式
+        thisModel->Draw(*MODEL_SHADER);
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+        // 视椎体裁剪判断
         if (thisModel->IsReady() &&
             camera->isSphereVisible(thisModel->bounds.Center, thisModel->bounds.Rad)
         ) { thisModel->Draw(*MODEL_SHADER); }

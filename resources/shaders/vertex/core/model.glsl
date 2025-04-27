@@ -8,14 +8,15 @@ layout (location = 2) in vec2 aTexCoords;
 
 uniform mat4 projection;
 uniform mat4 view;
+uniform mat4 model;
 
 out vec3 FragPos;
 out vec3 Normal;
 out vec2 TexCoords;
 
 void main() {
-    FragPos = aPos;
+    FragPos = vec3(model * vec4(aPos, 1.0)); // 转换为世界坐标;
     Normal = aNormal;
     TexCoords = aTexCoords;
-    gl_Position = projection * view * vec4(aPos, 1.0);
+    gl_Position = projection * view * model * vec4(aPos, 1.0);
 }
