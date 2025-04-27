@@ -7,7 +7,6 @@
 #include <functional>
 #include <format>
 
-
 namespace CubeDemo {
 
 struct ImageData;
@@ -19,13 +18,15 @@ class TextureLoader : public Texture {
 public:
 
     //------------------------ 核心接口 ------------------------//
-    // 创建纹理（异步）
-    static TexturePtr Create(const string& path, const string& type);
-    
-    // 同步创建纹理（仅调试用）
+
+    // 创建+同步加载纹理（调试专用）
     static TexturePtr CreateSync(const string& path, const string& type);
-    // 异步加载
+    // 仅创建纹理（异步）
+    static TexturePtr Create(const string& path, const string& type);
+    // 仅加载纹理（异步）
     static void LoadAsync(const string& path, const string& type, TexLoadCallback cb);
+    // 仅同步加载纹理（调试专用）
+    static TexturePtr LoadSync(const string& path, const string& type);
 
     //------------------------ 统计信息 ------------------------//
     inline static std::atomic<int32_t> s_TextureAliveCount{0};  // 存活纹理计数

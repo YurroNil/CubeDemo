@@ -2,6 +2,7 @@
 
 // 项目头文件
 #include "resources/imageData.h"
+#include "resources/placeHolder.h"
 // 标准库
 #include "utils/fileSystemKits.h"
 
@@ -16,17 +17,16 @@ std::mutex TextureLoader::s_TextureMutex;
 
 
 TexturePtr TextureLoader::Create(const string& path, const string& type) {
-    // 第一层无锁检查
-    if(auto cached = TryGetCached(path); cached) {
-        return cached;
-    }
+    
+    std::lock_guard lock(s_TextureMutex); // 全程加锁
+    
+    // 直接检查有效纹理
+    auto it = s_TexturePool.find(path); auto tex = it->second.lock();
+    if(it != s_TexturePool.end() && tex->State == LoadState::Ready){ return tex; }
 
-    std::lock_guard lock(s_TextureMutex);
-    if (auto it = s_TexturePool.find(path); it != s_TexturePool.end()) {
-        if (auto tex = it->second.lock()) {
-            return tex->m_Valid.load() ? tex : nullptr;
-        }
-    }
+    // 无锁检查
+    if(auto cached = TryGetCached(path); cached) { return cached; }
+
 
     // 创建占位符
     auto placeholder = Create(path, type);
@@ -49,6 +49,7 @@ TexturePtr TextureLoader::TryGetCached(const string& path) {
 
 // 异步加载纹理
 void TextureLoader::LoadAsync(const string& path, const string& type, TexLoadCallback cb) {
+    std::cout << "[Load] 提交加载任务: " << path << " 提交线程: " << std::this_thread::get_id() << std::endl;
 
     s_ActiveLoads.fetch_add(1);
     auto imageData = ImageData::Load(path); // 返回shared_ptr
@@ -64,6 +65,55 @@ void TextureLoader::LoadAsync(const string& path, const string& type, TexLoadCal
             cb(tex);
         }, true);
     });
+}
+
+// 同步加载纹理（调试专用）
+TexturePtr TextureLoader::LoadSync(const string& path, const string& type) {
+    // 第一层带锁缓存检查
+    {
+        std::lock_guard lock(s_TextureMutex);
+        if(auto it = s_TexturePool.find(path); it != s_TexturePool.end()) {
+            if(auto tex = it->second.lock()) {
+                if(tex->State == LoadState::Ready) return tex;
+                if(tex->State == LoadState::Failed) return nullptr;
+            }
+        }
+    }
+
+    // 同步加载流程
+    try {
+        // 加载图像数据
+        auto imageData = ImageData::Load(path);
+        
+        // 在主线程执行OpenGL操作
+        TexturePtr tex;
+        if(TaskQueue::IsMainThread()) {
+            tex = CreateFromData(imageData, path, type);
+        } else {
+            tex = TaskQueue::PushTaskSync([&]{
+                return CreateFromData(imageData, path, type);
+            });
+        }
+
+        // 更新状态
+        std::lock_guard lock(s_TextureMutex);
+        s_TexturePool[path] = tex;
+        tex->State.store(LoadState::Ready);
+         // 添加状态验证
+        if (tex->State != Texture::LoadState::Ready) {
+            throw std::runtime_error("纹理最终状态异常: " + path);
+        }
+        return tex;
+    } 
+    catch(const std::exception& e) {
+        // 失败处理
+        std::cerr << "[SyncLoad] 加载失败 " << path << ": " << e.what() << "\n";
+        
+        // 创建占位符
+        auto placeholder = PlaceHolder::Create(path, type);
+        placeholder->State.store(LoadState::Failed);
+        return nullptr;
+    }
 }
 
 TexturePtr TextureLoader::CreateFromData(ImageDataPtr data, const string& path, const string& type) {

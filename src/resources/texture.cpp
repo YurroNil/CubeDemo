@@ -1,14 +1,10 @@
 // src/resources/texture.cpp
 
-// 标准库
-
-// 项目头文件
 #include "resources/texture.h"
 #include "utils/glfwKits.h"
 #include "threads/taskQueue.h"
 
 namespace CubeDemo {
-
 
 Texture::Texture() 
     : ID(0), 

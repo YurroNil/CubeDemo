@@ -20,4 +20,6 @@ void main() {
     }
     
     FragColor = diffuse;
+    // 临时调试：强制将模型变成红色
+    //FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 }

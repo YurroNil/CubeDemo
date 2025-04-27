@@ -11,6 +11,7 @@ class ModelLoader : public ModelData {
 public:
     ModelLoader(const string& path);
     void LoadAsync(ModelLoadCallback cb); // 模型加载回调
+    void LoadSync(ModelLoadCallback cb); // 同步加载模型（调试专用）
     bool IsReady() const;
 
 };

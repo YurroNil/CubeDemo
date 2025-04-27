@@ -3,7 +3,6 @@
 #pragma once
 #include "threads/taskQueue.h"
 #include "core/window.h"
-#include <future>
 
 namespace CubeDemo {
 

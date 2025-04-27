@@ -4,7 +4,7 @@
 #include "cleanup.h"
 
 int main() {
-    CubeDemo::ResourceLoader::Init(2);
+    CubeDemo::ResourceLoader::Init(1);
     
     // 程序初始化
     GLFWwindow* window = CubeDemo::Init();

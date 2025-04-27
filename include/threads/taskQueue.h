@@ -15,9 +15,9 @@ class TaskQueue {
 public:
     // 记录运行状态
     static std::atomic<bool> s_Running;
-    
+
     // 静态方法
-    static void ProcTasks();
+    static void ProcTasks(int& processed);
     static void AddTasks(std::function<void()> task, bool isHighPriority);
     static bool IsMainThread();
 
@@ -37,7 +37,7 @@ public:
         auto promise = std::make_shared<std::promise<R>>();
         auto future = promise->get_future();
         
-        AddTasks([promise, func = std::forward<Func>(func)]() mutable {
+        TaskQueue::AddTasks([promise, func = std::forward<Func>(func)]() mutable {
             try {
                 if constexpr (std::is_void_v<R>) {
                     func();

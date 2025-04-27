@@ -34,7 +34,7 @@ public:
     Frustum GetFrustum(float aspect) const;
     bool isSphereVisible(const vec3& center, float radius) const;
 
-/* Procors and Actions */
+/* Proceesors and Actions */
     void ProcKeyboard(int directCase, float deltaTime);
     void ProcMouseMovement(float xoffset, float yoffset, bool constrainPitch);
     void ProcMouseScroll(float yoffset);

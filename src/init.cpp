@@ -8,6 +8,7 @@ namespace CubeDemo {
 
 std::vector<Model*> MODEL_POINTERS;
 Shader* MODEL_SHADER;
+bool DEBUG_ASYNC_MODE = false;
 
 GLFWwindow* Init() {
     if (!glfwInit()) {
@@ -23,7 +24,7 @@ GLFWwindow* Init() {
     UIMng::Init();
 
     Camera* camera = new Camera(
-        vec3(0.5f, 3.0f, 3.0f),
+        vec3(0.5f, 0.5f, 3.0f),
         vec3(0.0f, 1.0f, 0.0f),
         -90.0f,
         0.0f
@@ -48,18 +49,19 @@ try {
     
     std::atomic<bool> modelLoaded{false};
     Model* sample_model = new Model(sampleModelData[0]);
-    // 异步加载模型
-    sample_model->LoadAsync([&]{
-        modelLoaded.store(true);
-    });
+    
+    if (DEBUG_ASYNC_MODE == true) { sample_model->LoadAsync([&]{ modelLoaded.store(true); }); } // 加载模型（异步模式）
+    else { sample_model->LoadSync([&]{ modelLoaded.store(true); }); } // 加载模型（同步模式）
 
     while(!modelLoaded.load()) {
-
-        TaskQueue::ProcTasks();
+        int processed = 0; TaskQueue::ProcTasks(processed);
         
         // 超时机制
         static auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(3);
-        if(std::chrono::steady_clock::now() > deadline) { throw std::runtime_error("模型加载超时"); }
+
+        if(std::chrono::steady_clock::now() > deadline) {
+            throw std::runtime_error("模型加载超时");
+        }
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
 
     }

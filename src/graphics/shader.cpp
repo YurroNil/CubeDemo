@@ -3,16 +3,13 @@
 #include "graphics/shader.h"
 #include "utils/glfwKits.h"
 #include "utils/streams.h"
-using ifs = std::ifstream;
 
+using ifs = std::ifstream;
 namespace CubeDemo {
 
 string Shader::Load(const string& path) {
-    string code;
-    ifs file;
-    
+    string code; ifs file;
     file.exceptions(ifs::failbit | ifs::badbit);
-    
     // 调试
     try {
         file.open(path);
@@ -81,17 +78,19 @@ void Shader::SetFloat(const string& name, float value) {
     glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
 void Shader::SetInt(const string& name, int value) const {
-        glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+    glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }
 
 void Shader::ApplyCamera(const Camera& camera, float aspectRatio) const {
     mat4 projection = glm::perspective(
         glm::radians(camera.attribute.zoom),
         aspectRatio,    // 使用宽高比而不是固定分辨率
-        0.1f, 100.0f
+        camera.frustumPlane.near,
+        camera.frustumPlane.far
     );
     SetMat4("projection", projection);
     SetMat4("view", camera.GetViewMat());
+    
 }
 
 }

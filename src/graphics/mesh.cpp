@@ -3,8 +3,10 @@
 #include "glad/glad.h"
 #include "utils/stringsKits.h"
 #include "graphics/mesh.h"
+#include <iostream>
 
 namespace CubeDemo {
+extern bool DEBUG_ASYNC_MODE;
 
 Mesh::Mesh(const VertexArray& vertices, const std::vector<unsigned>& indices, const TexPtrArray& textures) 
     : indexCount(indices.size()) {
@@ -42,18 +44,34 @@ Mesh::Mesh(const VertexArray& vertices, const std::vector<unsigned>& indices, co
     glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
 
     glBindVertexArray(0);
+
+    std::cout << "\n=== 创建OpenGL资源 ===" << "\nVAO: " << VAO << "\nVBO: " << VBO << "\nEBO: " << EBO << "\n顶点数: " << vertices.size() << "\n索引数: " << indices.size() << "\n纹理数: " << textures.size() << std::endl;
+
+    // 添加OpenGL错误检查
+    GLenum err;
+    while((err = glGetError()) != GL_NO_ERROR) {
+        std::cerr << "[OpenGL错误] 在Mesh构造函数中: 0x" << std::hex << err << std::dec << std::endl;
+    }
+
 }
 
 void Mesh::UpdateTextures(const TexPtrArray& newTextures) {
-    std::lock_guard lock(m_TextureMutex);
+    if(DEBUG_ASYNC_MODE) { std::lock_guard lock(m_TextureMutex); }
     m_textures = newTextures;
 }
 
 void Mesh::Draw(Shader& shader) const {
-    unsigned int diffuseNr = 1;
-    unsigned int specularNr = 1;
+    // std::cout << "\n[绘制调用] VAO: " << VAO << " | 索引数: " << indexCount << " | 纹理数: " << m_textures.size() << std::endl;
+
+    // 检查VAO有效性
+    if(VAO == 0) {
+        std::cerr << "[错误] 无效的VAO!" << std::endl;
+        return;
+    }
+
+    unsigned int diffuseNr = 1, specularNr = 1;
     
-    for (size_t i = 0; i < m_textures.size(); i++) {
+    for (size_t i = 0; i < m_textures.size(); ++i) {
         glActiveTexture(GL_TEXTURE0 + i);
         
         const auto& tex = m_textures[i];
@@ -66,7 +84,7 @@ void Mesh::Draw(Shader& shader) const {
             number = std::to_string(specularNr++);
         }
         
-        shader.SetInt(("material." + name + number).c_str(), i);
+        shader.SetInt((name + number).c_str(), i);
         tex->Bind(i);
     }
     
@@ -75,6 +93,12 @@ void Mesh::Draw(Shader& shader) const {
     glBindVertexArray(0);
     
     glActiveTexture(GL_TEXTURE0);
+    // 绘制后检查错误
+    GLenum err;
+    while((err = glGetError()) != GL_NO_ERROR) {
+        std::cerr << "[OpenGL错误] 绘制后: 0x" << std::hex << err << std::dec << std::endl;
+    }
+
 }
 
 void Mesh::ReleaseGLResources() {
