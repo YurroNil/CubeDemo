@@ -13,7 +13,6 @@ struct BoundingSphere {
 // ModelData结构体
 struct ModelData : public MaterialData {
     ModelData(const string& path);
-
     BoundingSphere bounds; MeshArray m_meshes; const string Rawpath;
     // 异步加载状态
     std::atomic<bool> m_IsLoading{false}; std::atomic<bool> m_MeshesReady{false};
@@ -23,7 +22,6 @@ struct ModelData : public MaterialData {
 
 private:
     mat4 m_ModelMatrix{mat4(1.0f)};
-    
     void ProcNode(aiNode* node, const aiScene* scene);
     Mesh ProcMesh(aiMesh* mesh, const aiScene* scene);
 

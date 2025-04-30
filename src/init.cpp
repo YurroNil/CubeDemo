@@ -8,7 +8,7 @@ namespace CubeDemo {
 
 std::vector<Model*> MODEL_POINTERS;
 Shader* MODEL_SHADER;
-bool DEBUG_ASYNC_MODE = false;
+bool DEBUG_ASYNC_MODE = true;
 
 GLFWwindow* Init() {
     if (!glfwInit()) {
@@ -62,8 +62,9 @@ try {
         if(std::chrono::steady_clock::now() > deadline) {
             throw std::runtime_error("模型加载超时");
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(5));
 
+        // 事件驱动等待
+        if (processed == 0) { std::this_thread::yield(); }
     }
 
     MODEL_POINTERS.push_back(sample_model);

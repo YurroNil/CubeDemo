@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include "threads/taskQueue.h"
+#include "threads/diagnostic.h"
 
 namespace CubeDemo {
 constexpr int MAX_TASKS_PER_PROCESS = 100; // 处理限制
@@ -19,7 +20,6 @@ void TaskQueue::ProcTasks(int& processed) {
         task();
     }
 }
-
 // 发出任务指令
 void TaskQueue::AddTasks(std::function<void()> task, bool isHighPriority) {
     s_MainThreadQueue.Push(std::move(task), isHighPriority);
@@ -27,38 +27,40 @@ void TaskQueue::AddTasks(std::function<void()> task, bool isHighPriority) {
 }
 // 任务优先级处理
 void TaskQueue::Push(Task task, bool isHighPriority) {
+    auto& diag = Diagnostic::Get();
     {
-        std::cout << "[断点1]" << std::endl;
-
         std::lock_guard lock(mutex_);
-        // 修改为双端队列实现优先级
-        if(isHighPriority) {
-            queue_.emplace_front(std::move(task));  // 任务放到队头
-            std::cout << "[断点2]" << std::endl;
-        } else {
-            queue_.emplace_back(std::move(task));   // 任务放到队尾
-            std::cout << "[断点3]" << std::endl;
-        }
-        lastEnqueueTime_ = std::chrono::steady_clock::now();
-        std::cout << "[DEBUG] 添加任务，当前队列: " << queue_.size()+1 << std::endl;
+
+        if(isHighPriority) queue_.push_front(std::move(task));
+        else queue_.push_back(std::move(task));
+        
+
+        diag.stats.tasksQueued = queue_.size();
+        std::cout << "[TASK] 添加任务 类型:" << typeid(task).name()<< " 优先级:" << (isHighPriority ? "高" : "低") << " 队列深度:" << queue_.size() << "\n";
     }
-    condition_.notify_all();// 通知所有的等待线程
-    std::cout << "[断点4]" << std::endl;
+    condition_.notify_all(); // 必须使用notify_all
 }
 
 Task TaskQueue::Pop() {
-     std::unique_lock lock(mutex_);
+    auto& diag = Diagnostic::Get();
+
+    std::unique_lock lock(mutex_);
     
-    // 主动轮询代替被动等待
-    for(int retry=0; retry<3; ++retry){
-        if(!queue_.empty()) {
-            Task task = std::move(queue_.front());
-            queue_.pop_front();
-            return task;
-        }
-        lock.unlock();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1)); // 避免忙等待
-        lock.lock();
+    // 记录队列压力
+    diag.stats.tasksQueued = queue_.size();
+
+    // 使用条件变量+超时双重机制
+    condition_.wait_for(lock, std::chrono::milliseconds(100), [&]{
+        return !queue_.empty() || !s_Running;
+    });
+    
+    if(!s_Running) return nullptr;
+    
+    if(!queue_.empty()){
+        Task task = std::move(queue_.front());
+        queue_.pop_front();
+        std::cout << "[QUEUE] 取出任务，剩余: " << queue_.size() << "\n";
+        return task;
     }
     return nullptr;
 }
@@ -82,4 +84,10 @@ void TaskQueue::Shutdown() {
     while(!queue_.empty()) queue_.pop_front();
     condition_.notify_all();
 }
+
+size_t TaskQueue::GetQueueSize() const {
+    std::lock_guard<std::mutex> lock(mutex_);
+    return queue_.size();
+}
+
 }   // namespace CubeDemo

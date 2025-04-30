@@ -28,19 +28,14 @@ TexPtrArray MaterialData::LoadTex(aiMaterial* mat, aiTextureType type, const str
     context->outputTextures = &textures;
     context->pendingCount.store(textureCount);
 
-    std::cout << "[断点D]" << std::endl;
-
     for(unsigned i=0; i<textureCount; ++i) {
         aiString str;
         mat->GetTexture(type, i, &str);
         
         string path = this->Directory + "/textures/" + fs::path(str.C_Str()).filename().string();
 
-        std::cout << "[断点E]" << std::endl;
-
         TextureLoader::LoadAsync(path, typeName, [context, path](TexturePtr tex) {
 
-            std::cout << "[断点J]" << std::endl;
             std::lock_guard<std::mutex> lock(context->mutex);
 
             // 处理各种加载状态
@@ -62,13 +57,17 @@ TexPtrArray MaterialData::LoadTex(aiMaterial* mat, aiTextureType type, const str
                 }
             }
             
-            // 原子递减并检查是否是最后一个任务
-            if(context->pendingCount.fetch_sub(1) == 1) {
-                *context->outputTextures = std::move(context->loadedTextures);
+            // 无论成功失败都记录
+            context->loadedTextures.push_back(tex);
+            // 原子操作保证精确计数
+            int remaining = context->pendingCount.fetch_sub(1) - 1;
+            if(remaining == 0){
+                // 双重检查防止漏通知
+                std::lock_guard lock(context->mutex);
+                *context->outputTextures = context->loadedTextures;
                 context->completionPromise.set_value();
+                std::cout << "[TEXTURE] 全部纹理加载完成: " << path << "\n";
             }
-            std::cout << "[断点Z]" << std::endl;
-
         });
     }
     // 等待逻辑
@@ -88,7 +87,6 @@ void MaterialData::ProcMaterial(aiMesh* &mesh, const aiScene* &scene, TexPtrArra
 
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-    std::cout << "[断点C]" << std::endl;
     // 漫反射贴图
     auto diffuseMaps = LoadTex(material, aiTextureType_DIFFUSE, "texture_diffuse");
 
@@ -96,7 +94,6 @@ void MaterialData::ProcMaterial(aiMesh* &mesh, const aiScene* &scene, TexPtrArra
         diffuseMaps = LoadTex(material, aiTextureType_BASE_COLOR, "texture_diffuse");
     }  
     textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-
 
     // 加载反射贴图
     auto reflectionMaps = LoadTex(material, aiTextureType_REFLECTION, "texture_reflection");
@@ -115,12 +112,9 @@ void MaterialData::ProcMaterial(aiMesh* &mesh, const aiScene* &scene, TexPtrArra
 
     // 环境光遮蔽（map_Ka）
     auto aoMaps = LoadTex(material, aiTextureType_AMBIENT, "texture_ao");
-
     textures.insert(textures.end(), aoMaps.begin(), aoMaps.end());
 
-    std::cout << "[断点END]" << std::endl;
 }
-
 
 /* ---------调试专用--------- */
 

@@ -2,7 +2,7 @@
 
 #pragma once
 #include "threads/taskQueue.h"
-#include "core/window.h"
+#include "threads/diagnostic.h"
 
 namespace CubeDemo {
 
@@ -10,6 +10,7 @@ class ResourceLoader {
 public:
     static void Init(int ioThreads = 2);
     static void Shutdown();
+    static void RunningLoop(Diagnostic& diag, const std::thread::id& tid);
 
     // CPU任务
     template<typename F>
@@ -18,12 +19,8 @@ public:
         using result_type = decltype(f());
         auto promise = std::make_shared<std::promise<result_type>>();
 
-        std::cout << "[断点G]" << std::endl;
-
         // 执行TaskQueue::Push()
         s_IOQueue.Push([promise, func = std::forward<F>(f)]() mutable {
-            
-            std::cout << "[断点H]" << std::endl;
             try {
                 if constexpr (std::is_void_v<result_type>) {
                     func(); promise->set_value(); }
