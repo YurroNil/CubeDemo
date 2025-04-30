@@ -1,15 +1,11 @@
 // src/threads/textureLoader.cpp
 
 // 项目头文件
-#include "resources/imageData.h"
 #include "resources/placeHolder.h"
 // 标准库
 #include "utils/fileSystemKits.h"
 
 namespace CubeDemo {
-extern void TrackGLObj(GLuint id, const string& type);
-extern void UntrackGLObj(GLuint id);
-
 
 // 静态成员初始化
 TexPtrHashMap TextureLoader::s_TexturePool;
@@ -49,21 +45,32 @@ TexturePtr TextureLoader::TryGetCached(const string& path) {
 
 // 异步加载纹理
 void TextureLoader::LoadAsync(const string& path, const string& type, TexLoadCallback cb) {
-    std::cout << "[Load] 提交加载任务: " << path << " 提交线程: " << std::this_thread::get_id() << std::endl;
+
+    auto& diag = Diagnostic::Get();
+    std::cout << "[TEXTURE] 提交异步加载 路径:" << path << " 提交线程:" << std::this_thread::get_id() << "\n";
 
     s_ActiveLoads.fetch_add(1);
-    auto imageData = ImageData::Load(path); // 返回shared_ptr
 
-    std::cout << "[断点F]" << std::endl;
+    // 记录加载状态, 标记为进行中
+    diag.stats.texturesLoaded--;
 
     ResourceLoader::EnqueueIOJob([=]() mutable {
-        std::cout << "[断点I]" << std::endl;
+
+try {
+        auto imageData = ImageData::Load(path); // 返回shared_ptr
+
+        std::cout << "[TEXTURE] 开始IO加载 路径:" << path << " 处理线程:" << std::this_thread::get_id() << "\n";
 
         // 将GL操作提交到主线程队列（非阻塞）
         TaskQueue::AddTasks([imageData, path, type, cb]() {
+
             auto tex = CreateFromData(imageData, path, type);
+            std::cout << "[TEXTURE] 完成加载回调 路径:" << path << " 状态:" << static_cast<int>(tex->State.load()) << "\n";
             cb(tex);
         }, true);
+}   catch(...) {
+        std::cerr << "[TEXTURE] IO加载失败 路径:" << path << "\n";
+    }
     });
 }
 
@@ -117,8 +124,15 @@ TexturePtr TextureLoader::LoadSync(const string& path, const string& type) {
 }
 
 TexturePtr TextureLoader::CreateFromData(ImageDataPtr data, const string& path, const string& type) {
+    auto& diag = Diagnostic::Get();
+    // 确保在主线程创建
+    if(!TaskQueue::IsMainThread()){ throw std::runtime_error("OpenGL资源必须在主线程创建!"); }
     // 参数验证
     if(!data || !data->data) { throw std::runtime_error("无效的纹理数据: " + path); }
+
+try {
+    // 记录创建过程
+    std::cout << "[TEXTURE] 开始创建GL纹理 路径:" << path << " 尺寸:" << data->width << "x" << data->height << "\n";
 
     auto tex = TexturePtr(new Texture());
     tex->Path = path;
@@ -127,9 +141,8 @@ TexturePtr TextureLoader::CreateFromData(ImageDataPtr data, const string& path, 
     GLuint tempID;
     glGenTextures(1, &tempID);
     tex->ID.store(tempID); // 使用原子存储
-    TrackGLObj(tex->ID, "Texture");
     glBindTexture(GL_TEXTURE_2D, tempID);
-
+    
     GLenum format = GL_RGBA;
     switch(data->channels) {
         case 1: format = GL_RED;  break;
@@ -150,7 +163,14 @@ TexturePtr TextureLoader::CreateFromData(ImageDataPtr data, const string& path, 
     std::lock_guard lock(s_TextureMutex);
     s_TexturePool[path] = tex;
     tex->State.store(LoadState::Ready);
+
     return tex;
+
+} catch(...) {
+    std::cerr << "[TEXTURE] 创建失败 路径:" << path << "\n";
+    throw;
+}
+
 }
 
 // 暂无使用. 作为备份/进度回溯使用

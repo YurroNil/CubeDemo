@@ -10,7 +10,6 @@
 namespace CubeDemo {
 using Task = std::function<void()>;
 
-
 class TaskQueue {
 public:
     // 记录运行状态
@@ -27,6 +26,7 @@ public:
     bool Empty() const;
     float GetQueuePressure() const;
     void Shutdown();
+    size_t GetQueueSize() const;
     
     // 无返回值重载
     template<typename Func>

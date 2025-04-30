@@ -18,7 +18,6 @@ class TextureLoader : public Texture {
 public:
 
     //------------------------ 核心接口 ------------------------//
-
     // 创建+同步加载纹理（调试专用）
     static TexturePtr CreateSync(const string& path, const string& type);
     // 仅创建纹理（异步）
@@ -34,7 +33,6 @@ public:
     //------------------------ 静态资源 ------------------------//
     static TexPtrHashMap s_TexturePool;   // 纹理资源池
     static std::mutex s_TextureMutex;     // 资源池互斥锁
-
     static TexturePtr CreateFromData(ImageDataPtr data, const string& path, const string& type);
 
 
@@ -42,7 +40,6 @@ private:
     //------------------------ 私有实现 ------------------------//
     
     // 核心私有方法
-
     static TexturePtr TryGetCached(const string& path);
 
     // 重试系统相关
@@ -52,9 +49,6 @@ private:
         inline static constexpr int MAX_RETRY = 3;                   ///< 最大重试次数
         inline static constexpr auto BASE_DELAY = std::chrono::milliseconds(100); ///< 基础延迟
     };
-
 };
-
-
 }   // namespace CubeDemo
 

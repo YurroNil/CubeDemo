@@ -1,6 +1,8 @@
 // include/resources/placeHolder.h
 #pragma once
 #include "resources/imageData.h"
+#include "utils/glfwKits.h"
+#include <iostream>
 namespace CubeDemo {
 
 // 占位符结构体

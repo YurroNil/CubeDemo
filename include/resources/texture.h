@@ -34,7 +34,7 @@ public:
     Texture& operator=(const Texture&) = delete;
     // 立即绑定纹理到指定纹理单元
     void Bind(unsigned int slot) const;
-
+    void MarkValid(bool valid);
 
 //------------------------ 成员变量 ------------------------//
     std::atomic<bool> m_Valid{true};     // 有效性标志（原子）

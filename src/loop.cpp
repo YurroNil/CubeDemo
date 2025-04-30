@@ -14,7 +14,6 @@ void MainLoop(WIN, CAM) {
     while (!Window::ShouldClose()) {
         static int var = 0; int processed = 0;
         TaskQueue::ProcTasks(processed); // 任务处理
-    
 
         BeginFrame(camera);    // 开始帧
         HandleInput(window);    // 输入管理
@@ -22,7 +21,6 @@ void MainLoop(WIN, CAM) {
         HandleWindowSettings(window);    // 窗口输入设置
         RenderScene(window, camera);
         EndFrameHandling(window);
-
     }
 }
 
@@ -69,16 +67,12 @@ void RenderScene(WIN, CAM) {
     MODEL_SHADER->ApplyCamera(*camera, Window::GetAspectRatio());
     // 到模型
     for(auto* thisModel : MODEL_POINTERS) {
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // 线框模式
-        thisModel->Draw(*MODEL_SHADER);
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         // 视椎体裁剪判断
         if (thisModel->IsReady() &&
             camera->isSphereVisible(thisModel->bounds.Center, thisModel->bounds.Rad)
         ) { thisModel->Draw(*MODEL_SHADER); }
     }
-
 }   // RenderScene
 
 void EndFrameHandling(WIN) {

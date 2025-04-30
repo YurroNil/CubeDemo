@@ -4,6 +4,7 @@
 #include "stb_image.h"
 // 项目头文件
 #include "threads/modelLoader.h"
+#include <iostream>
 
 namespace CubeDemo {
 extern bool DEBUG_ASYNC_MODE;
@@ -31,9 +32,7 @@ void ModelData::LoadModel(const string& path) {
 
      std::cout << "\n=== 模型加载诊断 ===" << "\n模型路径: " << path << "\n节点数量: " << scene->mRootNode->mNumChildren << "\n网格数量: " << scene->mNumMeshes << "\n材质数量: " << scene->mNumMaterials << std::endl;
 
-
     ProcNode(scene->mRootNode, scene);
-
      std::cout << "=== 加载完成 ===" << "\n总网格数: " << m_meshes.size() << "\n包围球半径: " << bounds.Rad << std::endl;
 
 /* -------计算包围球------- */
@@ -47,7 +46,7 @@ void ModelData::ProcNode(aiNode* node, const aiScene* scene) {
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
         m_meshes.push_back(std::move(ProcMesh(mesh, scene)));
     }
-    std::cout << "[断点B]" << std::endl;
+
     // 递归处理子节点
     for (unsigned i = 0; i < node->mNumChildren; i++) {
         ProcNode(node->mChildren[i], scene);

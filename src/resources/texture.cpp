@@ -21,7 +21,6 @@ Texture::~Texture() {
     //         TaskQueue::AddTasks([id = tempID]{
     //             if(glIsTexture(id)) {
     //                 glDeleteTextures(1, &id);
-    //                 UntrackGLObj(id);
     //                 }
     //         }, true);
     //     }
@@ -43,5 +42,10 @@ void Texture::Bind(unsigned int slot = 0) const {
     glBindTexture(GL_TEXTURE_2D, currentID);
 }
 
+void Texture::MarkValid(bool valid) {
+    m_Valid.store(valid, std::memory_order_release);
+    // 状态同步
+    if (!valid) State.store(LoadState::Failed);
+}
 
 }   // namespace CubeDemo

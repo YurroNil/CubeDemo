@@ -9,7 +9,6 @@
 
 namespace CubeDemo {
 extern std::vector<Model*> MODEL_POINTERS; extern Shader* MODEL_SHADER;
-extern void DumpGLResources();
 
 void Cleanup(GLFWwindow* window, Camera* camera) {
 
@@ -19,7 +18,6 @@ void Cleanup(GLFWwindow* window, Camera* camera) {
     // 等待3秒确保资源释放
     TaskQueue::PushTaskSync([]{ 
         glFinish();
-        DumpGLResources(); // 打印泄露资源
     });
 
     // 摄像机清理

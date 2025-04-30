@@ -1,5 +1,4 @@
 #include "resources/placeHolder.h"
-
 namespace CubeDemo {
 
 namespace {
