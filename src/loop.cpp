@@ -17,7 +17,7 @@ void MainLoop(WIN, CAM) {
 
         BeginFrame(camera);    // 开始帧
         HandleInput(window);    // 输入管理
-        if (!Inputs::isGamePaused) { UpdateModels(); }    // 模型渲染
+        if (!Inputs::isGamePaused) UpdateModels();    // 模型渲染
         HandleWindowSettings(window);    // 窗口输入设置
         RenderScene(window, camera);
         EndFrameHandling(window);
@@ -38,11 +38,11 @@ void HandleInput(WIN) {
     
     if ((currentTime - lastEscPressTime) > Inputs::escCoolDown) {
         lastEscPressTime = currentTime;
-        if (!Inputs::isGamePaused) { Inputs::PauseTheGame(window); }
-        else if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) { Inputs::ResumeTheGame(window); }
+        if (!Inputs::isGamePaused) Inputs::PauseTheGame(window);
+        else if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) Inputs::ResumeTheGame(window);
     }
     
-    if (!Inputs::isGamePaused) { Inputs::ProcKeyboard(window, Time::DeltaTime()); }
+    if (!Inputs::isGamePaused) Inputs::ProcKeyboard(window, Time::DeltaTime());
 }
 
 // 模型变换(如旋转)

@@ -5,6 +5,7 @@
 #include "threads/diagnostic.h"
 
 namespace CubeDemo {
+
 constexpr int MAX_TASKS_PER_PROCESS = 100; // 处理限制
 static TaskQueue s_MainThreadQueue; // 添加全局任务队列
 
@@ -21,7 +22,7 @@ void TaskQueue::ProcTasks(int& processed) {
     }
 }
 // 发出任务指令
-void TaskQueue::AddTasks(std::function<void()> task, bool isHighPriority) {
+void TaskQueue::AddTasks(Task task, bool isHighPriority) {
     s_MainThreadQueue.Push(std::move(task), isHighPriority);
     std::cout << "[Queue] 添加任务类型: " << typeid(task).name() << " 队列深度: " << sizeof(queue_) << std::endl;
 }
@@ -50,9 +51,7 @@ Task TaskQueue::Pop() {
     diag.stats.tasksQueued = queue_.size();
 
     // 使用条件变量+超时双重机制
-    condition_.wait_for(lock, std::chrono::milliseconds(100), [&]{
-        return !queue_.empty() || !s_Running;
-    });
+    condition_.wait_for(lock, millisec(100), [&]{ return !queue_.empty() || !s_Running; });
     
     if(!s_Running) return nullptr;
     
@@ -72,8 +71,8 @@ bool TaskQueue::Empty() const {
 
 float TaskQueue::GetQueuePressure() const {
     std::lock_guard lock(mutex_);
-    const auto now = std::chrono::steady_clock::now();
-    const auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+    const auto now = csclock::now();
+    const auto elapsed = std::chrono::duration_cast<millisec>(
         now - lastEnqueueTime_
     ).count();
     return queue_.size() * 1000.0f / (elapsed + 1); // +1防止除零

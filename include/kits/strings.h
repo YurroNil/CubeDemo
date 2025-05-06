@@ -1,4 +1,4 @@
-// include/utils/stringKits.h
+// include/kits/strings.h
 
 #pragma once
 #include <string>

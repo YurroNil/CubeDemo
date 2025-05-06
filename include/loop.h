@@ -1,7 +1,7 @@
 // include/loop.h
 
 #pragma once
-#include "utils/glfwKits.h"
+#include "kits/glfw.h"
 #include "core/camera.h"
 
 #define WIN GLFWwindow* window

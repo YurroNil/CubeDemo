@@ -1,22 +1,21 @@
 // include/mainProgramInc.h
 
 #pragma once
-// utils模块
-#include "utils/imguiKits.h"
-#include "utils/streams.h"
-#include "utils/stringsKits.h"
+// kits模块
+#include "kits/imgui.h"
+#include "kits/streams.h"
+#include "kits/strings.h"
 // core模块
 #include "core/window.h"
 #include "core/inputs.h"
-#include "threads/resourceLoader.h"
 // graphics模块
 #include "graphics/renderer.h"
 #include "graphics/shader.h"
 // resources模块
 #include "resources/model.h"
-// threads模块
-#include "threads/modelLoader.h"
-#include "threads/textureLoader.h"
-
+// loaders模块
+#include "loaders/model.h"
+#include "loaders/texture.h"
+#include "loaders/resource.h"
 // ui模块
 #include "ui/uiMng.h"

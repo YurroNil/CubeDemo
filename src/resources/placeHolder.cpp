@@ -1,9 +1,12 @@
 #include "resources/placeHolder.h"
+
+using millisec = std::chrono::milliseconds;
+
 namespace CubeDemo {
 
 namespace {
     constexpr int MAX_RETRY = 3;
-    constexpr std::chrono::milliseconds RETRY_BASE_DELAY{100};
+    constexpr millisec RETRY_BASE_DELAY{100};
     std::unordered_map<string, int> s_RetryCounters;
     std::mutex s_RetryMutex;
 }
@@ -24,13 +27,13 @@ TexturePtr PlaceHolder::Create(const string& path, const string& type) {
 void PlaceHolder::ScheAsyncLoad(const string& path, const string& type, TexturePtr placeholder) {
     s_ActiveLoads.fetch_add(1, std::memory_order_relaxed);
     
-    ResourceLoader::EnqueueIOJob([=, self = placeholder]() mutable {
+    RL::EnqueueIOJob([=, self = placeholder]() mutable {
         try {
-            auto imageData = ImageData::Load(path);
+            auto image_data = IL::Load(path);
             TaskQueue::AddTasks([=, self = std::move(self)] {
                 if(!self->m_Valid.load(std::memory_order_acquire)) return;
                 
-                auto realTex = CreateFromData(imageData, path, type);
+                auto realTex = CreateFromData(image_data, path, type);
                 FinalizeTex(self, realTex);
                 s_ActiveLoads.fetch_sub(1, std::memory_order_relaxed);
             }, true);

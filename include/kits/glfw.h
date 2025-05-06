@@ -1,4 +1,4 @@
-// include/utils/glfwKits.h
+// include/kits/glfw.h
 #pragma once
 
 #include "glad/glad.h"

@@ -1,4 +1,4 @@
-// include/utils/assimpKits.h
+// include/kits/assimp.h
 #pragma once
 
 #include "assimp/Importer.hpp"

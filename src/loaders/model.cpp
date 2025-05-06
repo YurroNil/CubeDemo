@@ -1,20 +1,21 @@
-// src/resources/modelData.cpp
+// src/loaders/model.cpp
 
-// 第三方库
-#include "stb_image.h"
-// 项目头文件
-#include "threads/modelLoader.h"
-#include <iostream>
+#include "loaders/model.h"
+// 标准库
+#include "kits/streams.h"
 
+using MaL = CubeDemo::Loaders::Material;
+using ML = CubeDemo::Loaders::Model;
 namespace CubeDemo {
 extern bool DEBUG_ASYNC_MODE;
 
-// ModelData类方法实现
-ModelData::ModelData(const string& path) : MaterialData(), Rawpath(path) {
+
+ML::Model(const string& path) : Rawpath(path) {
     Directory = path.substr(0, path.find_last_of('/'));
 }
 
-void ModelData::LoadModel(const string& path) {
+
+void ML::LoadModel(const string& path) {
 /* -------模型加载------- */
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path, 
@@ -40,7 +41,7 @@ void ModelData::LoadModel(const string& path) {
 
 }
 
-void ModelData::ProcNode(aiNode* node, const aiScene* scene) {
+void ML::ProcNode(aiNode* node, const aiScene* scene) {
     // 处理当前节点的所有网格
     for (unsigned i = 0; i < node->mNumMeshes; i++) {
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
@@ -53,9 +54,9 @@ void ModelData::ProcNode(aiNode* node, const aiScene* scene) {
     }
 }
 
-Mesh ModelData::ProcMesh(aiMesh* mesh, const aiScene* scene) {
+Mesh ML::ProcMesh(aiMesh* mesh, const aiScene* scene) {
     VertexArray vertices;
-    std::vector<unsigned> indices;
+    UnsignedArray indices;
     TexPtrArray textures;
     
     // 处理顶点数据
@@ -95,8 +96,8 @@ Mesh ModelData::ProcMesh(aiMesh* mesh, const aiScene* scene) {
     // 处理材质
      if (mesh->mMaterialIndex >= 0 && mesh->mMaterialIndex < scene->mNumMaterials) {
 
-        if (DEBUG_ASYNC_MODE == true) { MaterialData::ProcMaterial(mesh, scene, textures); } // 异步处理材质
-        else { MaterialData::ProcMaterialSync(mesh, scene, textures); } // 同步处理材质（调试专用）
+        MaL::ProcMaterial(mesh, scene, textures, DEBUG_ASYNC_MODE);
+
         std::cout << "[材质处理] 完成，加载纹理数: " << textures.size() << std::endl;
     } else {
         std::cerr << "无效材质索引: " << mesh->mMaterialIndex << "/" << scene->mNumMaterials << std::endl;
@@ -106,7 +107,7 @@ Mesh ModelData::ProcMesh(aiMesh* mesh, const aiScene* scene) {
 }
 
 // 渲染循环中绘制模型
-void ModelData::Draw(Shader& shader) {
+void ML::Draw(Shader& shader) {
     shader.SetMat4("model", m_ModelMatrix);
 
     if(m_IsLoading.load()) return; // 加载中不绘制
@@ -114,32 +115,45 @@ void ModelData::Draw(Shader& shader) {
     for (auto& mesh : m_meshes) { mesh.Draw(shader); }
 }
 
-// 计算包围球
-void BoundingSphere::Calc(const MeshArray& meshes) {
-    if (meshes.empty()) {
-        Center = vec3(0.0f);
-        Rad = 0.0f;
-        return;
-    }
-    // 计算AABB
-    vec3 minVert(FLT_MAX), maxVert(-FLT_MAX);
-    for (const auto& mesh : meshes) {
-        for (const auto& vert : mesh.Vertices) {
-            minVert = glm::min(minVert, vert.Position);
-            maxVert = glm::max(maxVert, vert.Position);
-        }
-    }
-    // 中心点计算
-    Center = (minVert + maxVert) * 0.5f;
-    
-    // 计算最大半径
-    float maxDist = 0.0f;
-    for (const auto& mesh : meshes) {
-        for (const auto& vert : mesh.Vertices) {
-            maxDist = glm::max(maxDist, glm::length(vert.Position - Center));
-        }
-    }
-    Rad = maxDist;
+
+// 异步加载模型
+void ML::LoadAsync(ModelLoadCallback cb) {
+    m_IsLoading = true;
+    RL::EnqueueIOJob([this, cb]{
+
+        std::cout << "\n---[ModelAsyncLoader] 开始加载模型..." << std::endl;
+        this->LoadModel(Rawpath);
+        std::cout << "---[ModelAsyncLoader] 加载模型结束" << std::endl;
+        
+        TaskQueue::AddTasks([this, cb]{
+            // 通知所有网格更新纹理引用
+            ML::m_MeshesReady.store(true, std::memory_order_release);
+
+            for(auto& mesh : m_meshes) mesh.UpdateTextures(mesh.m_textures);
+
+            m_IsLoading = false; cb();
+        }, true);
+    });
 }
 
-}   // namespace CubeDemo
+// 同步加载模型（调试专用）
+void ML::LoadSync(ModelLoadCallback cb) {
+    m_IsLoading = true;
+    std::cout << "\n---[模型加载器] 使用同步加载模式加载模型..." << std::endl;
+
+    this->LoadModel(Rawpath);
+    
+    TaskQueue::AddTasks([this, cb]{
+        // 通知所有网格更新纹理引用
+        ML::m_MeshesReady.store(true, std::memory_order_release);
+        for(auto& mesh : m_meshes) mesh.UpdateTextures(mesh.m_textures);
+        
+        m_IsLoading = false;
+        cb();
+    }, true);
+    std::cout << "---[模型加载器] 加载模型结束" << std::endl;
+}
+
+bool ML::IsReady() const { return ML::m_MeshesReady.load(std::memory_order_acquire); }
+
+} // namespace CubeDemo

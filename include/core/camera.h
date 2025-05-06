@@ -1,7 +1,7 @@
 // include/core/camera.h
 
 #pragma once
-#include "utils/glmKits.h"
+#include "kits/glm.h"
 
 namespace CubeDemo {
 

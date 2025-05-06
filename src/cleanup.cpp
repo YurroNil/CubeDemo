@@ -1,11 +1,11 @@
 // src/cleanup.cpp
 #include <iostream>
-#include "utils/imguiKits.h"
+#include "kits/imgui.h"
 
 #include "cleanup.h"
 #include "resources/model.h"
 #include "core/window.h"
-#include "threads/resourceLoader.h"
+#include "loaders/resource.h"
 
 namespace CubeDemo {
 extern std::vector<Model*> MODEL_POINTERS; extern Shader* MODEL_SHADER;
@@ -13,7 +13,7 @@ extern std::vector<Model*> MODEL_POINTERS; extern Shader* MODEL_SHADER;
 void Cleanup(GLFWwindow* window, Camera* camera) {
 
     // 确保资源释放顺序
-    ResourceLoader::Shutdown(); // 先关闭资源加载器
+    RL::Shutdown(); // 先关闭资源加载器
     
     // 等待3秒确保资源释放
     TaskQueue::PushTaskSync([]{ 

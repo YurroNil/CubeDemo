@@ -11,6 +11,11 @@
 │     ├── resources/ (资源模块)
 │     │    └── model, texture
 │     │
+│     ├── threads/ (线程模块)
+│     │    └── diagnostic, loaders, taskQueue
+│     │    └── loaders/
+│     │         └── material, model, resource, texture
+│     │
 │     ├── ui/ (UI模块)
 │     │    └── monitor, uiMng
 │     │

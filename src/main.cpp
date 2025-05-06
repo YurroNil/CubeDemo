@@ -4,11 +4,11 @@
 #include "cleanup.h"
 
 int main() {
-    CubeDemo::ResourceLoader::Init(2);
+    RL::Init(1);
     
     // 程序初始化
     GLFWwindow* window = CubeDemo::Init();
-    CubeDemo::Camera* camera = CubeDemo::Camera::GetCamera(); // 加载摄像机的指针
+    CMR* camera = CMR::GetCamera(); // 加载摄像机的指针
 
     // 程序主循环 (包含渲染循环)
     CubeDemo::MainLoop(window, camera);

@@ -5,7 +5,7 @@
 #include <mutex>
 #include <unordered_map>
 #include <memory>
-#include "utils/stringsKits.h"
+#include "kits/strings.h"
 
 
 namespace CubeDemo {
@@ -36,11 +36,11 @@ public:
     void Bind(unsigned int slot) const;
     void MarkValid(bool valid);
 
-//------------------------ 成员变量 ------------------------//
-    std::atomic<bool> m_Valid{true};     // 有效性标志（原子）
-    std::atomic<int> m_RetryCount{0};    // 当前重试次数
-    string Type;                         //纹理类型（diffuse/normal等）
-    std::atomic<unsigned int> ID{0};     //OpenGL纹理ID
+
+    std::atomic<bool> m_Valid = true;     // 有效性标志（原子）
+    std::atomic<int> m_RetryCount = 0;    // 当前重试次数
+    string Type;                          //纹理类型（diffuse/normal等）
+    std::atomic<unsigned int> ID = 0;     //OpenGL纹理ID
     //加载任务数
     std::atomic<LoadState> State{LoadState::Uninitialized}; // 当前状态
     string Path;    // 原始文件路径
@@ -49,22 +49,4 @@ public:
 
 
 // 关于LoadState结构体的枚举参数声明
-
-namespace std {
-using TLS = CubeDemo::Texture::LoadState; template<>
-
-struct formatter<TLS> : formatter<string_view> {
-    auto format(TLS state, format_context& ctx) {
-        string_view name = "Unknown";
-        switch(state) {
-            case TLS::Init: name = "Init"; break;
-            case TLS::Placeholder: name = "Placeholder"; break;
-            case TLS::Loading: name = "Loading"; break;
-            case TLS::Ready: name = "Ready"; break;
-            case TLS::Failed: name = "Failed"; break;
-        }
-        return formatter<string_view>::format(name, ctx);
-    }
-};
-
-}   // namespace std
+#include "resources/texture.inl"
