@@ -1,12 +1,13 @@
 // include/resources/placeHolder.h
 #pragma once
-#include "resources/imageData.h"
-#include "utils/glfwKits.h"
+#include "loaders/image.h"
+#include "kits/glfw.h"
 #include <iostream>
+
 namespace CubeDemo {
 
 // 占位符结构体
-struct PlaceHolder : public TextureLoader
+struct PlaceHolder : public Loaders::Texture
 {
     static TexturePtr Create(const string& path, const string& type);
     static void ScheAsyncLoad(const string& path, const string& type, TexturePtr placeholder);

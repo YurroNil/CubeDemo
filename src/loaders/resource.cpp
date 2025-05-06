@@ -1,27 +1,29 @@
-// src/threads/resourceLoader.cpp
+// src/loaders/resource.cpp
 
 #include <thread>
-#include "threads/resourceLoader.h"
+#include "loaders/resource.h"
 #include <iostream>
 
+using DTS = CubeDemo::Diagnostic::ThreadState;
 namespace CubeDemo {
+
 // 静态成员初始化
-std::atomic<bool> ResourceLoader::s_Running{false};
-std::vector<std::thread> ResourceLoader::s_IOThreads;
-TaskQueue ResourceLoader::s_IOQueue;
-TaskQueue ResourceLoader::s_GPUQueue;
+std::atomic<bool> RL::s_Running = false;
+std::vector<std::thread> RL::s_IOThreads;
+TaskQueue RL::s_IOQueue;
+TaskQueue RL::s_GPUQueue;
 
 // 初始化
-void ResourceLoader::Init(int ioThreads) {
+void RL::Init(int ioThreads) {
     s_Running = true;
     std::cout << "正在启动" << ioThreads << "个IO线程...\n";
-    for(int i=0; i<ioThreads; ++i){
+    for(int i=0; i<ioThreads; ++i) {
 
         s_IOThreads.emplace_back([]{
             // Diagnostic记录
             auto& diag = Diagnostic::Get();
             const auto tid = std::this_thread::get_id();
-            diag.ReportThreadState(tid, Diagnostic::ThreadState::Created);
+            diag.ReportThreadState(tid, DTS::Created);
 
             std::cout << "IO线程ID: " << std::this_thread::get_id() << "启动, ";
 
@@ -33,19 +35,19 @@ void ResourceLoader::Init(int ioThreads) {
 }
 
 // s_Running = true时循环执行
-void ResourceLoader::RunningLoop(Diagnostic& diag, const std::thread::id& tid) {
+void RL::RunningLoop(Diagnostic& diag, const TID& tid) {
 
 int temp_counter = 1;
 // 循环体
 while(s_Running) {
     // 报告等待状态
-    diag.ReportThreadState(tid, Diagnostic::ThreadState::Waiting);
+    diag.ReportThreadState(tid, DTS::Waiting);
     diag.stats.tasksQueued = s_IOQueue.GetQueueSize();
     auto task = s_IOQueue.Pop();
     if(!task) continue;
 
     // 处理任务
-    diag.ReportThreadState(tid, Diagnostic::ThreadState::Running);
+    diag.ReportThreadState(tid, DTS::Running);
     try {
         std::cout << "IO线程ID: " << std::this_thread::get_id() << "处理任务...";
         task();
@@ -53,16 +55,15 @@ while(s_Running) {
     // 线程让步
     std::this_thread::yield();
     // 调试部分
-    std::cout << "[ResourceLoader:RunningLoop] 运行中, 当前帧号: "<< temp_counter << std::endl;
+    std::cout << "[资源加载器:RunningLoop] 运行中, 当前帧号: "<< temp_counter << std::endl;
     temp_counter++;
 }
     // 退出循环后报告
-    diag.ReportThreadState(tid, Diagnostic::ThreadState::Terminated);
+    diag.ReportThreadState(tid, DTS::Terminated);
     std::cout << "[THREAD] IO线程退出 ID:" << tid << std::endl;
 }
 
-
-void ResourceLoader::Shutdown() {
+void RL::Shutdown() {
     s_Running = false;
     
     // 清空任务队列

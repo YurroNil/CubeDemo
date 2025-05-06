@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "utils/glfwKits.h"
+#include "kits/glfw.h"
 #include "core/camera.h"
 
 namespace CubeDemo {

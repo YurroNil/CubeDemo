@@ -6,6 +6,8 @@
 #include <mutex>
 #include <thread>
 
+using TID = std::thread::id;
+
 namespace CubeDemo {
 class Diagnostic {
 public:
@@ -18,7 +20,7 @@ public:
     };
 
     static Diagnostic& Get();
-    void ReportThreadState(std::thread::id tid, ThreadState state);
+    void ReportThreadState(TID tid, ThreadState state);
     auto GetThreadStates() const;
 
     // 资源加载统计
@@ -30,6 +32,6 @@ public:
 
 private:
     mutable std::mutex mutex_;
-    std::map<std::thread::id, ThreadState> threadStates_;
+    std::map<TID, ThreadState> threadStates_;
 };
 }

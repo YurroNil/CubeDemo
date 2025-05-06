@@ -1,8 +1,8 @@
 // include/ui/uiMng.h
 #pragma once
 #include "core/camera.h"
-#include "utils/glfwKits.h"
-#include "utils/imguiKits.h"
+#include "kits/glfw.h"
+#include "kits/imgui.h"
 namespace CubeDemo {
 
 class UIMng {

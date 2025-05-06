@@ -1,15 +1,20 @@
 // src/init.cpp
 #include "init.h"
 #include "core/camera.h"
-#include <chrono>
+
 #include <thread>
 
 namespace CubeDemo {
 
+// 乱七八糟的别名
+using csclock = std::chrono::steady_clock;
+
+// 全局变量
 std::vector<Model*> MODEL_POINTERS;
 Shader* MODEL_SHADER;
-bool DEBUG_ASYNC_MODE = true;
+bool DEBUG_ASYNC_MODE = false;
 
+// Init函数
 GLFWwindow* Init() {
     if (!glfwInit()) {
         std::cerr << "GLFW初始化失败" << std::endl;
@@ -50,16 +55,16 @@ try {
     std::atomic<bool> modelLoaded{false};
     Model* sample_model = new Model(sampleModelData[0]);
     
-    if (DEBUG_ASYNC_MODE == true) { sample_model->LoadAsync([&]{ modelLoaded.store(true); }); } // 加载模型（异步模式）
-    else { sample_model->LoadSync([&]{ modelLoaded.store(true); }); } // 加载模型（同步模式）
+    if (DEBUG_ASYNC_MODE == true) sample_model->LoadAsync([&]{ modelLoaded.store(true); }); // 加载模型（异步模式）
+    else sample_model->LoadSync([&]{ modelLoaded.store(true); }); // 加载模型（同步模式）
 
     while(!modelLoaded.load()) {
         int processed = 0; TaskQueue::ProcTasks(processed);
         
         // 超时机制
-        static auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(3);
+        static auto deadline = csclock::now() + std::chrono::seconds(3);
 
-        if(std::chrono::steady_clock::now() > deadline) {
+        if(csclock::now() > deadline) {
             throw std::runtime_error("模型加载超时");
         }
 

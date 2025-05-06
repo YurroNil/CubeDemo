@@ -1,7 +1,7 @@
 // include/core/inputs.h
 
 #pragma once
-#include "utils/glfwKits.h"
+#include "kits/glfw.h"
 #include "core/camera.h"
 #include <iostream>
 namespace CubeDemo {
@@ -22,9 +22,7 @@ public:
     static float lastEscPressTime;  // 上次按下ESC的时间
     static constexpr float escCoolDown = 0.1f;  // 冷却时间100ms
     static void PauseTheGame(GLFWwindow* &window);
-
     static bool s_isDebugVisible;   // 调试信息面板状态
-
 
 private:
     inline static Camera* s_Camera = nullptr;
@@ -32,8 +30,5 @@ private:
     inline static float s_LastY = 0.0f;
     inline static bool s_FirstMouse = true;
     inline static bool s_AltPressed = false;
-
 };
-
-
 }

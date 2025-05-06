@@ -1,7 +1,8 @@
-// include/threads/textureLoader.h
+// include/loaders/texture.h
 #pragma once
 
 // 项目头文件
+#include "threads/loaders.h"
 #include "resources/texture.h"
 // 标准库
 #include <functional>
@@ -9,17 +10,17 @@
 
 namespace CubeDemo {
 
-struct ImageData;
-using ImageDataPtr = std::shared_ptr<ImageData>;
+// 乱七八糟的别名
+using millisec = std::chrono::milliseconds;
+using ImagePtr = std::shared_ptr<Loaders::Image>;
 using TexLoadCallback = std::function<void(TexturePtr)>; // 纹理加载回调
+using TL = Loaders::Texture;
 
-// TextureLoader类
-class TextureLoader : public Texture {
+// loaders.texture类继承texture类
+
+class Loaders::Texture : public CubeDemo::Texture {
 public:
 
-    //------------------------ 核心接口 ------------------------//
-    // 创建+同步加载纹理（调试专用）
-    static TexturePtr CreateSync(const string& path, const string& type);
     // 仅创建纹理（异步）
     static TexturePtr Create(const string& path, const string& type);
     // 仅加载纹理（异步）
@@ -33,7 +34,7 @@ public:
     //------------------------ 静态资源 ------------------------//
     static TexPtrHashMap s_TexturePool;   // 纹理资源池
     static std::mutex s_TextureMutex;     // 资源池互斥锁
-    static TexturePtr CreateFromData(ImageDataPtr data, const string& path, const string& type);
+    static TexturePtr CreateFromData(ImagePtr data, const string& path, const string& type);
 
 
 private:
@@ -47,7 +48,7 @@ private:
         inline static std::unordered_map<string, int> Counters; ///< 路径重试计数器
         inline static std::mutex Mutex;                              ///< 重试系统互斥锁
         inline static constexpr int MAX_RETRY = 3;                   ///< 最大重试次数
-        inline static constexpr auto BASE_DELAY = std::chrono::milliseconds(100); ///< 基础延迟
+        inline static constexpr auto BASE_DELAY = millisec(100); ///< 基础延迟
     };
 };
 }   // namespace CubeDemo

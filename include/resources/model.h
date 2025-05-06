@@ -1,12 +1,12 @@
 // include/resources/model.h
 
 #pragma once
-#include "threads/modelLoader.h"
+#include "threads/loaders.h"
+#include "loaders/model.h"
 
 namespace CubeDemo {
 
-class ModelLoader;
-class Model : public ModelLoader {
+class Model : public Loaders::Model {
 public:
     Model(const string& path);  // 初始化
 };

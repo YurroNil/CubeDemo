@@ -1,7 +1,7 @@
 // src/core/time.cpp
 
 #include "core/time.h"
-#include "utils/glfwKits.h"
+#include "kits/glfw.h"
 
 
 namespace CubeDemo {

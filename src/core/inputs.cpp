@@ -1,7 +1,7 @@
 // src/core/inputs.cpp
 
 #include "core/inputs.h"
-#include "utils/imguiKits.h"
+#include "kits/imgui.h"
 
 namespace CubeDemo {
 
@@ -83,9 +83,7 @@ void Inputs::ProcKeyboard(GLFWwindow* &window, float deltaTime) {
     // F3切换调试信息
     static bool f3LastState = false;
     bool f3CurrentState = glfwGetKey(window, GLFW_KEY_F3);
-    if (f3CurrentState && !f3LastState) {
-        s_isDebugVisible = !s_isDebugVisible;
-    }
+    if (f3CurrentState && !f3LastState) s_isDebugVisible = !s_isDebugVisible;
     f3LastState = f3CurrentState;
 }
 

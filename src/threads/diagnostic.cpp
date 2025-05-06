@@ -9,7 +9,7 @@ Diagnostic& Diagnostic::Get() {
     return instance;
 }
 // 记录线程状态
-void Diagnostic::ReportThreadState(std::thread::id tid, ThreadState state) {
+void Diagnostic::ReportThreadState(TID tid, ThreadState state) {
     std::lock_guard lock(mutex_);
     threadStates_[tid] = state;
 }

@@ -1,8 +1,8 @@
 // include/core/window.h
 
 #pragma once
-#include "utils/glfwKits.h"
-#include "utils/streams.h"
+#include "kits/glfw.h"
+#include "kits/streams.h"
 #include "resources/texture.h"
 
 namespace CubeDemo {

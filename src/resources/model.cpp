@@ -3,6 +3,6 @@
 #include "resources/model.h"
 
 namespace CubeDemo {
-    // Model构造函数传递路径到中间层ModelLoader类
-    Model::Model(const string& path) : ModelLoader(path) {}
+    // Model构造函数传递路径到中间层Loader.Model类
+    Model::Model(const string& path) : Loaders::Model(path) {}
 }   // namespace CubeDemo

@@ -1,14 +1,14 @@
 // src/graphics/mesh.cpp
 
 #include "glad/glad.h"
-#include "utils/stringsKits.h"
+#include "kits/strings.h"
 #include "graphics/mesh.h"
 #include <iostream>
 
 namespace CubeDemo {
 extern bool DEBUG_ASYNC_MODE;
 
-Mesh::Mesh(const VertexArray& vertices, const std::vector<unsigned>& indices, const TexPtrArray& textures) 
+Mesh::Mesh(const VertexArray& vertices, const UnsignedArray& indices, const TexPtrArray& textures) 
     : indexCount(indices.size()) {
     
     // 储存顶点数组
@@ -56,7 +56,7 @@ Mesh::Mesh(const VertexArray& vertices, const std::vector<unsigned>& indices, co
 }
 
 void Mesh::UpdateTextures(const TexPtrArray& newTextures) {
-    if(DEBUG_ASYNC_MODE) { std::lock_guard lock(m_TextureMutex); }
+    if(DEBUG_ASYNC_MODE) std::lock_guard lock(m_TextureMutex);
     m_textures = newTextures;
 }
 
@@ -99,6 +99,23 @@ void Mesh::Draw(Shader& shader) const {
         std::cerr << "[OpenGL错误] 绘制后: 0x" << std::hex << err << std::dec << std::endl;
     }
 
+}
+
+Mesh& Mesh::operator=(Mesh&& other) noexcept {
+    if(this != &other) {
+        ReleaseGLResources();
+        
+        Vertices = std::move(other.Vertices);
+        m_textures = std::move(other.m_textures);
+        VAO = other.VAO;
+        VBO = other.VBO;
+        EBO = other.EBO;
+        indexCount = other.indexCount;
+
+        other.VAO = other.VBO = other.EBO = 0;
+        other.indexCount = 0;
+    }
+    return *this;
 }
 
 void Mesh::ReleaseGLResources() {

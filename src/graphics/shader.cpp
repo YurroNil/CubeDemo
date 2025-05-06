@@ -1,8 +1,8 @@
 // src/graphics/shader.cpp
 
 #include "graphics/shader.h"
-#include "utils/glfwKits.h"
-#include "utils/streams.h"
+#include "kits/glfw.h"
+#include "kits/streams.h"
 
 using ifs = std::ifstream;
 namespace CubeDemo {
