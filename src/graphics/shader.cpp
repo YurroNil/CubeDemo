@@ -92,5 +92,4 @@ void Shader::ApplyCamera(const Camera& camera, float aspectRatio) const {
     SetMat4("view", camera.GetViewMat());
     
 }
-
 }

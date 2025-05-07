@@ -108,7 +108,6 @@ Mesh ML::ProcMesh(aiMesh* mesh, const aiScene* scene) {
         textures.clear();
         for (auto& [path, tex] : uniqueTextures) textures.push_back(tex);
         
-
         std::cout << "[材质处理] 完成，加载纹理数: " << textures.size() << std::endl;
     } else {
         std::cerr << "无效材质索引: " << mesh->mMaterialIndex << "/" << scene->mNumMaterials << std::endl;
@@ -122,10 +121,10 @@ void ML::Draw(Shader& shader) {
     shader.SetMat4("model", m_ModelMatrix);
 
     if(m_IsLoading.load()) return; // 加载中不绘制
+
     // 绘制模型的所有网格
     for (auto& mesh : m_meshes) { mesh.Draw(shader); }
 }
-
 
 // 异步加载模型
 void ML::LoadAsync(ModelLoadCallback cb) {
@@ -157,7 +156,8 @@ void ML::LoadSync(ModelLoadCallback cb) {
     TaskQueue::AddTasks([this, cb]{
         // 通知所有网格更新纹理引用
         ML::m_MeshesReady.store(true, std::memory_order_release);
-        for(auto& mesh : m_meshes) mesh.UpdateTextures(mesh.m_textures);
+        
+        // for(auto& mesh : m_meshes) mesh.UpdateTextures(mesh.m_textures);
         
         m_IsLoading = false;
         cb();

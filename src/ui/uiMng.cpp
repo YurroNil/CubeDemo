@@ -4,6 +4,8 @@
 #include "core/window.h"
 #include "core/monitor.h"
 #include "core/time.h"
+
+extern int Utf8_toUnicodeConv(unsigned int* out_char, const char* in_text, const char* in_text_end);
 namespace CubeDemo {
 
 // 初始化UI管理器
@@ -41,16 +43,8 @@ void UIMng::ConfigureImGuiStyle() {
     ImGui::StyleColorsDark();                // 使用深色主题
 }
 
-// 加载自定义字体
-void UIMng::LoadFonts() {
-    if (!fs::exists("../resources/fonts/simhei.ttf")) {
-        std::cerr << "字体文件不存在: " << "../resources/fonts/simhei.ttf" << std::endl;
-        return;
-    }
-
-    ImGuiIO& io = ImGui::GetIO();
-    
-    // 添加中文字符范围
+static void temp() {
+    // 添加中文字符范围 (暂不采用)
     static const ImWchar ranges[] = {
         // 基础拉丁字符
         0x0020, 0x007F, // 基本ASCII
@@ -65,16 +59,52 @@ void UIMng::LoadFonts() {
 
         0               // 范围终止符
     };
+}
 
-    // 合并加载中文字体
-    io.Fonts->AddFontFromFileTTF(
+// 加载自定义字体
+void UIMng::LoadFonts() {
+    if (!fs::exists("../resources/fonts/simhei.ttf")) {
+        std::cerr << "字体文件不存在: " << "../resources/fonts/simhei.ttf" << std::endl;
+        return;
+    }
+
+    ImGuiIO& io = ImGui::GetIO();
+
+    // 硬编码需要加载的中文字符
+    const char* keyChineseChars = 
+    "开始游戏菜单暂停帧数退出"
+    "控制面板调试位置内存用量速度"
+    "全屏返回桌面继续到至已移动";
+
+    // 创建字符范围构建器
+    ImFontGlyphRangesBuilder builder;
+
+    // 添加 ASCII 基础字符
+    builder.AddRanges(io.Fonts->GetGlyphRangesDefault());
+
+    // 添加硬编码的中文字符
+    const char* p = keyChineseChars;
+    while (*p) {
+        unsigned int c = 0;
+        int bytes = Utf8_toUnicodeConv(&c, p, nullptr);
+        if (bytes == 0) break;
+        builder.AddChar(static_cast<ImWchar>(c));
+        p += bytes;
+    }
+
+    // 生成紧凑的字符范围数组
+    ImVector<ImWchar> ranges;
+    builder.BuildRanges(&ranges);
+
+    // 加载字体并设为默认字体
+    ImFont* font = io.Fonts->AddFontFromFileTTF(
         "../resources/fonts/simhei.ttf",
         30.0f,
         nullptr,
-        ranges // 添加字符范围参数
+        ranges.Data
     );
     
-    // 合并其他字体（如果有）
+    // 合并其他字体
     io.Fonts->Build();
 }
 

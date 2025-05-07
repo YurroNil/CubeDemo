@@ -3,24 +3,25 @@
 ├── include/    (以下全部文件后缀都为.h文件)
 │     │
 │     ├── core/ (核心模块)
-│     │     └── camera, inputs, time, Window
+│     │     └── camera, inputs, time, Window, monitor
 │     │
 │     ├── graphics/ (图形渲染模块)
-│     │    └── renderer, mesh, shader
+│     │    └── boundingSphere, renderer, mesh, shader
 │     │
 │     ├── resources/ (资源模块)
-│     │    └── model, texture
+│     │    └── model, texture, placeHolder
 │     │
 │     ├── threads/ (线程模块)
-│     │    └── diagnostic, loaders, taskQueue
-│     │    └── loaders/
-│     │         └── material, model, resource, texture
+│     │    └── diagnostic, taskQueue, loaders
+│     │
+│     ├── loaders/ (加载器模块)
+│     │         └── material, model, resource, texture, image, asyncTex
 │     │
 │     ├── ui/ (UI模块)
 │     │    └── monitor, uiMng
 │     │
 │     ├── utils/ (工具模块)
-│     │    └── streams, stringConvertor, glfwKits, glmKits, imguiKits
+│     │    └── stringConvertor, utf8_to_unicode
 │     │
 │     └── init, loop, cleanup, mainProgramInc
 │

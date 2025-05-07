@@ -99,11 +99,31 @@ void TL::CreateTexAsync(const string& path, const string& type, TexLoadCallback 
 TexturePtr TL::LoadSync(const string& path, const string& type) {
 
     // 第一层带锁缓存检查
-    TexturePtr cacheCheker, cacheChekerCopy = cacheCheker;
+    while(true) {
+        std::lock_guard lock(s_TextureMutex);
 
-    cacheCheker = CacheCheckSync(path, cacheChekerCopy);
-    if(cacheCheker == nullptr) return nullptr;
-    if (cacheCheker != nullptr || cacheCheker != cacheChekerCopy ) return cacheCheker;
+        // 在纹理池中查找指定路径path对应的条目, 并返回一个迭代器给it
+        auto it = s_TexturePool.find(path);
+
+        // 若返回的迭代器(即it)存在的话, 就不break
+        if (it == s_TexturePool.end()) break;
+
+        // 尝试查找哈希表中存储的weak_ptr<Texture>, 然后试图升级为shared_ptr
+        auto tex = it->second.lock();
+        // 失败则退出
+        if (tex == nullptr) return nullptr;
+
+        // 如果tex不是nullptr那么将执行复用操作
+        std::cout << "[TL:loadSync] 正在检查路径: " << path <<", 纹理状态: " << GetStatePrint(tex) << std::endl;
+
+        // 等待异步加载完成（包括占位符转换）
+        while (tex->State == TLS::Loading || tex->State == TLS::Placeholder) std::this_thread::sleep_for(millisec(1));
+
+        if (tex->State != TLS::Ready) break;
+
+        std::cout << "[优化] 同步复用: " << path;
+        return tex;
+    }
 
     // 同步加载流程
     try {
@@ -138,37 +158,6 @@ TexturePtr TL::LoadSync(const string& path, const string& type) {
         placeholder->State.store(TLS::Failed);
         return nullptr;
     }
-}
-
-// 同步模式纹理检查
-TexturePtr TL::CacheCheckSync(const string& path, TexturePtr self) {
-    while(true) {
-        std::lock_guard lock(s_TextureMutex);
-
-        // 在纹理池中查找指定路径path对应的条目, 并返回一个迭代器给it
-        auto it = s_TexturePool.find(path);
-
-        // 若返回的迭代器(即it)存在的话, 就不break
-        if (it == s_TexturePool.end()) break;
-
-        // 尝试查找哈希表中存储的weak_ptr<Texture>, 然后试图升级为shared_ptr
-        auto tex = it->second.lock();
-        // 失败则退出
-        if (tex == nullptr) return nullptr;
-
-        // 如果tex不是nullptr那么将执行复用操作
-        std::cout << "[TL:loadSync] 正在检查路径: " << path <<", 纹理状态: " << GetStatePrint(tex) << std::endl;
-
-        // 等待异步加载完成（包括占位符转换）
-        while (tex->State == TLS::Loading || tex->State == TLS::Placeholder) std::this_thread::sleep_for(millisec(1));
-
-        if (tex->State != TLS::Ready) break;
-
-        std::cout << "[优化] 同步复用: " << path;
-        return tex;
-    }
-
-    return self;
 }
 
 
