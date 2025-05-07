@@ -5,6 +5,7 @@
 // 标准库
 #include "kits/file_system.h"
 
+using TLS = CubeDemo::Texture::LoadState;
 namespace CubeDemo {
 
 // 静态成员初始化
@@ -12,44 +13,25 @@ TexPtrHashMap TL::s_TexturePool;
 std::mutex TL::s_TextureMutex;
 
 
-TexturePtr TL::Create(const string& path, const string& type) {
-    std::lock_guard lock(s_TextureMutex); // 全程加锁
-    
-    // 直接检查有效纹理
-    auto it = s_TexturePool.find(path); auto tex = it->second.lock();
-    if(it != s_TexturePool.end() && tex->State == LoadState::Ready) return tex;
-
-    // 无锁检查
-    if(auto cached = TryGetCached(path); cached) return cached;
-
-    // 创建占位符
-    auto placeholder = Create(path, type);
-    s_TexturePool[path] = placeholder;
-    // 带重试机制的异步加载
-    PlaceHolder::ScheAsyncLoad(path, type, placeholder);
-
-    return placeholder;
-}
-
 TexturePtr TL::TryGetCached(const string& path) {
-
-    // 快速失败检查（路径不存在）
+    std::lock_guard lock(s_TextureMutex);
     auto it = s_TexturePool.find(path);
     if (it == s_TexturePool.end()) return nullptr;
- 
-    // 快速失败检查（纹理已失效）
+    
     auto tex = it->second.lock();
-    if (!tex) return nullptr;
- 
-    // 快速失败检查（有效性标志）
-    if (!tex->m_Valid.load()) return nullptr;
-
-    // 所有检查通过，返回有效纹理
-    return tex;
+    if (!tex || !tex->m_Valid.load()) return nullptr;
+    
+    return tex->State.load() == TLS::Ready ? tex : nullptr;
 }
 
 // 异步加载纹理
 void TL::LoadAsync(const string& path, const string& type, TexLoadCallback cb) {
+
+    // 优先返回缓存
+    if (auto cached = TryGetCached(path)) {
+        TaskQueue::AddTasks([cached, cb] { cb(cached); }, true);
+        return;
+    }
 
     auto& diag = Diagnostic::Get();
     std::cout << "[TEXTURE] 提交异步加载 路径:" << path << " 提交线程:" << std::this_thread::get_id() << "\n";
@@ -62,48 +44,66 @@ void TL::LoadAsync(const string& path, const string& type, TexLoadCallback cb) {
     RL::EnqueueIOJob([=]() mutable {
 
         try {
-            auto image_data = IL::Load(path); // 返回shared_ptr
-
-            std::cout << "[TEXTURE] 开始IO加载 路径:" << path << " 处理线程:" << std::this_thread::get_id() << "\n";
-
-            // 将GL操作提交到主线程队列（非阻塞）
-            TaskQueue::AddTasks([image_data, path, type, cb]() {
-
-                auto tex = CreateFromData(image_data, path, type);
-                std::cout << "[TEXTURE] 完成加载回调 路径:" << path << " 状态:" << static_cast<int>(tex->State.load()) << "\n";
-                cb(tex);
-
-            }, true);
+            CreateTexAsync(path, type, cb);
 
         } catch(...) {
+             // 纹理创建失败时保留占位符
+            auto placeholder = PlaceHolder::Create(path, type);
+            placeholder->State.store(TLS::Failed);
+            cb(placeholder);
+
             std::cerr << "[TEXTURE] IO加载失败 路径:" << path << "\n";
         }
     });
 }
 
-// 同步加载纹理（调试专用）
-TexturePtr TL::LoadSync(const string& path, const string& type) {
-    // 第一层带锁缓存检查
-    while(true) {
+// 异步创建纹理
+void TL::CreateTexAsync(const string& path, const string& type, TexLoadCallback cb) {
+    auto image_data = IL::Load(path); // 返回shared_ptr
+
+    std::cout << "[TEXTURE] 开始IO加载 路径:" << path << " 处理线程:" << std::this_thread::get_id() << "\n";
+
+    // 将GL操作提交到主线程队列（非阻塞）
+    TaskQueue::AddTasks([image_data, path, type, cb]() {
+
+        // 再次检查缓存
         std::lock_guard lock(s_TextureMutex);
+        auto existing = s_TexturePool[path].lock();
+        if (existing && existing->State == TLS::Ready) {
+            std::cout << "[优化] 异步复用: " << path;
+            cb(existing);
+            return;
+        }
+
+        // 创建纹理
+        auto tex = CreateFromData(image_data, path, type);
         
-        // 检查纹理是否存在
-        auto it = s_TexturePool.find(path);
-        if (it == s_TexturePool.end()) break;
-    
-        // 检查weak_ptr有效性
-        auto tex = it->second.lock();
-        if (!tex) break;
-    
-        // 状态检查
-        if (tex->State == LoadState::Ready) {
-            return tex;
+        if (existing) {
+            // 转移OpenGL资源到占位符
+            existing->ID.store(tex->ID.load());
+            existing->State.store(TLS::Ready);
+            cb(existing);
+        } else {
+            s_TexturePool[path] = tex;
+            cb(tex);
         }
-        if (tex->State == LoadState::Failed) {
-            return nullptr;
-        }
-        break;
-    }
+
+        std::cout << "[TEXTURE] 完成加载回调 路径:" << path << " 状态:" << static_cast<int>(tex->State.load()) << "\n";
+        
+        cb(tex);
+    }, true);
+}
+
+
+// 同步加载纹理
+TexturePtr TL::LoadSync(const string& path, const string& type) {
+
+    // 第一层带锁缓存检查
+    TexturePtr cacheCheker, cacheChekerCopy = cacheCheker;
+
+    cacheCheker = CacheCheckSync(path, cacheChekerCopy);
+    if(cacheCheker == nullptr) return nullptr;
+    if (cacheCheker != nullptr || cacheCheker != cacheChekerCopy ) return cacheCheker;
 
     // 同步加载流程
     try {
@@ -123,9 +123,9 @@ TexturePtr TL::LoadSync(const string& path, const string& type) {
         // 更新状态
         std::lock_guard lock(s_TextureMutex);
         s_TexturePool[path] = tex;
-        tex->State.store(LoadState::Ready);
+        tex->State.store(TLS::Ready);
          // 添加状态验证
-        if (tex->State != Texture::LoadState::Ready) {
+        if (tex->State != TLS::Ready) {
             throw std::runtime_error("纹理最终状态异常: " + path);
         }
         return tex;
@@ -133,13 +133,44 @@ TexturePtr TL::LoadSync(const string& path, const string& type) {
     catch(const std::exception& e) {
         // 失败处理
         std::cerr << "[SyncLoad] 加载失败 " << path << ": " << e.what() << "\n";
-        
         // 创建占位符
         auto placeholder = PlaceHolder::Create(path, type);
-        placeholder->State.store(LoadState::Failed);
+        placeholder->State.store(TLS::Failed);
         return nullptr;
     }
 }
+
+// 同步模式纹理检查
+TexturePtr TL::CacheCheckSync(const string& path, TexturePtr self) {
+    while(true) {
+        std::lock_guard lock(s_TextureMutex);
+
+        // 在纹理池中查找指定路径path对应的条目, 并返回一个迭代器给it
+        auto it = s_TexturePool.find(path);
+
+        // 若返回的迭代器(即it)存在的话, 就不break
+        if (it == s_TexturePool.end()) break;
+
+        // 尝试查找哈希表中存储的weak_ptr<Texture>, 然后试图升级为shared_ptr
+        auto tex = it->second.lock();
+        // 失败则退出
+        if (tex == nullptr) return nullptr;
+
+        // 如果tex不是nullptr那么将执行复用操作
+        std::cout << "[TL:loadSync] 正在检查路径: " << path <<", 纹理状态: " << GetStatePrint(tex) << std::endl;
+
+        // 等待异步加载完成（包括占位符转换）
+        while (tex->State == TLS::Loading || tex->State == TLS::Placeholder) std::this_thread::sleep_for(millisec(1));
+
+        if (tex->State != TLS::Ready) break;
+
+        std::cout << "[优化] 同步复用: " << path;
+        return tex;
+    }
+
+    return self;
+}
+
 
 TexturePtr TL::CreateFromData(ImagePtr data, const string& path, const string& type) {
     auto& diag = Diagnostic::Get();
@@ -180,7 +211,7 @@ try {
 
     std::lock_guard lock(s_TextureMutex);
     s_TexturePool[path] = tex;
-    tex->State.store(LoadState::Ready);
+    tex->State.store(TLS::Ready);
 
     return tex;
 
@@ -189,6 +220,18 @@ try {
     throw;
 }
 
+}
+
+string TL::GetStatePrint(TexturePtr tex) {
+    string name;
+
+    if (tex->State == LoadState::Uninitialized) return "LoadState: Uninited";
+    if (tex->State == LoadState::Placeholder) return "LoadState: PlaceHolder";
+    if (tex->State == LoadState::Loading) return "LoadState: Loading";
+    if (tex->State == LoadState::Init) return "LoadState: Init";
+    if (tex->State == LoadState::Ready) return "LoadState: Ready";
+    if (tex->State == LoadState::Failed) return "LoadState: Failed";
+    return "LoadState: ??";
 }
 
 }   // namespace CubeDemo

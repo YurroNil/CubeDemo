@@ -12,7 +12,7 @@ using MaL = CubeDemo::Loaders::Material;
 
 namespace CubeDemo {
 
-string MaL::BuildTexturePath(const char* aiPath) const {
+string MaL::BuildTexPath(const char* aiPath) const {
     return this->Directory + "/textures/" + fs::path(aiPath).filename().string();
 }
 
@@ -36,7 +36,7 @@ void MaL::ProcMaterial(aiMesh*& mesh, const aiScene*& scene, TexPtrArray& textur
 
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
     
-    // 定义加载策略：类型 + 后备类型
+    // 加载策略：类型 + 后备类型
     const std::vector<std::tuple<aiTextureType, aiTextureType, string>> strategies = {
         {aiTextureType_DIFFUSE, aiTextureType_BASE_COLOR, "texture_diffuse"},
         {aiTextureType_REFLECTION, aiTextureType_NONE, "texture_reflection"},

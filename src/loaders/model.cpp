@@ -90,13 +90,24 @@ Mesh ML::ProcMesh(aiMesh* mesh, const aiScene* scene) {
         for (unsigned j = 0; j < face.mNumIndices; j++)
             indices.push_back(face.mIndices[j]);
     }
-
-    std::cout << "\n[网格信息]" << "\n顶点数: " << vertices.size() << "\n索引数: " << indices.size() << "\n材质索引: " << mesh->mMaterialIndex << "\n是否有切线数据: " << (mesh->mTangents ? "是" : "否") << std::endl;
-
+    
     // 处理材质
-     if (mesh->mMaterialIndex >= 0 && mesh->mMaterialIndex < scene->mNumMaterials) {
+     if (mesh->mMaterialIndex >= 0) {
 
         MaL::ProcMaterial(mesh, scene, textures, DEBUG_ASYNC_MODE);
+
+        // 去重处理
+        std::unordered_map<string, TexturePtr> uniqueTextures;
+        for (auto& tex : textures) {
+            if (auto it = uniqueTextures.find(tex->Path); it != uniqueTextures.end()) {
+                std::cout << "[优化] 网格内去重纹理: " << tex->Path << "\n";
+            } else {
+                uniqueTextures[tex->Path] = tex;
+            }
+        }
+        textures.clear();
+        for (auto& [path, tex] : uniqueTextures) textures.push_back(tex);
+        
 
         std::cout << "[材质处理] 完成，加载纹理数: " << textures.size() << std::endl;
     } else {

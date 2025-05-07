@@ -1,8 +1,6 @@
 // include/init.h
 
 #pragma once
-#include <vector>
-#include "kits/glfw.h"
 #include "mainProgramInc.h"
 #include "utils/defines.h"
 
