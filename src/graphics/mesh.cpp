@@ -9,7 +9,7 @@ namespace CubeDemo {
 extern bool DEBUG_ASYNC_MODE;
 
 Mesh::Mesh(const VertexArray& vertices, const UnsignedArray& indices, const TexPtrArray& textures) 
-    : indexCount(indices.size()) {
+    : m_textures(textures), indexCount(indices.size()) {
     
     // 储存顶点数组
     this->Vertices = vertices;
@@ -59,43 +59,64 @@ void Mesh::UpdateTextures(const TexPtrArray& newTextures) {
 }
 
 void Mesh::Draw(Shader& shader) const {
-    // std::cout << "\n[绘制调用] VAO: " << VAO << " | 索引数: " << indexCount << " | 纹理数: " << m_textures.size() << std::endl;
 
-    // 检查VAO有效性
+     // 检查VAO有效性
     if(VAO == 0) {
         std::cerr << "[错误] 无效的VAO!" << std::endl;
         return;
     }
 
-    unsigned int diffuseNr = 1, specularNr = 1;
-    
+    // 计数器初始化
+    unsigned int diffuseCount = 1;
+    unsigned int specularCount = 1;
+    unsigned int normalCount = 1;
+    unsigned int aoCount = 1;
+
+    static int counter = 0;
+     // 遍历所有纹理
+    if(counter==0) {
+        std::cout << "[Mesh] m_textures数量: " << m_textures.size() << std::endl;
+        counter++;
+    }
+
     for (size_t i = 0; i < m_textures.size(); ++i) {
-        glActiveTexture(GL_TEXTURE0 + i);
-        
-        const auto& tex = m_textures[i];
-        string name = tex->Type;
-        string number;
-        
-        if (name == "texture_diffuse") {
-            number = std::to_string(diffuseNr++);
-        } else if (name == "texture_specular") {
-            number = std::to_string(specularNr++);
+
+        if(!m_textures[i] || !m_textures[i]->m_Valid.load()) {
+            std::cerr << "[警告] 跳过无效纹理: 索引" << i << std::endl;
+            continue;
         }
-        
-        shader.SetInt((name + number).c_str(), i);
+
+        glActiveTexture(GL_TEXTURE0 + i); // 激活对应纹理单元
+
+        const auto& tex = m_textures[i];
+        std::string type = tex->Type;
+        std::string uniformName;
+
+        // 动态生成uniform名称
+        if (type == "texture_diffuse") {
+            uniformName = type + std::to_string(diffuseCount++);
+        } else if (type == "texture_specular") {
+            uniformName = type + std::to_string(specularCount++);
+        } else if (type == "texture_normal") {
+            uniformName = type + std::to_string(normalCount++);
+        } else if (type == "texture_ao") {
+            uniformName = type + std::to_string(aoCount++);
+        } else {
+            uniformName = type + "_unknown";
+        }
+
+        // 设置Shader参数并绑定纹理
+        shader.SetInt(uniformName.c_str(), i);
         tex->Bind(i);
     }
-    
+
+    // 绘制网格
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
-    
+
+    // 重置纹理单元
     glActiveTexture(GL_TEXTURE0);
-    // 绘制后检查错误
-    GLenum err;
-    while((err = glGetError()) != GL_NO_ERROR) {
-        std::cerr << "[OpenGL错误] 绘制后: 0x" << std::hex << err << std::dec << std::endl;
-    }
 
 }
 

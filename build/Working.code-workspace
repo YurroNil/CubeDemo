@@ -84,7 +84,8 @@
 			"future": "cpp",
 			"mutex": "cpp",
 			"*.rh": "cpp",
-			"stacktrace": "cpp"
+			"stacktrace": "cpp",
+			"cuchar": "cpp"
 		},
 		"powershell.cwd": "workspace"
 	}

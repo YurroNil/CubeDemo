@@ -26,7 +26,6 @@ public:
     // 同步 加载纹理
     static TexturePtr LoadSync(const string& path, const string& type);
     static void CreateTexAsync(const string& path, const string& type, TexLoadCallback cb);
-    static TexturePtr CacheCheckSync(const string& path, TexturePtr self);
 
     //------------------------ 统计信息 ------------------------//
     inline static std::atomic<int32_t> s_TextureAliveCount{0};  // 存活纹理计数
@@ -35,7 +34,6 @@ public:
     static TexPtrHashMap s_TexturePool;   // 纹理资源池
     static std::mutex s_TextureMutex;     // 资源池互斥锁
     static TexturePtr CreateFromData(ImagePtr data, const string& path, const string& type);
-
 
 private:
     //------------------------ 私有实现 ------------------------//
