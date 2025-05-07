@@ -7,7 +7,7 @@ using ATL = CubeDemo::Loaders::AsyncTexture;
 using TLS = CubeDemo::Texture::LoadState;
 namespace CubeDemo {
 
-void ATL::OnTextureLoaded(const std::shared_ptr<Context>& ctx, const string& path, TexturePtr tex) {
+void ATL::OnTexLoaded(const std::shared_ptr<Context>& ctx, const string& path, TexturePtr tex) {
 
     std::lock_guard<std::mutex> lock(ctx->mutex);
     HandleTexState(tex, path); // 提取状态处理逻辑

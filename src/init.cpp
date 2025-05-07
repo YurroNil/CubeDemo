@@ -1,8 +1,5 @@
 // src/init.cpp
 #include "init.h"
-#include "core/camera.h"
-
-#include <thread>
 
 namespace CubeDemo {
 

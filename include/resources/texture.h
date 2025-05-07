@@ -47,6 +47,5 @@ public:
 
 }; }    // namespace CubeDemo
 
-
 // 关于LoadState结构体的枚举参数声明
 #include "resources/texture.inl"

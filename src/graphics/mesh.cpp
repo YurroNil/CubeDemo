@@ -45,8 +45,6 @@ Mesh::Mesh(const VertexArray& vertices, const UnsignedArray& indices, const TexP
 
     glBindVertexArray(0);
 
-    std::cout << "\n=== 创建OpenGL资源 ===" << "\nVAO: " << VAO << "\nVBO: " << VBO << "\nEBO: " << EBO << "\n顶点数: " << vertices.size() << "\n索引数: " << indices.size() << "\n纹理数: " << textures.size() << std::endl;
-
     // 添加OpenGL错误检查
     GLenum err;
     while((err = glGetError()) != GL_NO_ERROR) {

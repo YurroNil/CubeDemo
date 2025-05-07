@@ -16,7 +16,7 @@ public:
         std::promise<void> completionPromise;
     };
 
-    static void OnTextureLoaded(const std::shared_ptr<Context>& ctx, const std::string& path, TexturePtr tex);
+    static void OnTexLoaded(const std::shared_ptr<Context>& ctx, const std::string& path, TexturePtr tex);
 
 private:
     static void HandleTexState(TexturePtr tex, const string& path);

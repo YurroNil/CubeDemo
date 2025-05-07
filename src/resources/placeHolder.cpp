@@ -25,6 +25,7 @@ TexturePtr PlaceHolder::Create(const string& path, const string& type) {
 }
 
 void PlaceHolder::ScheAsyncLoad(const string& path, const string& type, TexturePtr placeholder) {
+
     s_ActiveLoads.fetch_add(1, std::memory_order_relaxed);
     
     RL::EnqueueIOJob([=, self = placeholder]() mutable {
@@ -44,14 +45,16 @@ void PlaceHolder::ScheAsyncLoad(const string& path, const string& type, TextureP
 }
 
 void PlaceHolder::FinalizeTex(TexturePtr placeholder, TexturePtr realTex) {
-    // 原子交换逻辑
-
+    
     TaskQueue::PushTaskSync([&]{
-        GLuint oldID = placeholder->ID.load();
-        placeholder->ID = realTex->ID.load();
-        if(oldID != 0) glDeleteTextures(1, &oldID);
+        // 转移OpenGL资源
+        placeholder->ID.store(realTex->ID.load());
+        placeholder->State.store(LoadState::Ready);
+        
+        // 销毁临时纹理
+        GLuint oldID = realTex->ID.load();
+        if (oldID != 0) glDeleteTextures(1, &oldID);
     });
-    realTex->ID.store(0); // 仅允许在主线程操作后重置
 
 }
 

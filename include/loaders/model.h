@@ -6,7 +6,7 @@
 using ModelLoadCallback = std::function<void()>;  // 模型加载回调
 
 namespace CubeDemo {
-// Loader.Model类
+// Loader:Model类
 class Loaders::Model : public Loaders::Material {
 public:
     BoundingSphere bounds; MeshArray m_meshes;

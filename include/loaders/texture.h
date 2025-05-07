@@ -21,12 +21,12 @@ using TL = Loaders::Texture;
 class Loaders::Texture : public CubeDemo::Texture {
 public:
 
-    // 仅创建纹理（异步）
-    static TexturePtr Create(const string& path, const string& type);
-    // 仅加载纹理（异步）
+    // 异步加载纹理
     static void LoadAsync(const string& path, const string& type, TexLoadCallback cb);
-    // 仅同步加载纹理（调试专用）
+    // 同步 加载纹理
     static TexturePtr LoadSync(const string& path, const string& type);
+    static void CreateTexAsync(const string& path, const string& type, TexLoadCallback cb);
+    static TexturePtr CacheCheckSync(const string& path, TexturePtr self);
 
     //------------------------ 统计信息 ------------------------//
     inline static std::atomic<int32_t> s_TextureAliveCount{0};  // 存活纹理计数
@@ -50,6 +50,6 @@ private:
         inline static constexpr int MAX_RETRY = 3;                   ///< 最大重试次数
         inline static constexpr auto BASE_DELAY = millisec(100); ///< 基础延迟
     };
+    static string GetStatePrint(TexturePtr tex);
 };
 }   // namespace CubeDemo
-

@@ -20,11 +20,11 @@ TexPtrArray Loaders::Material::LoadTextures(aiMaterial* mat, aiTextureType type,
         for(unsigned i=0; i<mat->GetTextureCount(type); ++i) {
             aiString str;
             mat->GetTexture(type, i, &str);
-            string path = BuildTexturePath(str.C_Str());
+            string path = BuildTexPath(str.C_Str());
             
             // 显式捕获path副本
             loader(path, typeName, [ctx, path](TexturePtr tex) { 
-                ATL::OnTextureLoaded(ctx, path, tex); 
+                ATL::OnTexLoaded(ctx, path, tex); 
             });
         }
 
@@ -33,7 +33,7 @@ TexPtrArray Loaders::Material::LoadTextures(aiMaterial* mat, aiTextureType type,
         for(unsigned i=0; i<mat->GetTextureCount(type); ++i) {
             aiString str;
             mat->GetTexture(type, i, &str);
-            string path = BuildTexturePath(str.C_Str());
+            string path = BuildTexPath(str.C_Str());
             
             if(auto tex = loader(path, typeName)) { // 直接获取返回值
                 textures.push_back(tex);
