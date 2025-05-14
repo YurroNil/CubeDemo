@@ -44,10 +44,10 @@ void Inputs::PauseTheGame(GLFWwindow* &window) {
     glfwSetInputMode(window, GLFW_CURSOR, isGamePaused ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 
     // 恢复游戏时更新鼠标位置
-    double currentX, currentY;
-    glfwGetCursorPos(window, &currentX, &currentY);
-    s_LastX = currentX;
-    s_LastY = currentY;
+    double current_x, current_y;
+    glfwGetCursorPos(window, &current_x, &current_y);
+    s_LastX = current_x;
+    s_LastY = current_y;
     s_FirstMouse = true; // 强制下次移动时重置初始位置
 
 }
@@ -73,24 +73,36 @@ void Inputs::ProcKeyboard(GLFWwindow* &window, float deltaTime) {
         s_Camera->Position.y -= velocity;
 
     // Alt键呼出鼠标
-    bool altPressed = glfwGetKey(window, GLFW_KEY_LEFT_ALT) || glfwGetKey(window, GLFW_KEY_RIGHT_ALT);
-    if (altPressed != s_AltPressed) {
-        glfwSetInputMode(window, GLFW_CURSOR, altPressed ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+    bool alt_pressed = glfwGetKey(window, GLFW_KEY_LEFT_ALT) || glfwGetKey(window, GLFW_KEY_RIGHT_ALT);
+    if (alt_pressed != s_AltPressed) {
+        glfwSetInputMode(window, GLFW_CURSOR, alt_pressed ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
         s_FirstMouse = true; // 重置鼠标初始位置
-        s_AltPressed = altPressed;
+        s_AltPressed = alt_pressed;
     }
 
     // F3切换调试信息
-    static bool f3LastState = false;
-    bool f3CurrentState = glfwGetKey(window, GLFW_KEY_F3);
-    if (f3CurrentState && !f3LastState) s_isDebugVisible = !s_isDebugVisible;
-    f3LastState = f3CurrentState;
+    static bool f3_last_state = false;
+    bool f3_current_state = glfwGetKey(window, GLFW_KEY_F3);
+    if (f3_current_state && !f3_last_state) s_isDebugVisible = !s_isDebugVisible;
+    f3_last_state = f3_current_state;
 }
 
 // 回到游戏(解除暂停状态)
 void Inputs::ResumeTheGame(GLFWwindow* &window) {
     isGamePaused = false;
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
+// 程序主循环中，ESC按键高频检测
+void Inputs::isEscPressed(GLFWwindow* &window) {
+    static float last_esc_press_time = 0.0f;
+    const float current_time = glfwGetTime();
+    
+    if ((current_time - last_esc_press_time) > Inputs::escCoolDown) {
+        last_esc_press_time = current_time;
+        if (!Inputs::isGamePaused) Inputs::PauseTheGame(window);
+        else if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) Inputs::ResumeTheGame(window);
+    }
 }
 
 }

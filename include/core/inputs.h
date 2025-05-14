@@ -24,6 +24,8 @@ public:
     static void PauseTheGame(GLFWwindow* &window);
     static bool s_isDebugVisible;   // 调试信息面板状态
 
+    static void isEscPressed(GLFWwindow* &window);
+
 private:
     inline static Camera* s_Camera = nullptr;
     inline static float s_LastX = 0.0f;

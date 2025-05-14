@@ -4,8 +4,7 @@
 
 #include "cleanup.h"
 #include "resources/model.h"
-#include "core/window.h"
-#include "loaders/resource.h"
+
 
 namespace CubeDemo {
 extern std::vector<Model*> MODEL_POINTERS; extern Shader* MODEL_SHADER;

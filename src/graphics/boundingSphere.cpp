@@ -1,5 +1,6 @@
 
 #include "graphics/boundingSphere.h"
+#include <iostream>
 
 namespace CubeDemo {
 
@@ -10,26 +11,26 @@ void BoundingSphere::Calc(const MeshArray& meshes) {
         Rad = 0.0f;
         return;
     }
-    // 计算AABB
-    vec3 minVert(FLT_MAX), maxVert(-FLT_MAX);
-    for (const auto& mesh : meshes) {
-        for (const auto& vert : mesh.Vertices) {
-            minVert = glm::min(minVert, vert.Position);
-            maxVert = glm::max(maxVert, vert.Position);
-        }
-    }
-    // 中心点计算
-    Center = (minVert + maxVert) * 0.5f;
-    
-    // 计算最大半径
-    float maxDist = 0.0f;
-    for (const auto& mesh : meshes) {
-        for (const auto& vert : mesh.Vertices) {
-            maxDist = glm::max(maxDist, glm::length(vert.Position - Center));
-        }
-    }
-    Rad = maxDist;
-}
 
+    // 精确计算包围球（使用所有顶点）
+    vec3 min_vert(FLT_MAX), max_vert(-FLT_MAX);
+    for (const auto& mesh : meshes) {
+        for (const auto& v : mesh.Vertices) {
+            min_vert = glm::min(min_vert, v.Position);
+            max_vert = glm::max(max_vert, v.Position);
+        }
+    }
+
+    Center = (min_vert + max_vert) * 0.5f;
+    Rad = 0.0f;
+
+    // 计算最大距离
+    for (const auto& mesh : meshes) {
+        for (const auto& v : mesh.Vertices) {
+            float dist = glm::length(v.Position - Center);
+            if (dist > Rad) Rad = dist;
+        }
+    }
+}
 
 }

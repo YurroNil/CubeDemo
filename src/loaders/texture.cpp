@@ -176,10 +176,10 @@ try {
     tex->Path = path;
     tex->Type = type;
 
-    GLuint tempID;
-    glGenTextures(1, &tempID);
-    tex->ID.store(tempID); // 使用原子存储
-    glBindTexture(GL_TEXTURE_2D, tempID);
+    GLuint temp_id;
+    glGenTextures(1, &temp_id);
+    tex->ID.store(temp_id); // 使用原子存储
+    glBindTexture(GL_TEXTURE_2D, temp_id);
     
     GLenum format = GL_RGBA;
     switch(data->channels) {

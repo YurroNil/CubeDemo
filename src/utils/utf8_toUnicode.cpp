@@ -1,6 +1,6 @@
 // src/utils/utf8_to_unicode.cpp
 
-int Utf8_toUnicodeConv(unsigned int* out_char, const char* in_text, const char* in_text_end) {
+int utf8_to_unicode_conv(unsigned int* out_char, const char* in_text, const char* in_text_end) {
     if (!in_text || !out_char) return 0;
     const unsigned char* p = reinterpret_cast<const unsigned char*>(in_text);
     if (in_text_end && p >= reinterpret_cast<const unsigned char*>(in_text_end)) return 0;

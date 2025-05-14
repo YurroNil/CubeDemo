@@ -11,11 +11,11 @@ namespace CubeDemo {
     
     // 程序主循环模块
     void MainLoop(WIN, CAM);
-    void BeginFrame(CAM);
-    void HandleInput(WIN);
-    void UpdateModels();
-    void HandleWindowSettings(WIN);
-    void RenderScene(WIN, CAM);
-    void EndFrameHandling(WIN);
+    void begin_frame(CAM);
+    void handle_input(WIN);
+    void update_models();
+    void handle_window_settings(WIN);
+    void render_scene(WIN, CAM);
+    void end_frame_handling(WIN);
 
 }

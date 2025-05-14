@@ -25,9 +25,9 @@ void Texture::Bind(unsigned int slot = 0) const {
         return;
     }
     
-    GLuint currentID = ID.load(); // 原子加载
+    GLuint current_id = ID.load(); // 原子加载
     glActiveTexture(GL_TEXTURE0 + slot);
-    glBindTexture(GL_TEXTURE_2D, currentID);
+    glBindTexture(GL_TEXTURE_2D, current_id);
 }
 
 void Texture::MarkValid(bool valid) {

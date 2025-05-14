@@ -28,8 +28,10 @@ build/*
 #Bin and Resources files
 /bin/*
 /resources/models/*
+!/resources/models/*.json
 /textures/*
-/resources/fonts/*
+/resources/fonts/*.ttf
+!/resources/fonts/*.json
 
 #Libraries
 /.3rdParty/

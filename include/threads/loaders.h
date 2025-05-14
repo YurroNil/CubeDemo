@@ -8,6 +8,7 @@ namespace CubeDemo {
         class AsyncTexture;
         class Resource;
         class Model;
+        class ModelIniter;
         class Material;
         class Image;
 

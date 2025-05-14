@@ -14,20 +14,20 @@ namespace {
 }
 
 void Time::Update() {
-    static float lastFrame = 0.0f;
-    float currentFrame = glfwGetTime();
-    float deltaTime = currentFrame - lastFrame;
-    lastFrame = currentFrame;
-    s_DeltaTime = deltaTime;
+    static float last_frame = 0.0f;
+    float current_frame = glfwGetTime();
+    float delta_time = current_frame - last_frame;
+    last_frame = current_frame;
+    s_DeltaTime = delta_time;
 
     // 每帧计数器累加
     s_FrameCounter++;
 
     // 检查是否达到更新间隔
-    if (currentFrame - s_LastUpdate >= UPDATE_INTERVAL) {
-        float elapsed = currentFrame - s_LastUpdate;
+    if (current_frame - s_LastUpdate >= UPDATE_INTERVAL) {
+        float elapsed = current_frame - s_LastUpdate;
         s_CachedFPS = static_cast<int>(s_FrameCounter / elapsed);
-        s_LastUpdate = currentFrame;
+        s_LastUpdate = current_frame;
         s_FrameCounter = 0;
     }
 }

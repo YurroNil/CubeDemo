@@ -2,7 +2,7 @@
 #pragma once
 #include "core/camera.h"
 #include "kits/glfw.h"
-#include "kits/imgui.h"
+#include "utils/jsonConfig.h"
 namespace CubeDemo {
 
 class UIMng {
@@ -22,6 +22,10 @@ private:
     static void HandlePauseMenu(GLFWwindow* window);
     static void RenderPauseMenuContent(GLFWwindow* window);
     static ImVec2 GetWindowCenter(GLFWwindow* window);
+
+    static void BuildFromUnicodeRanges(ImFontGlyphRangesBuilder& builder, const std::vector<ImWchar>& ranges);
+
+    static void BuildFromCustomChars(ImFontGlyphRangesBuilder& builder, const std::vector<string>& char_lines);
 
 };
 

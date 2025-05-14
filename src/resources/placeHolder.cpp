@@ -52,8 +52,8 @@ void PlaceHolder::FinalizeTex(TexturePtr placeholder, TexturePtr realTex) {
         placeholder->State.store(LoadState::Ready);
         
         // 销毁临时纹理
-        GLuint oldID = realTex->ID.load();
-        if (oldID != 0) glDeleteTextures(1, &oldID);
+        GLuint old_id = realTex->ID.load();
+        if (old_id != 0) glDeleteTextures(1, &old_id);
     });
 
 }

@@ -26,8 +26,8 @@ void Window::Init(int width, int height, const char* title) {
         glfwTerminate();
     }
     
-    int winWidth, winHeight; glfwGetFramebufferSize(s_Window, &winWidth, &winHeight);
-    s_InitMouseX = winWidth / 2.0f; s_InitMouseY = winHeight / 2.0f;
+    int win_width, win_height; glfwGetFramebufferSize(s_Window, &win_width, &win_height);
+    s_InitMouseX = win_width / 2.0f; s_InitMouseY = win_height / 2.0f;
     // 设置GLFW回调（通过lambda转发到静态方法）
     glfwSetCursorPosCallback(s_Window, [](GLFWwindow* w, double x, double y) { Inputs::MouseCallback(x, y); });
     glfwSetScrollCallback(s_Window, [](GLFWwindow* w, double x, double y) { Inputs::ScrollCallback(y); });
@@ -56,24 +56,24 @@ void Window::ToggleFullscreen(GLFWwindow* window) {
 }
 
 void Window::FullscreenTrigger(GLFWwindow* window) {
-    static bool f11LastState = false;
-    bool f11CurrentState = glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS;
-    if (f11CurrentState && !f11LastState) { ToggleFullscreen(window); }
-    f11LastState = f11CurrentState;
+    static bool f11_last_state = false;
+    bool f11_current_state = glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS;
+    if (f11_current_state && !f11_last_state) { ToggleFullscreen(window); }
+    f11_last_state = f11_current_state;
 }
 
-void Window::UpdateWindowSize(GLFWwindow* window) {
-    // 更新成员的值
-    glfwGetWindowSize(window, &s_WindowWidth, &s_WindowHeight);
-}
+// Setters
+void Window::UpdateWindowSize(GLFWwindow* window) { glfwGetWindowSize(window, &s_WindowWidth, &s_WindowHeight); }
 
-void Window::UpdateWindowPos(GLFWwindow* window) {
-    // 更新成员的值
-    glfwGetWindowPos(window, &s_WindowPosX, &s_WindowPosY);
-}
+void Window::UpdateWindowPos(GLFWwindow* window) { glfwGetWindowPos(window, &s_WindowPosX, &s_WindowPosY); }
 
-float Window::GetAspectRatio() {
-    return (s_WindowHeight == 0) ? 1.0f : static_cast<float>(s_WindowWidth) / s_WindowHeight;
-}
+// Getters
+float Window::GetAspectRatio() { return (s_WindowHeight == 0) ? 1.0f : static_cast<float>(s_WindowWidth) / s_WindowHeight; }
 
-}
+GLFWwindow* Window::GetWindow() { return s_Window; }
+float Window::GetInitMouseX() { return s_InitMouseX; }
+float Window::GetInitMouseY() { return s_InitMouseY; }
+const int Window::GetWidth() { return s_WindowWidth; };
+const int Window::GetHight() { return s_WindowHeight; };
+
+}   // namespace CubeDemo

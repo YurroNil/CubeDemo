@@ -29,30 +29,30 @@ string Shader::Load(const string& path) {
 Shader::Shader(const string& vertexPath, const string& fragmentPath) {
 
     // 加载着色器
-    string vertexCode = Load(vertexPath);
-    string fragmentCode = Load(fragmentPath);
+    string vertex_code = Load(vertexPath);
+    string frag_code = Load(fragmentPath);
     
     // 编译顶点着色器
-    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    const char* vShaderCode = vertexCode.c_str();
-    glShaderSource(vertexShader, 1, &vShaderCode, NULL);
-    glCompileShader(vertexShader);
+    unsigned int vert_shader = glCreateShader(GL_VERTEX_SHADER);
+    const char* vert_shader_code = vertex_code.c_str();
+    glShaderSource(vert_shader, 1, &vert_shader_code, NULL);
+    glCompileShader(vert_shader);
 
     // 编译片段着色器
-    unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    const char* fShaderCode = fragmentCode.c_str();
-    glShaderSource(fragmentShader, 1, &fShaderCode, NULL);
-    glCompileShader(fragmentShader);
+    unsigned int frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
+    const char* frag_shader_code = frag_code.c_str();
+    glShaderSource(frag_shader, 1, &frag_shader_code, NULL);
+    glCompileShader(frag_shader);
 
     // 创建着色器程序
     ID = glCreateProgram();
-    glAttachShader(ID, vertexShader);
-    glAttachShader(ID, fragmentShader);
+    glAttachShader(ID, vert_shader);
+    glAttachShader(ID, frag_shader);
     glLinkProgram(ID);
 
     // 删除着色器对象
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+    glDeleteShader(vert_shader);
+    glDeleteShader(frag_shader);
 }
 
 Shader::~Shader() {

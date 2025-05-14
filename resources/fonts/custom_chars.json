@@ -1,0 +1,21 @@
+{
+    "CustomChars": [
+        "开始游戏菜单暂停帧数退出",
+        "控制面板调试位置内存用量速度",
+        "全屏返回桌面继续到至已移动"
+    ],
+    "ImWideCharRanges": {
+        "basic_latin_chars": [
+            "0x0020", "0x007F",
+            "0x00A0", "0x00FF"
+        ],
+        "custom_char_sets": [
+            "0x3000", "0x303F",
+            "0x4E00", "0x62FF",
+            "0x6300", "0x77FF",
+            "0x7800", "0x8CFF",
+            "0x8D00", "0x9FA5"
+        ]
+    },
+    "CustomMode": true
+}
