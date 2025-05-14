@@ -5,12 +5,15 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "D:/PDT-C/mingw64/include",
-                "D:/PDT-C/include/freetype2",
                 "D:/WindowsSDK/Include/10.0.26100.0",
                 "D:/PDT-C/include",
                 "D:/PDT-C/include/imgui",
                 "D:/PDT-C/include/assimp",
-                "D:/PDT-C/include/stb"
+                "D:/PDT-C/include/stb",
+                "D:/PDT-C/include/boost",
+                "D:/PDT-C/include/gmp_6_3_0",
+                "D:/PDT-C/include/mpfr"
+
             ],
             "defines": [
                 "_DEBUG",

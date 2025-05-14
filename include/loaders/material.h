@@ -1,7 +1,6 @@
 // include/loaders/material.h
 
 #pragma once
-#include <vector>
 #include "graphics/mesh.h"
 #include "kits/assimp.h"
 #include "loaders/asyncTex.h"

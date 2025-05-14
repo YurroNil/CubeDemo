@@ -1,0 +1,5 @@
+{
+    "LoadModels": [
+        "tree/tree.obj", "kokomi/kokomi.obj"
+    ]
+}

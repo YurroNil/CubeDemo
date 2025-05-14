@@ -9,5 +9,4 @@ namespace CubeDemo {
         vec3 Center; float Rad; // 包围球中心, 半径
         void Calc(const MeshArray& meshes); // 计算包围球
     };
-
 }

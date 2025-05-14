@@ -5,7 +5,7 @@
 #include "core/monitor.h"
 #include "core/time.h"
 
-extern int Utf8_toUnicodeConv(unsigned int* out_char, const char* in_text, const char* in_text_end);
+extern int utf8_to_unicode_conv(unsigned int* out_char, const char* in_text, const char* in_text_end);
 namespace CubeDemo {
 
 // 初始化UI管理器
@@ -43,69 +43,75 @@ void UIMng::ConfigureImGuiStyle() {
     ImGui::StyleColorsDark();                // 使用深色主题
 }
 
-static void temp() {
-    // 添加中文字符范围 (暂不采用)
-    static const ImWchar ranges[] = {
-        // 基础拉丁字符
-        0x0020, 0x007F, // 基本ASCII
-        0x00A0, 0x00FF, // 拉丁补充
-
-        // 精简中文常用字符集（覆盖99%日常使用）
-        0x3000, 0x303F, // 中文标点符号（。，；：「」等）
-        0x4E00, 0x62FF, // 常用汉字区1（的、一、是、在等）
-        0x6300, 0x77FF, // 常用汉字区2（做、作、使、用等）
-        0x7800, 0x8CFF, // 常用汉字区3（器、械、操、控等）
-        0x8D00, 0x9FA5, // 常用汉字区4（魔、法、绘、图等）
-
-        0               // 范围终止符
-    };
-}
-
 // 加载自定义字体
 void UIMng::LoadFonts() {
-    if (!fs::exists("../resources/fonts/simhei.ttf")) {
-        std::cerr << "字体文件不存在: " << "../resources/fonts/simhei.ttf" << std::endl;
+    constexpr const char* FONT_CONFIG_PATH = "../resources/fonts/custom_chars.json";
+    constexpr const char* FONT_FILE_PATH = "../resources/fonts/simhei.ttf";
+
+    // 检查字体文件存在性
+    if (!fs::exists(FONT_FILE_PATH)) {
+        std::cerr << "字体文件不存在: " << FONT_FILE_PATH << std::endl;
         return;
     }
 
-    ImGuiIO& io = ImGui::GetIO();
+    try {
+        // 加载字体配置
+        auto font_config = Utils::JsonConfig::LoadFontConfig(FONT_CONFIG_PATH);
+        
+        ImGuiIO& io = ImGui::GetIO();
+        ImFontGlyphRangesBuilder builder;
 
-    // 硬编码需要加载的中文字符
-    const char* keyChineseChars = 
-    "开始游戏菜单暂停帧数退出"
-    "控制面板调试位置内存用量速度"
-    "全屏返回桌面继续到至已移动";
+        // 模式选择
+        if (font_config.custom_mode) {
+            BuildFromCustomChars(builder, font_config.custom_chars);
+        } else {
+            BuildFromUnicodeRanges(builder, font_config.unicode_ranges);
+        }
 
-    // 创建字符范围构建器
-    ImFontGlyphRangesBuilder builder;
+        // 生成紧凑字符范围
+        ImVector<ImWchar> ranges;
+        builder.BuildRanges(&ranges);
 
-    // 添加 ASCII 基础字符
-    builder.AddRanges(io.Fonts->GetGlyphRangesDefault());
-
-    // 添加硬编码的中文字符
-    const char* p = keyChineseChars;
-    while (*p) {
-        unsigned int c = 0;
-        int bytes = Utf8_toUnicodeConv(&c, p, nullptr);
-        if (bytes == 0) break;
-        builder.AddChar(static_cast<ImWchar>(c));
-        p += bytes;
+        // 加载字体
+        ImFont* font = io.Fonts->AddFontFromFileTTF(
+            FONT_FILE_PATH,
+            30.0f,
+            nullptr,
+            ranges.Data
+        );
+        
+        io.Fonts->Build();
+        std::cout << "成功加载字体: " << FONT_FILE_PATH << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "字体加载失败: " << e.what() << std::endl;
     }
+}
 
-    // 生成紧凑的字符范围数组
-    ImVector<ImWchar> ranges;
-    builder.BuildRanges(&ranges);
+void UIMng::BuildFromCustomChars(ImFontGlyphRangesBuilder& builder, const std::vector<string>& char_lines) {
+    // 添加基础拉丁字符
+    builder.AddRanges(ImGui::GetIO().Fonts->GetGlyphRangesDefault());
 
-    // 加载字体并设为默认字体
-    ImFont* font = io.Fonts->AddFontFromFileTTF(
-        "../resources/fonts/simhei.ttf",
-        30.0f,
-        nullptr,
-        ranges.Data
-    );
-    
-    // 合并其他字体
-    io.Fonts->Build();
+    // 添加自定义字符
+    for (const auto& line : char_lines) {
+        const char* p = line.c_str();
+        while (*p) {
+            unsigned int c = 0;
+            int bytes = utf8_to_unicode_conv(&c, p, nullptr);
+            if (bytes == 0) break;
+            builder.AddChar(static_cast<ImWchar>(c));
+            p += bytes;
+        }
+    }
+}
+
+// 从Unicode范围构建字符集
+void UIMng::BuildFromUnicodeRanges(ImFontGlyphRangesBuilder& builder, const std::vector<ImWchar>& ranges) {
+    // 直接添加预定义的Unicode范围
+    for (size_t i = 0; i < ranges.size(); ) {
+        if (ranges[i] == 0) break;
+        builder.AddRanges(&ranges[i]);
+        i += 2; // 跳过范围对
+    }
 }
 
 // 渲染控制面板
@@ -123,8 +129,8 @@ void UIMng::RenderControlPanel(Camera& camera) {
 void UIMng::HandlePauseMenu(GLFWwindow* window) {
     if (!Inputs::isGamePaused) return; // 如果游戏未暂停，则直接返回
 
-    const ImVec2 pauseMenuSize(400, 350); // 暂停菜单的尺寸
-    const ImVec2 windowCenter = GetWindowCenter(window); // 获取窗口中心位置
+    const ImVec2 pause_menu_size(400, 350); // 暂停菜单的尺寸
+    const ImVec2 window_center = GetWindowCenter(window); // 获取窗口中心位置
 
     // 使用ImGui的弹出窗口状态管理
     if (ImGui::BeginPopupModal("PauseMenu", nullptr, 
@@ -140,11 +146,11 @@ void UIMng::HandlePauseMenu(GLFWwindow* window) {
     }
 
     // 设置窗口属性（只需在首次渲染时设置）
-    static bool firstRender = true;
-    if (firstRender) {
-        ImGui::SetNextWindowPos(windowCenter, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f)); // 设置窗口位置为窗口中心
-        ImGui::SetNextWindowSize(pauseMenuSize, ImGuiCond_Always); // 设置窗口大小
-        firstRender = false;
+    static bool first_render = true;
+    if (first_render) {
+        ImGui::SetNextWindowPos(window_center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f)); // 设置窗口位置为窗口中心
+        ImGui::SetNextWindowSize(pause_menu_size, ImGuiCond_Always); // 设置窗口大小
+        first_render = false;
     }
 }
 
@@ -152,7 +158,7 @@ void UIMng::HandlePauseMenu(GLFWwindow* window) {
 ImVec2 UIMng::GetWindowCenter(GLFWwindow* window) {
     Window::UpdateWindowSize(window); // 更新窗口尺寸
 
-    return ImVec2(Window::s_WindowWidth/2.0f, Window::s_WindowHeight/2.0f); // 返回窗口中心位置
+    return ImVec2(Window::GetWidth()/2.0f, Window::GetHight()/2.0f); // 返回窗口中心位置
 }
 
 // 渲染暂停菜单内容
@@ -163,20 +169,20 @@ void UIMng::RenderPauseMenuContent(GLFWwindow* window) {
     ImGui::Separator(); // 添加分隔线
 
     // 按钮布局
-    const ImVec2 buttonSize(280, 60); // 按钮的尺寸
-    if (ImGui::Button("回到游戏", buttonSize)) { // 添加"回到游戏"按钮
+    const ImVec2 button_size(280, 60); // 按钮的尺寸
+    if (ImGui::Button("回到游戏", button_size)) { // 添加"回到游戏"按钮
         Inputs::ResumeTheGame(window); // 恢复游戏
         ImGui::CloseCurrentPopup(); // 关闭弹出窗口
     }
 
-    if (ImGui::Button("退出到桌面", buttonSize)) { // 添加"退出到桌面"按钮
+    if (ImGui::Button("退出到桌面", button_size)) { // 添加"退出到桌面"按钮
         glfwSetWindowShouldClose(window, true); // 设置窗口关闭标志
     }
 }
 
 // 渲染调试面板
 void UIMng::RenderDebugPanel(const Camera& camera) {
-   const ImGuiWindowFlags windowFlags = 
+   const ImGuiWindowFlags window_flags = 
         ImGuiWindowFlags_NoTitleBar |
         ImGuiWindowFlags_NoResize |
         ImGuiWindowFlags_AlwaysAutoResize |
@@ -186,7 +192,7 @@ void UIMng::RenderDebugPanel(const Camera& camera) {
     ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_Always);
     ImGui::SetNextWindowBgAlpha(0.35f); // 半透明背景
     
-    if (ImGui::Begin("调试面板", nullptr, windowFlags)) {
+    if (ImGui::Begin("调试面板", nullptr, window_flags)) {
         // FPS显示
         ImGui::Text("FPS: %d", Time::FPS());
         
@@ -195,9 +201,9 @@ void UIMng::RenderDebugPanel(const Camera& camera) {
         ImGui::Text("位置 X: %.1f, Y: %.1f, Z: %.1f)", pos.x, pos.y, pos.z);
         
         // 内存使用
-        float memUsage = Monitor::GetMemoryUsageMB();
-        if(memUsage >= 0) {
-            ImGui::Text("内存用量: %.1f MB", memUsage);
+        float memory_usage = Monitor::GetMemoryUsageMB();
+        if(memory_usage >= 0) {
+            ImGui::Text("内存用量: %.1f MB", memory_usage);
         }
     }
     ImGui::End();

@@ -3,10 +3,10 @@
 ├── include/    (以下全部文件后缀都为.h文件)
 │     │
 │     ├── core/ (核心模块)
-│     │     └── camera, inputs, time, Window, monitor
+│     │     └── camera, inputs, time, window, monitor
 │     │
 │     ├── graphics/ (图形渲染模块)
-│     │    └── boundingSphere, renderer, mesh, shader
+│     │    └── boundingSphere, renderer, mesh, shader, lod
 │     │
 │     ├── resources/ (资源模块)
 │     │    └── model, texture, placeHolder
@@ -21,9 +21,11 @@
 │     │    └── monitor, uiMng
 │     │
 │     ├── utils/ (工具模块)
-│     │    └── stringConvertor, utf8_to_unicode
+│     │    └── stringConvertor, utf8_to_unicode, msaConv, jsonConfig, defines
 │     │
-│     └── init, loop, cleanup, mainProgramInc
+│     ├── main/ (main主程序工具链模块)
+│     │         └── includes
+│     └── init, loop, cleanup
 │
 ├── src/    (以下全部文件后缀都为.cpp文件)
 │     │

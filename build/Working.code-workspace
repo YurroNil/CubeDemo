@@ -85,7 +85,18 @@
 			"mutex": "cpp",
 			"*.rh": "cpp",
 			"stacktrace": "cpp",
-			"cuchar": "cpp"
+			"cuchar": "cpp",
+			"bitset": "cpp",
+			"set": "cpp",
+			"cfenv": "cpp",
+			"strstream": "cpp",
+			"complex": "cpp",
+			"csignal": "cpp",
+			"source_location": "cpp",
+			"shared_mutex": "cpp",
+			"stdfloat": "cpp",
+			"typeindex": "cpp",
+			"expected": "cpp"
 		},
 		"powershell.cwd": "workspace"
 	}

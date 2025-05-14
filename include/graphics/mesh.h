@@ -24,37 +24,45 @@ public:
     VertexArray Vertices;
     TexPtrArray m_textures;
 
+    // 提供一个默认的构造函数
+    Mesh();
+    
+    // 普通版本的构造函数
     Mesh(const VertexArray& vertices, const UnsignedArray& indices, const TexPtrArray& textures);
         
-    // 添加移动构造函数
-    Mesh(Mesh&& other) noexcept 
-        : Vertices(std::move(other.Vertices)),
-          m_textures(std::move(other.m_textures)),
-          VAO(other.VAO),
-          VBO(other.VBO),
-          EBO(other.EBO),
-          indexCount(other.indexCount)
-    {
-        // 将源对象置为无效状态
-        other.VAO = other.VBO = other.EBO = 0;
-        other.indexCount = 0;
-    }
+    // 添加移动构造函数的许可
+    Mesh(Mesh&& other) noexcept;
 
-    // 添加移动赋值运算符
+    // 赋值运算符重载为移动操作
     Mesh& operator=(Mesh&& other) noexcept;
 
-    // 删除拷贝构造和拷贝赋值
+    // 禁用拷贝构造函数
     Mesh(const Mesh&) = delete;
+
+    // 禁用拷贝赋值运算符（避免默认浅拷贝）
     Mesh& operator=(const Mesh&) = delete;
-     
+
+    // 构造函数的深拷贝实现(左移运算符重载)
+    Mesh& operator<<(const Mesh& other);
+
     void Draw(Shader& shader) const;
     void UpdateTextures(const TexPtrArray& newTextures);
 
+    // Getters
+    const UnsignedArray& GetIndices() const;
+    unsigned int GetVAO() const;
+    unsigned int GetVBO() const;
+    unsigned int GetEBO() const;
+    unsigned int GetIndexCount() const;
+
+
 private:
-    unsigned VAO, VBO, EBO;
-    size_t indexCount;
+    unsigned m_VAO, m_VBO, m_EBO;
+    size_t m_indexCount;
     mutable std::mutex m_TextureMutex;
+
     void ReleaseGLResources();
+    UnsignedArray m_Indices;
 };
 
 }
