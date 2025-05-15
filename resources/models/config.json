@@ -1,5 +1,5 @@
 {
     "LoadModels": [
-        "tree/tree.obj", "kokomi/kokomi.obj"
+        "kokomi/kokomi.obj", "tree/tree.obj"
     ]
 }

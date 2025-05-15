@@ -84,6 +84,9 @@ void Mesh::Draw(Shader& shader) const {
         std::cerr << "[错误] 无效的VAO!" << std::endl;
         return;
     }
+     // 在绑定纹理前启用混合
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // 标准混合模式
 
     // 计数器初始化
     unsigned int

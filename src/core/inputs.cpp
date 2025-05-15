@@ -55,7 +55,7 @@ void Inputs::PauseTheGame(GLFWwindow* &window) {
 // 输入处理
 void Inputs::ProcKeyboard(GLFWwindow* &window, float deltaTime) {
     // WASD 移动
-    float velocity = s_Camera->attribute.movementSpeed * deltaTime;
+    float velocity = 2* s_Camera->attribute.movementSpeed * deltaTime;
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         s_Camera->Position += s_Camera->direction.front * velocity;

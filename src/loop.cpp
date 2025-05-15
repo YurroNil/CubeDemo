@@ -39,8 +39,6 @@ void MainLoop(WIN, CAM) {
 
 } /* ---------------- 程序主循环 -------------- */
 
-
-
 // 开始帧
 void begin_frame(CAM) {
     Renderer::BeginFrame();
@@ -51,14 +49,11 @@ void begin_frame(CAM) {
 // 输入管理
 void handle_input(WIN) {
     Inputs::isEscPressed(window);
-
     if (!Inputs::isGamePaused) Inputs::ProcKeyboard(window, Time::DeltaTime());
-
 }
 
 // 模型变换(如旋转)
 void update_models() {
-
 }   // UpdateModels
 
 // 输入窗口设置
@@ -85,18 +80,16 @@ void render_scene(WIN, CAM) {
             continue;
         }
 
-        const float distance = glm::distance(model->bounds.Center, camera->Position);
+        // const float distance = glm::distance(model->bounds.Center, camera->Position);
         
         // 视椎体裁剪判断
         if (model->IsReady() &&
             camera->isSphereVisible(model->bounds.Center, model->bounds.Rad)
         ) {
-            model->NormalDraw(*MODEL_SHADER);
-            //model->LodDraw(*MODEL_SHADER, camera->Position);
+            model->DrawCall(DEBUG_LOD_MODE, *MODEL_SHADER, camera->Position);
         }
     }
 }   // RenderScene
-
 
 // 结束帧
 void end_frame_handling(WIN) {

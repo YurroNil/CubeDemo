@@ -8,6 +8,12 @@ namespace CubeDemo {
 // Model构造函数传递路径到Loaders:Model类
 Model::Model(const string& path) : Loaders::Model(path) {}
 
+// 根据不同模式使用对应的绘制指令
+void Model::DrawCall(bool mode, Shader& shader, const vec3& cameraPos) {
+    if(mode) LodDraw(shader, cameraPos);
+    else NormalDraw(shader);
+}
+
 // 普通模式绘制模型
 void Model::NormalDraw(Shader& shader) {
     shader.SetMat4("model", GetModelMatrix());

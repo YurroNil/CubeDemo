@@ -11,6 +11,8 @@ namespace CubeDemo {
 // 静态成员初始化
 TexPtrHashMap TL::s_TexturePool;
 std::mutex TL::s_TextureMutex;
+std::unordered_set<string> TL::s_PrintedPaths;
+std::mutex TL::s_PrintMutex; 
 
 
 TexturePtr TL::TryGetCached(const string& path) {
@@ -70,7 +72,12 @@ void TL::CreateTexAsync(const string& path, const string& type, TexLoadCallback 
         std::lock_guard lock(s_TextureMutex);
         auto existing = s_TexturePool[path].lock();
         if (existing && existing->State == TLS::Ready) {
-            std::cout << "[优化] 异步复用: " << path;
+            {
+                std::lock_guard lock(s_PrintMutex);
+                if (s_PrintedPaths.insert(path).second) {
+                    std::cout << "[优化] 异步复用: " << path << std::endl;
+                }
+            }
             cb(existing);
             return;
         }
@@ -114,14 +121,25 @@ TexturePtr TL::LoadSync(const string& path, const string& type) {
         if (tex == nullptr) return nullptr;
 
         // 如果tex不是nullptr那么将执行复用操作
-        std::cout << "[TL:loadSync] 正在检查路径: " << path <<", 纹理状态: " << GetStatePrint(tex) << std::endl;
+        {
+            std::lock_guard lock(s_PrintMutex);
+            if (s_PrintedPaths.insert(path).second) {
+                std::cout << "[TL:loadSync] 正在检查路径: " << path <<", 纹理状态: " << GetStatePrint(tex) << std::endl;
+            }
+        }
+        
 
         // 等待异步加载完成（包括占位符转换）
         while (tex->State == TLS::Loading || tex->State == TLS::Placeholder) std::this_thread::sleep_for(millisec(1));
 
         if (tex->State != TLS::Ready) break;
 
-        std::cout << "[优化] 同步复用: " << path;
+        {
+            std::lock_guard lock(s_PrintMutex);
+            if (s_PrintedPaths.insert(path).second) { // 如果首次插入成功
+                std::cout << "[优化] 同步复用: " << path << std::endl;
+            }
+        }
         return tex;
     }
 

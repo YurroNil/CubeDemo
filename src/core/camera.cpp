@@ -23,28 +23,7 @@ mat4 Camera::GetProjectionMat(float aspect) const {
     return glm::perspective(glm::radians(attribute.zoom), aspect, frustumPlane.near, frustumPlane.far);
 }
 
-// 处理键盘输入
-void Camera::ProcKeyboard(int directCase, float deltaTime)  {
-    float velocity = attribute.movementSpeed * deltaTime;
 
-    switch (directCase)
-    {
-    case 0:
-        Position += direction.front * velocity; // W
-        break;
-    case 1:
-        Position -= direction.front * velocity; // S
-        break;
-    case 2:
-        Position -= direction.right * velocity; // A
-        break;
-    case 3:
-        Position += direction.right * velocity; // D
-        break;
-    
-    default: break;
-    }
-}
 
 // 处理鼠标移动
 void Camera::ProcMouseMovement(float xoffset, float yoffset, bool constrainPitch = true) {

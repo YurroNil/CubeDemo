@@ -8,6 +8,10 @@ namespace CubeDemo {
 extern bool DEBUG_ASYNC_MODE;
 extern bool DEBUG_LOD_MODE;
 
+// 静态成员初始化
+std::unordered_set<string> ML::s_PrintedPaths;
+std::mutex ML::s_PrintMutex; 
+
 ML::Model(const string& path) : Rawpath(path) {
     Directory = path.substr(0, path.find_last_of('/'));
 }
@@ -134,7 +138,6 @@ Mesh ML::ProcMesh(aiMesh* mesh, const aiScene* scene) {
         textures.clear();
         for (auto& [path, tex] : unique_tex) textures.push_back(tex);
         
-        std::cout << "[材质处理] 完成，加载纹理数: " << textures.size() << std::endl;
     } else {
         std::cerr << "无效材质索引: " << mesh->mMaterialIndex << "/" << scene->mNumMaterials << std::endl;
     }
