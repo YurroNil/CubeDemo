@@ -10,7 +10,7 @@ namespace CubeDemo {
 ImagePtr IL::Load(const string& path) {
     auto data = std::make_shared<IL>();
 
-    stbi_set_flip_vertically_on_load(true);
+    stbi_set_flip_vertically_on_load(false);
 
     data->data.reset(
         stbi_load(

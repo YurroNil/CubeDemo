@@ -7,6 +7,7 @@
 // 标准库
 #include <functional>
 #include <format>
+#include <unordered_set>
 
 namespace CubeDemo {
 
@@ -49,5 +50,9 @@ private:
         inline static constexpr auto BASE_DELAY = millisec(100); ///< 基础延迟
     };
     static string GetStatePrint(TexturePtr tex);
+
+    // 记录已打印的复用路径
+    static std::unordered_set<string> s_PrintedPaths;
+    static std::mutex s_PrintMutex;
 };
 }   // namespace CubeDemo

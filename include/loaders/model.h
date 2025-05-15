@@ -21,7 +21,10 @@ private:
     // 异步加载状态
     std::atomic<bool> m_IsLoading = false;
     std::atomic<bool> m_MeshesReady = false;
-
+    
+    // 记录已打印的复用路径
+    static std::unordered_set<string> s_PrintedPaths;
+    static std::mutex s_PrintMutex;
 
     mat4 m_ModelMatrix = mat4(1.0f);
 

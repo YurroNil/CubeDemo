@@ -35,7 +35,7 @@ GLFWwindow* Init() {
         0.0f
     );
 
-    if (!camera) {glfwTerminate(); glfwDestroyWindow(Window::GetWindow()); throw std::runtime_error("[Error] 窗口创建失败"); }
+    if (!camera) { glfwTerminate(); glfwDestroyWindow(Window::GetWindow()); throw std::runtime_error("[Error] 窗口创建失败"); }
     Camera::SaveCamera(camera); Inputs::Init(camera);
 
 /* ---------- 模型初始化 ------------ */

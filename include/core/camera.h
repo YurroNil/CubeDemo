@@ -16,7 +16,7 @@ public:
     struct Direction { vec3 front, up, right, worldUp; } direction;
 
     struct Attributes {
-        float movementSpeed, // 移动速度
+        float movementSpeed = 2.0, // 移动速度
         mouseSensvty,        // Mouse Senstivity的简写, 即鼠标灵敏度
         zoom;                // 缩放
     } attribute;
@@ -35,7 +35,7 @@ public:
     bool isSphereVisible(const vec3& center, float radius) const;
 
 /* Proceesors and Actions */
-    void ProcKeyboard(int directCase, float deltaTime);
+
     void ProcMouseMovement(float xoffset, float yoffset, bool constrainPitch);
     void ProcMouseScroll(float yoffset);
     void Jump(float velocity);
