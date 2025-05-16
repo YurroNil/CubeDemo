@@ -29,8 +29,8 @@
 
 ## How to Compile
 First you need to prepare the following some libraries into `include/` : `GLFW` (<a href="https://github.com/glfw/glfw" target="_blank">Link</a>) , `glad` (<a href="https://glad.dav1d.de/" target="_blank">Link</a>) , `glm` (<a href="https://github.com/g-truc/glm" target="_blank">Link</a>) , `json` (<a href="https://github.com/nlohmann/json" target="_blank">Link</a>) , `stb` (<a href="https://github.com/nothings/stb" target="_blank">Link</a>) , `OpenMesh` (<a href="https://www.graphics.rwth-aachen.de/software/openmesh/download" target="_blank">Link</a>) and `assimp` (<a href="https://github.com/assimp/assimp" target="_blank">Link</a>).  
-Finally, in the root directory of the workspace Run command (Here take GCC as an example) :
-```{sh}
+Finally, in the root directory of the workspace Run command (Here take MingW64 as an example) :
+```sh
 g++.exe -g\
      "../src/core/*.cpp"\
      "../src/graphics/*.cpp"\
@@ -40,6 +40,7 @@ g++.exe -g\
      "../src/main/*.cpp"\
      "../src/threads/*.cpp"\
      "../src/loaders/*.cpp"\
+     "../src/scenes/*.cpp"\
 -o ./bin/Demo.exe\
      -Iinclude -Llib -lglfw3 -lopengl32 -lassimp  -lOpenMeshCored -lOpenMeshToolsd -std=c++23
 ```
@@ -48,9 +49,9 @@ to compile successfully.
 ## Changelog
 * [**1.0.7**]
      - (2025.05.15)  
-          -- 使用了Assimp完成了加载obj与fbx等格式的自定义模型;  
+          -- 使用Assimp库完成了加载obj与fbx等格式的自定义模型;  
           -- 完成了部分的异步加载系统(未启用); 完成了初步的LOD系统(未启用);  
-          -- 可以修改资源文件夹下的config.json和custom_chars.json的json数据, 以热更新加载程序中的模型与字体.  
+          -- 可以修改resources文件夹内config.json和custom_chars.json的数据, 以热更新加载程序中的模型与字符.  
 
 * [**1.0.6**]
      - (2025.04.04) 增加了暂停菜单; 代码更加模块化; 增加了对象注册模块; 增加了对象变换模块(如移动、缩放、旋转等).
