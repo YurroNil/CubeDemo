@@ -6,7 +6,7 @@
 │     │     └── camera, inputs, time, window, monitor
 │     │
 │     ├── graphics/ (图形渲染模块)
-│     │    └── boundingSphere, renderer, mesh, shader, lod
+│     │    └── boundingSphere, renderer, mesh, shader, lod, light, shadowMap
 │     │
 │     ├── resources/ (资源模块)
 │     │    └── model, texture, placeHolder
@@ -15,10 +15,13 @@
 │     │    └── diagnostic, taskQueue, loaders
 │     │
 │     ├── loaders/ (加载器模块)
-│     │         └── material, model, resource, texture, image, asyncTex
+│     │         └── material, model, resource, texture, image, asyncTex, fonts, modelIniter
 │     │
 │     ├── ui/ (UI模块)
 │     │    └── monitor, uiMng
+│     │
+│     ├── scenses/ (场景布置模块)
+│     │    └── mainScene, baseScene
 │     │
 │     ├── utils/ (工具模块)
 │     │    └── stringConvertor, utf8_to_unicode, msaConv, jsonConfig, defines

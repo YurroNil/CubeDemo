@@ -5,7 +5,6 @@
 
 namespace CubeDemo {
 
- 
 class Renderer {
 public:
     static void Init();  // 初始化渲染器（设置OpenGL状态）

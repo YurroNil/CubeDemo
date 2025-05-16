@@ -9,8 +9,8 @@ using ML = CubeDemo::Loaders::Model;
 namespace CubeDemo::Graphics {
 
 void LODSystem::Init(
-    MeshArray&& baseMeshes,     // 基础网格（移动语义转移所有权）
-    float boundingRadius,       // 包围球半径
+    MeshArray&& base_meshes,     // 基础网格（移动语义转移所有权）
+    float bound_rad,       // 包围球半径
     const std::vector<float>& ratios, // 简化比例列表
     SimplifyAlg algorithm       // 简化算法
 ) {
@@ -18,9 +18,9 @@ void LODSystem::Init(
     m_Levels.clear(); // 清空现有层级
 
     /* 添加原始LOD层级 */
-    const float base_trans_dist = boundingRadius * 0.5f;
+    const float base_trans_dist = bound_rad * 0.5f;
     m_Levels.emplace_back(
-        std::move(baseMeshes),
+        std::move(base_meshes),
         base_trans_dist,
         true
     );
@@ -37,7 +37,7 @@ void LODSystem::Init(
         }
 
         // 计算过渡距离：基于包围球半径和简化比例
-        float trans_dist = boundingRadius * (1.0f + ratio * 2.0f);
+        float trans_dist = bound_rad * (1.0f + ratio * 2.0f);
         m_Levels.emplace_back(
             std::move(simplified_meshes),
             trans_dist,
@@ -61,17 +61,16 @@ LODLevel& LODLevel::operator=(LODLevel&& other) noexcept {
     if (this != &other) {
         m_Meshes = std::move(other.m_Meshes);
         m_TransDistance = other.m_TransDistance;
-        m_IsReady.store(other.m_IsReady.load(std::memory_order_acquire), 
-                       std::memory_order_release);
+        m_IsReady.store(other.m_IsReady.load(std::memory_order_acquire), std::memory_order_release);
         other.m_IsReady.store(false, std::memory_order_release);
     }
     return *this;
 }
 
 
-LODLevel::LODLevel(MeshArray meshes, float transitionDist, bool ready)
+LODLevel::LODLevel(MeshArray meshes, float transition_dist, bool ready)
     : m_Meshes(std::move(meshes)),
-      m_TransDistance(transitionDist),
+      m_TransDistance(transition_dist),
       m_IsReady(ready) {}
 
 const MeshArray& LODLevel::GetMeshes() const noexcept {
@@ -97,11 +96,11 @@ void LODSystem::AddPrebuiltLevel(LODLevel&& level) {
 }
 
 const LODLevel& LODSystem::SelectLevel(
-    const vec3& anchorPoint,
-    const vec3& observerPos) const 
+    const vec3& anchor_point,
+    const vec3& observer_pos) const 
 {
     std::lock_guard<std::mutex> lock(m_LevelsMutex);
-    const float distance = glm::distance(anchorPoint, observerPos);
+    const float distance = glm::distance(anchor_point, observer_pos);
     
     for (auto it = m_Levels.rbegin(); it != m_Levels.rend(); ++it) {
         if (distance >= it->GetTransDistance() && it->IsReady()) {
@@ -127,19 +126,19 @@ size_t LODSystem::GetLevelCount() const noexcept {
 }
 
 void LODSystem::GenLodHierarchy_async(
-    const LODLevel& baseLevel,
-    const std::vector<float>& simpFactors,
+    const LODLevel& base_level,
+    const std::vector<float>& simp_factors,
     SimplifyAlg algorithm)
 {
     // 创建异步任务
-    auto asyncTask = [this, &baseLevel, simpFactors, algorithm]() {
+    auto asyncTask = [this, &base_level, simp_factors, algorithm]() {
         try {
-            for (const float ratio : simpFactors) {
+            for (const float ratio : simp_factors) {
                 MeshArray simplified_meshes;
                 
                 // 并行处理每个网格
                 std::vector<std::future<Mesh>> futures;
-                for (const auto& mesh : baseLevel.GetMeshes()) {
+                for (const auto& mesh : base_level.GetMeshes()) {
                     futures.push_back(std::async(std::launch::async, 
                         [&mesh, ratio, &algorithm]() {
                             return algorithm(mesh, ratio);
@@ -152,11 +151,11 @@ void LODSystem::GenLodHierarchy_async(
                 }
                 
                 // 创建并添加新层级
-                LODLevel newLevel(std::move(simplified_meshes),  ratio * baseLevel.GetTransDistance());
-                newLevel.MarkReady();
+                LODLevel new_level(std::move(simplified_meshes),  ratio * base_level.GetTransDistance());
+                new_level.MarkReady();
                 
                 std::lock_guard<std::mutex> lock(m_LevelsMutex);
-                m_Levels.push_back(std::move(newLevel));
+                m_Levels.push_back(std::move(new_level));
             }
         } catch (const std::exception& e) {
             std::cerr << "LOD生成失败: " << e.what() << std::endl;
@@ -167,14 +166,14 @@ void LODSystem::GenLodHierarchy_async(
 }
 
 void LODSystem::GenLodHierarchy_sync(
-    const LODLevel& baseLevel,
-    const std::vector<float>& simpFactors,
+    const LODLevel& base_level,
+    const std::vector<float>& simp_factors,
     SimplifyAlg algorithm)
 {
-    for (const float ratio : simpFactors) {
+    for (const float ratio : simp_factors) {
         MeshArray simplified_meshes;
 
-        for (const auto& mesh : baseLevel.GetMeshes()) {
+        for (const auto& mesh : base_level.GetMeshes()) {
 
             Mesh simplified = Graphics::simplify_mesh(std::move(mesh), ratio);
             simplified.m_textures = mesh.m_textures; 
@@ -184,7 +183,7 @@ void LODSystem::GenLodHierarchy_sync(
         std::lock_guard<std::mutex> lock(m_LevelsMutex);
         m_Levels.emplace_back(
             std::move(simplified_meshes), 
-            baseLevel.GetTransDistance() * (1.0f + ratio),
+            base_level.GetTransDistance() * (1.0f + ratio),
             true // 直接标记为就绪
         );
     }

@@ -3,7 +3,6 @@
 #pragma once
 namespace CubeDemo {
 
-
 class Time {
 public:
     static void Update();

@@ -16,7 +16,7 @@ public:
     static void FullscreenTrigger(GLFWwindow* window);
     static bool ShouldClose();
 
-    static void UpdateWindowSize(GLFWwindow* window);
+    static void UpdateWinSize(GLFWwindow* window);
     static void UpdateWindowPos(GLFWwindow* window);
 
     // Getters
@@ -25,7 +25,7 @@ public:
     static float GetInitMouseY();
     static float GetAspectRatio();
     static const int GetWidth();
-    static const int GetHight();
+    static const int GetHeight();
 
 private:
     // 静态成员

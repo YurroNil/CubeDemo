@@ -6,14 +6,19 @@
 #include <future>
 
 namespace CubeDemo {
-extern std::vector<Model*> MODEL_POINTERS; extern Shader* MODEL_SHADER;
+
+extern std::vector<Model*> MODEL_POINTERS;
+extern Shader* MODEL_SHADER;
 extern bool DEBUG_LOD_MODE;
 
 /* ---------------- 程序主循环 -------------- */
 void MainLoop(WIN, CAM) {
 
+    Scene scene_inst;
+    scene_inst.Init();
+
     while (!Window::ShouldClose()) {
-        static int var = 0; int processed = 0;
+        int processed = 0;
 
         /* 任务处理 */
         TaskQueue::ProcTasks(processed);
@@ -31,13 +36,12 @@ void MainLoop(WIN, CAM) {
         handle_window_settings(window);
 
         /* 渲染场景 */
-        render_scene(window, camera);    
+        render_scene(window, camera, scene_inst);    
 
         /* 结束帧 */
         end_frame_handling(window);
     }
-
-} /* ---------------- 程序主循环 -------------- */
+}
 
 // 开始帧
 void begin_frame(CAM) {
@@ -58,37 +62,19 @@ void update_models() {
 
 // 输入窗口设置
 void handle_window_settings(WIN) {
-    Window::UpdateWindowSize(window);    // 更新窗口尺寸
+    Window::UpdateWinSize(window);    // 更新窗口尺寸
     Window::FullscreenTrigger(window);   // 全屏 
 }
 
 /* <------------ 渲  染  循  环 ------------> */
-void render_scene(WIN, CAM) {
+void render_scene(WIN, CAM, Scene& scene_inst) {
 
-    Window::UpdateWindowSize(window);
+    // 阴影渲染阶段
+    scene_inst.RenderShadow(camera);
 
-/* ------应用模型着色器------ */
-    MODEL_SHADER->Use();
+    // 主渲染阶段
+    scene_inst.RenderMainPass(window, camera);
 
-    // 到摄像机
-    MODEL_SHADER->ApplyCamera(*camera, Window::GetAspectRatio());
-
-    // 到模型
-    for (auto* model : MODEL_POINTERS) {
-        if (!model->IsReady()) {
-            std::cout << "[Render] 模型未就绪: " << model << std::endl;
-            continue;
-        }
-
-        // const float distance = glm::distance(model->bounds.Center, camera->Position);
-        
-        // 视椎体裁剪判断
-        if (model->IsReady() &&
-            camera->isSphereVisible(model->bounds.Center, model->bounds.Rad)
-        ) {
-            model->DrawCall(DEBUG_LOD_MODE, *MODEL_SHADER, camera->Position);
-        }
-    }
 }   // RenderScene
 
 // 结束帧

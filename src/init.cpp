@@ -3,6 +3,7 @@
 #include "loaders/modelIniter.h"
 
 namespace CubeDemo {
+
 // 全局变量
 std::vector<Model*> MODEL_POINTERS;
 Shader* MODEL_SHADER;

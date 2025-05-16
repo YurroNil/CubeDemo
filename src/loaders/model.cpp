@@ -2,9 +2,13 @@
 
 #include "loaders/model.h"
 
+// 别名
 using MaL = CubeDemo::Loaders::Material;
 using ML = CubeDemo::Loaders::Model;
+
 namespace CubeDemo {
+
+// 外部变量声明
 extern bool DEBUG_ASYNC_MODE;
 extern bool DEBUG_LOD_MODE;
 

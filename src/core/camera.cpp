@@ -23,8 +23,6 @@ mat4 Camera::GetProjectionMat(float aspect) const {
     return glm::perspective(glm::radians(attribute.zoom), aspect, frustumPlane.near, frustumPlane.far);
 }
 
-
-
 // 处理鼠标移动
 void Camera::ProcMouseMovement(float xoffset, float yoffset, bool constrainPitch = true) {
 

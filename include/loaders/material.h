@@ -5,18 +5,19 @@
 #include "kits/assimp.h"
 #include "loaders/asyncTex.h"
 
-using ATL = CubeDemo::Loaders::AsyncTexture;
 
 namespace CubeDemo {
+
+// 别名
+using ATL = CubeDemo::Loaders::AsyncTexture;
 using VertexArray = std::vector<Vertex>;
 using MeshArray = std::vector<Mesh>;
 
-
 class Loaders::Material {
 public:
-    string Directory;
 
-    void ProcMaterial(aiMesh* &mesh, const aiScene* &scene, TexPtrArray& textures, bool isAyncMode);
+    string Directory;
+    void ProcMaterial(aiMesh* &mesh, const aiScene* &scene, TexPtrArray& textures, bool is_aync);
 
 private:
     string BuildTexPath(const char* aiPath) const;
@@ -26,7 +27,7 @@ private:
     TexPtrArray LoadTextures(aiMaterial*, aiTextureType, const string&, LoaderFunc);
 
     // 异步加载入口
-    TexPtrArray LoadTex(aiMaterial* mat, aiTextureType type, const string& typeName, bool isAsync);
+    TexPtrArray LoadTex(aiMaterial* mat, aiTextureType type, const string& type_name, bool is_async);
 
 };
 
