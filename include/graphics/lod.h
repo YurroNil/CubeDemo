@@ -8,7 +8,7 @@ namespace CubeDemo::Graphics {
 
 class LODLevel {
 public:
-    // 显式声明移动操作（关键修复点）
+    // 显式声明移动操作
     LODLevel(LODLevel&& other) noexcept;
     LODLevel& operator=(LODLevel&& other) noexcept;
     
@@ -16,7 +16,7 @@ public:
     LODLevel(const LODLevel&) = delete;
     LODLevel& operator=(const LODLevel&) = delete;
 
-    LODLevel(MeshArray meshes, float transitionDist, bool ready = false);
+    LODLevel(MeshArray meshes, float transition_dist, bool ready = false);
     
     const MeshArray& GetMeshes() const noexcept;
     float GetTransDistance() const noexcept;
@@ -36,8 +36,8 @@ public:
     using SimplifyAlg = std::function<Mesh(const Mesh&, float)>;
 
     // LOD系统初始化
-    void Init(MeshArray&& baseMeshes,
-        float boundingRadius,
+    void Init(MeshArray&& base_meshes,
+        float bound_rad,
         const std::vector<float>& ratios = {0.3f, 0.6f},
         SimplifyAlg algorithm = simplify_mesh
     );
@@ -46,19 +46,19 @@ public:
     void AddPrebuiltLevel(LODLevel&& level);
     
     // 核心选择算法
-    const LODLevel& SelectLevel(const vec3& anchorPoint, const vec3& observerPos) const;
+    const LODLevel& SelectLevel(const vec3& anchor_point, const vec3& observer_pos) const;
     
     // 异步生成接口
     void GenLodHierarchy_async(
-        const LODLevel& baseLevel,
-        const std::vector<float>& simpFactors,
+        const LODLevel& base_level,
+        const std::vector<float>& simp_factors,
         SimplifyAlg algorithm = simplify_mesh
     );
 
     // 同步生成接口
     void GenLodHierarchy_sync(
-        const LODLevel& baseLevel,
-        const std::vector<float>& simpFactors,
+        const LODLevel& base_level,
+        const std::vector<float>& simp_factors,
         SimplifyAlg algorithm = simplify_mesh
     );
 

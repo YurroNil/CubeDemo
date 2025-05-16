@@ -4,15 +4,18 @@
 #include "core/window.h"
 #include "core/monitor.h"
 #include "core/time.h"
+#include "loaders/fonts.h"
 
-extern int utf8_to_unicode_conv(unsigned int* out_char, const char* in_text, const char* in_text_end);
 namespace CubeDemo {
 
 // 初始化UI管理器
 void UIMng::Init() {
-    InitImGui();          // 初始化ImGui库
-    ConfigureImGuiStyle(); // 配置ImGui的样式
-    LoadFonts();          // 加载自定义字体
+    // 初始化ImGui库
+    InitImGui();
+    // 配置ImGui的样式
+    ConfigureImGuiStyle();
+    // 加载自定义字体
+    Loaders::Fonts::LoadFonts();
 }
 
 // 渲染循环，用于在每一帧中更新和渲染UI
@@ -41,77 +44,6 @@ void UIMng::ConfigureImGuiStyle() {
     style.ItemSpacing = ImVec2(10, 15);      // 设置控件之间的间距
     style.ScaleAllSizes(1.5f);               // 放大所有尺寸以适配高DPI屏幕
     ImGui::StyleColorsDark();                // 使用深色主题
-}
-
-// 加载自定义字体
-void UIMng::LoadFonts() {
-    constexpr const char* FONT_CONFIG_PATH = "../resources/fonts/custom_chars.json";
-    constexpr const char* FONT_FILE_PATH = "../resources/fonts/simhei.ttf";
-
-    // 检查字体文件存在性
-    if (!fs::exists(FONT_FILE_PATH)) {
-        std::cerr << "字体文件不存在: " << FONT_FILE_PATH << std::endl;
-        return;
-    }
-
-    try {
-        // 加载字体配置
-        auto font_config = Utils::JsonConfig::LoadFontConfig(FONT_CONFIG_PATH);
-        
-        ImGuiIO& io = ImGui::GetIO();
-        ImFontGlyphRangesBuilder builder;
-
-        // 模式选择
-        if (font_config.custom_mode) {
-            BuildFromCustomChars(builder, font_config.custom_chars);
-        } else {
-            BuildFromUnicodeRanges(builder, font_config.unicode_ranges);
-        }
-
-        // 生成紧凑字符范围
-        ImVector<ImWchar> ranges;
-        builder.BuildRanges(&ranges);
-
-        // 加载字体
-        ImFont* font = io.Fonts->AddFontFromFileTTF(
-            FONT_FILE_PATH,
-            30.0f,
-            nullptr,
-            ranges.Data
-        );
-        
-        io.Fonts->Build();
-        std::cout << "成功加载字体: " << FONT_FILE_PATH << std::endl;
-    } catch (const std::exception& e) {
-        std::cerr << "字体加载失败: " << e.what() << std::endl;
-    }
-}
-
-void UIMng::BuildFromCustomChars(ImFontGlyphRangesBuilder& builder, const std::vector<string>& char_lines) {
-    // 添加基础拉丁字符
-    builder.AddRanges(ImGui::GetIO().Fonts->GetGlyphRangesDefault());
-
-    // 添加自定义字符
-    for (const auto& line : char_lines) {
-        const char* p = line.c_str();
-        while (*p) {
-            unsigned int c = 0;
-            int bytes = utf8_to_unicode_conv(&c, p, nullptr);
-            if (bytes == 0) break;
-            builder.AddChar(static_cast<ImWchar>(c));
-            p += bytes;
-        }
-    }
-}
-
-// 从Unicode范围构建字符集
-void UIMng::BuildFromUnicodeRanges(ImFontGlyphRangesBuilder& builder, const std::vector<ImWchar>& ranges) {
-    // 直接添加预定义的Unicode范围
-    for (size_t i = 0; i < ranges.size(); ) {
-        if (ranges[i] == 0) break;
-        builder.AddRanges(&ranges[i]);
-        i += 2; // 跳过范围对
-    }
 }
 
 // 渲染控制面板
@@ -156,9 +88,9 @@ void UIMng::HandlePauseMenu(GLFWwindow* window) {
 
 // 获取窗口中心位置
 ImVec2 UIMng::GetWindowCenter(GLFWwindow* window) {
-    Window::UpdateWindowSize(window); // 更新窗口尺寸
+    Window::UpdateWinSize(window); // 更新窗口尺寸
 
-    return ImVec2(Window::GetWidth()/2.0f, Window::GetHight()/2.0f); // 返回窗口中心位置
+    return ImVec2(Window::GetWidth()/2.0f, Window::GetHeight()/2.0f); // 返回窗口中心位置
 }
 
 // 渲染暂停菜单内容
@@ -207,7 +139,5 @@ void UIMng::RenderDebugPanel(const Camera& camera) {
         }
     }
     ImGui::End();
-
 }
-
 }

@@ -8,7 +8,7 @@ using TexPtrArray = std::vector<std::shared_ptr<Texture>>;
 
 // LoaderFunc模板
 template <typename LoaderFunc>
-TexPtrArray Loaders::Material::LoadTextures(aiMaterial* mat, aiTextureType type, const string& typeName, LoaderFunc loader) {
+TexPtrArray Loaders::Material::LoadTextures(aiMaterial* mat, aiTextureType type, const string& type_name, LoaderFunc loader) {
     TexPtrArray textures;
     constexpr bool is_async_during_compi = std::is_invocable_v<LoaderFunc, string, string, TexLoadCallback>;
 
@@ -23,7 +23,7 @@ TexPtrArray Loaders::Material::LoadTextures(aiMaterial* mat, aiTextureType type,
             string path = BuildTexPath(str.C_Str());
             
             // 显式捕获path副本
-            loader(path, typeName, [ctx, path](TexturePtr tex) { 
+            loader(path, type_name, [ctx, path](TexturePtr tex) { 
                 ATL::OnTexLoaded(ctx, path, tex); 
             });
         }
@@ -35,7 +35,7 @@ TexPtrArray Loaders::Material::LoadTextures(aiMaterial* mat, aiTextureType type,
             mat->GetTexture(type, i, &str);
             string path = BuildTexPath(str.C_Str());
             
-            if(auto tex = loader(path, typeName)) { // 直接获取返回值
+            if(auto tex = loader(path, type_name)) { // 直接获取返回值
                 textures.push_back(tex);
             }
         }

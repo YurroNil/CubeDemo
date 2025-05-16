@@ -11,7 +11,6 @@ public:
     static void InitModels();
     
 private:
-
     // 子功能模块
     static void LoadModelData(std::atomic<bool>& model_loaded, CubeDemo::Model* model, bool async_mode);
     static void WaitForModelLoad(std::atomic<bool>& model_loaded);
@@ -19,9 +18,5 @@ private:
     static void ValidateModelData(CubeDemo::Model* model);
     static void LoadSingleModel(const string& model_path);
     static void InitModelShader(const string& vsh_path, const string& fsh_path);
-
-    // 模型配置
-    static constexpr const char* SHADER_VERTEX = VSH_PATH "model.glsl";
-    static constexpr const char* SHADER_FRAGMENT = FSH_PATH "model.glsl";
 };
 }

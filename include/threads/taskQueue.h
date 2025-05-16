@@ -21,7 +21,7 @@ public:
 
     // 静态方法
     static void ProcTasks(int& processed);
-    static void AddTasks(Task task, bool isHighPriority);
+    static void AddTasks(Task task, bool is_high_priority);
     static bool IsMainThread();
 
     // 实例方法

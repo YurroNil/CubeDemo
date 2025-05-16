@@ -11,6 +11,7 @@ namespace CubeDemo {
         class ModelIniter;
         class Material;
         class Image;
+        class Fonts;
 
     }   // namespace Loaders
 }   // namespace CubeDemo

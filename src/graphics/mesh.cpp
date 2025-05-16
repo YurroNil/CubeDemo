@@ -5,6 +5,8 @@
 #include <iostream>
 
 namespace CubeDemo {
+
+// 外部变量声明
 extern bool DEBUG_ASYNC_MODE;
 
 // 普通版本的构造函数
@@ -16,9 +18,7 @@ Mesh::Mesh(
     : m_textures(textures),
       m_indexCount(indices.size()),
       m_Indices(indices)
-
 {
-
     // 储存顶点数组
     this->Vertices = vertices;
 
@@ -168,7 +168,6 @@ Mesh& Mesh::operator=(Mesh&& other) noexcept {
     return *this;
 }
 
-
 // 构造函数的深拷贝实现(左移运算符重载)
 Mesh& Mesh::operator<<(const Mesh& other) {
     // 将other的数据拷贝到this这里
@@ -220,8 +219,6 @@ void Mesh::ReleaseGLResources() {
     if(m_VBO) glDeleteBuffers(1, &m_VBO);
     if(m_EBO) glDeleteBuffers(1, &m_EBO);
 }
-
-
 
 // 乱七八糟的Getters
 const UnsignedArray& Mesh::GetIndices() const { return m_Indices; }

@@ -22,22 +22,22 @@ void TaskQueue::ProcTasks(int& processed) {
     }
 }
 // 发出任务指令
-void TaskQueue::AddTasks(Task task, bool isHighPriority) {
-    s_MainThreadQueue.Push(std::move(task), isHighPriority);
+void TaskQueue::AddTasks(Task task, bool is_high_priority) {
+    s_MainThreadQueue.Push(std::move(task), is_high_priority);
     std::cout << "[Queue] 添加任务类型: " << typeid(task).name() << " 队列深度: " << sizeof(queue_) << std::endl;
 }
 // 任务优先级处理
-void TaskQueue::Push(Task task, bool isHighPriority) {
+void TaskQueue::Push(Task task, bool is_high_priority) {
     auto& diag = Diagnostic::Get();
     {
         std::lock_guard lock(mutex_);
 
-        if(isHighPriority) queue_.push_front(std::move(task));
+        if(is_high_priority) queue_.push_front(std::move(task));
         else queue_.push_back(std::move(task));
         
 
         diag.stats.tasksQueued = queue_.size();
-        std::cout << "[TASK] 添加任务 类型:" << typeid(task).name()<< " 优先级:" << (isHighPriority ? "高" : "低") << " 队列深度:" << queue_.size() << "\n";
+        std::cout << "[TASK] 添加任务 类型:" << typeid(task).name()<< " 优先级:" << (is_high_priority ? "高" : "低") << " 队列深度:" << queue_.size() << "\n";
     }
     condition_.notify_all(); // 必须使用notify_all
 }

@@ -127,7 +127,6 @@ TexturePtr TL::LoadSync(const string& path, const string& type) {
                 std::cout << "[TL:loadSync] 正在检查路径: " << path <<", 纹理状态: " << GetStatePrint(tex) << std::endl;
             }
         }
-        
 
         // 等待异步加载完成（包括占位符转换）
         while (tex->State == TLS::Loading || tex->State == TLS::Placeholder) std::this_thread::sleep_for(millisec(1));

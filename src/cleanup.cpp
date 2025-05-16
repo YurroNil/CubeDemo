@@ -4,10 +4,13 @@
 
 #include "cleanup.h"
 #include "resources/model.h"
-
+#include "scenes/mainScene.h"
 
 namespace CubeDemo {
-extern std::vector<Model*> MODEL_POINTERS; extern Shader* MODEL_SHADER;
+
+// 外部变量声明
+extern std::vector<Model*> MODEL_POINTERS;
+extern Shader* MODEL_SHADER;
 
 void Cleanup(GLFWwindow* window, Camera* camera) {
 

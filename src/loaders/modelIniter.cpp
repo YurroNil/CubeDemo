@@ -2,9 +2,12 @@
 
 #include "loaders/modelIniter.h"
 
+// 别名
 using MIL = CubeDemo::Loaders::ModelIniter;
+
 namespace CubeDemo {
 
+// 外部变量声明
 extern bool DEBUG_ASYNC_MODE;
 extern std::vector<CubeDemo::Model*> MODEL_POINTERS;
 extern Shader* MODEL_SHADER;
@@ -17,7 +20,10 @@ void MIL::InitModels() {
         const auto model_list = Utils::JsonConfig::LoadModelList("../resources/models/config.json");
         
         // 初始化着色器（所有模型共享）
-        MODEL_SHADER = new Shader(SHADER_VERTEX, SHADER_FRAGMENT);
+        MODEL_SHADER = new Shader(
+            VSH_PATH + string("model.glsl"),
+            FSH_PATH + string("model.glsl")
+        );
 
         // 加载每个模型
         for (const auto& model_rel_path : model_list) {

@@ -7,7 +7,6 @@
 
 namespace CubeDemo {
 
-
 void Window::Init(int width, int height, const char* title) {
 
     // 在初始化时捕获主线程ID
@@ -43,7 +42,7 @@ void Window::ToggleFullscreen(GLFWwindow* window) {
     if(!window) return; // 防止空指针
     if (!s_IsFullscreen) {
         // 保存窗口位置和尺寸
-        UpdateWindowSize(window); UpdateWindowPos(window);
+        UpdateWinSize(window); UpdateWindowPos(window);
         // 切换到全屏
         GLFWmonitor* monitor = glfwGetPrimaryMonitor();
         const GLFWvidmode* mode = glfwGetVideoMode(monitor);
@@ -63,7 +62,7 @@ void Window::FullscreenTrigger(GLFWwindow* window) {
 }
 
 // Setters
-void Window::UpdateWindowSize(GLFWwindow* window) { glfwGetWindowSize(window, &s_WindowWidth, &s_WindowHeight); }
+void Window::UpdateWinSize(GLFWwindow* window) { glfwGetWindowSize(window, &s_WindowWidth, &s_WindowHeight); }
 
 void Window::UpdateWindowPos(GLFWwindow* window) { glfwGetWindowPos(window, &s_WindowPosX, &s_WindowPosY); }
 
@@ -74,6 +73,6 @@ GLFWwindow* Window::GetWindow() { return s_Window; }
 float Window::GetInitMouseX() { return s_InitMouseX; }
 float Window::GetInitMouseY() { return s_InitMouseY; }
 const int Window::GetWidth() { return s_WindowWidth; };
-const int Window::GetHight() { return s_WindowHeight; };
+const int Window::GetHeight() { return s_WindowHeight; };
 
 }   // namespace CubeDemo
