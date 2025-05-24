@@ -5,7 +5,7 @@
 #include "kits/imgui.h"
 
 namespace CubeDemo::Utils {
-using StringArray = std::vector<std::string>;
+using StringArray = std::vector<string>;
 
 struct FontConfig {
     bool custom_mode;

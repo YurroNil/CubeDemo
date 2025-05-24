@@ -2,7 +2,7 @@
 #pragma once
 #include "loaders/image.h"
 #include "kits/glfw.h"
-#include <iostream>
+#include "resources/textureBase.h"
 
 namespace CubeDemo {
 

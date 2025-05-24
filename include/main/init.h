@@ -1,4 +1,4 @@
-// include/init.h
+// include/main/init.h
 
 #pragma once
 

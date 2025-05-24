@@ -1,9 +1,12 @@
 // include/loaders/resource.inl
 #pragma once
-namespace CubeDemo {
+
+using RL = CubeDemo::Loaders::Resource;
+
+namespace CubeDemo::Loaders {
 
 template<typename F>
-auto Loaders::Resource::EnqueueIOJob(F&& f) -> std::future<decltype(f())> {
+auto RL::EnqueueIOJob(F&& f) -> std::future<decltype(f())> {
 
     using result_type = decltype(f());
     auto promise = std::make_shared<std::promise<result_type>>();
@@ -26,7 +29,7 @@ auto Loaders::Resource::EnqueueIOJob(F&& f) -> std::future<decltype(f())> {
 
 // GPU任务专用（需在主线程执行）
 template<typename F>
-auto Loaders::Resource::EnqueueGPUJob(F&& f) -> std::future<decltype(f())> {
+auto RL::EnqueueGPUJob(F&& f) -> std::future<decltype(f())> {
     using result_type = decltype(f());
     using task_type = std::packaged_task<result_type()>;
     
@@ -40,4 +43,4 @@ auto Loaders::Resource::EnqueueGPUJob(F&& f) -> std::future<decltype(f())> {
     return future;
 }
 
-}   // namespace CubeDemo
+}   // namespace

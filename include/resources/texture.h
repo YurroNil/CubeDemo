@@ -3,17 +3,9 @@
 
 #include <atomic>
 #include <mutex>
-#include <unordered_map>
-#include <memory>
-#include "kits/strings.h"
-
+#include "resources/textureBase.h"
 
 namespace CubeDemo {
-
-// 前向声明
-class Texture;
-using TexturePtr = std::shared_ptr<Texture>;
-using TexPtrHashMap = std::unordered_map<string, std::weak_ptr<Texture>>;
 
 class Texture {
 public:

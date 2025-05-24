@@ -4,7 +4,7 @@
 #include "core/window.h"
 #include "core/monitor.h"
 #include "core/time.h"
-#include "loaders/fonts.h"
+#include "loaders/font.h"
 
 namespace CubeDemo {
 
@@ -15,7 +15,7 @@ void UIMng::Init() {
     // 配置ImGui的样式
     ConfigureImGuiStyle();
     // 加载自定义字体
-    Loaders::Fonts::LoadFonts();
+    FL::LoadFonts();
 }
 
 // 渲染循环，用于在每一帧中更新和渲染UI

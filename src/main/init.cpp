@@ -1,5 +1,5 @@
-// src/init.cpp
-#include "init.h"
+// src/main/init.cpp
+#include "main/init.h"
 #include "loaders/modelIniter.h"
 
 namespace CubeDemo {

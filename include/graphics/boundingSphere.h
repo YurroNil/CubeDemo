@@ -1,7 +1,7 @@
 
+#pragma once
 #include "loaders/material.h"
 
-#pragma once
 namespace CubeDemo {
 
 // 包围球结构体

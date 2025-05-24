@@ -72,7 +72,7 @@ void ML::ProcNode(aiNode* node, const aiScene* scene) {
 
         // 生成原始网格
         Mesh original = ProcMesh(mesh, scene);
-        Mesh copy; // 空对象
+        Mesh copy;
         copy << original; // 深拷贝
 
         // 主列表：移动语义转移所有权

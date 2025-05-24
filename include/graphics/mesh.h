@@ -1,11 +1,15 @@
 // include/graphics/mesh.h
 
 #pragma once
-#include <vector>
 #include "graphics/shader.h"
 #include "resources/texture.h"
+#include <vector>
+
+// 前置声明
 
 namespace CubeDemo {
+
+class Shader;
 
 struct Vertex {
     vec3 Position;
