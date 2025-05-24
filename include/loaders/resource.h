@@ -3,10 +3,9 @@
 #pragma once
 #include "threads/loaders.h"
 #include "threads/taskQueue.h"
-#include "threads/diagnostic.h"
 
 namespace CubeDemo {
-using RL = CubeDemo::Loaders::Resource;
+class Diagnostic;
 
 class Loaders::Resource {
 public:

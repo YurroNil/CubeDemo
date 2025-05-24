@@ -43,11 +43,8 @@ public:
     static void SaveCamera(Camera* c);  // 保存摄像机对象的指针
     static void Delete(Camera* c);  // Cleanner
 
-
 private:
     void UpdateCameraVec();
     inline static Camera* m_SaveCameraPtr = nullptr;
 };
-
-
 }

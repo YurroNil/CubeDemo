@@ -1,7 +1,18 @@
-// src/graphics/shadowMap.h
-#include "graphics/shadowMap.h"
+// src/prefabs/shadowMap.h
+#include "prefabs/shadowMap.h"
+#include "resources/model.h"
+#include "utils/defines.h"
 
-namespace CubeDemo::Graphics {
+// 外部变量声明
+namespace CubeDemo {
+    extern Shader* MODEL_SHADER;
+    extern std::vector<Model*> MODEL_POINTERS;
+}
+
+// 别名
+using PSM = CubeDemo::Prefabs::ShadowMap;
+
+namespace CubeDemo::Prefabs {
 
 ShadowMap::ShadowMap(int width, int height) : m_Width(width), m_Height(height) {
     glGenFramebuffers(1, &m_FBO);
@@ -16,7 +27,7 @@ ShadowMap::ShadowMap(int width, int height) : m_Width(width), m_Height(height) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
     float borderColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-    
+
     // 绑定到FBO
     glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_ShadowMap, 0);
@@ -28,7 +39,7 @@ ShadowMap::ShadowMap(int width, int height) : m_Width(width), m_Height(height) {
 void ShadowMap::BindForWriting() {
     glViewport(0, 0, m_Width, m_Height);
     glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
-    glClear(GL_DEPTH_BUFFER_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT); // 深度缓冲清除
 }
 
 void ShadowMap::BindForReading(GLenum textureUnit) {
@@ -36,7 +47,7 @@ void ShadowMap::BindForReading(GLenum textureUnit) {
     glBindTexture(GL_TEXTURE_2D, m_ShadowMap);
 }
 
-mat4 ShadowMap::GetLightSpaceMatrix(Graphics::DirLight* sun) const {
+mat4 ShadowMap::GetLightSpaceMat(DL* sun) const {
 
     // 根据场景最大包围球半径动态计算
     float sceneRadius = 15.0f;
@@ -55,5 +66,39 @@ mat4 ShadowMap::GetLightSpaceMatrix(Graphics::DirLight* sun) const {
     );
 
     return lightProjection * lightView;
+}
+
+// 渲染深度到阴影贴图
+void ShadowMap::RenderShadow(Camera* camera, const Light& light) {
+    
+    BindForWriting();
+    m_ShadowShader->Use();
+    
+    // 阴影矩阵计算
+    const auto lightSpaceMatrix = GetLightSpaceMat(light.Get.DirLight());
+    m_ShadowShader->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
+
+    // 简化绘制模型（仅位置属性）
+    for (auto* model : MODEL_POINTERS) {
+        if (model->IsReady() && camera->isSphereVisible(model->bounds.Center, model->bounds.Rad)) {
+            m_ShadowShader->SetMat4("model", model->GetModelMatrix());
+            model->DrawSimple();
+        }
+    }
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // 传递阴影贴图
+    BindForReading(GL_TEXTURE1);
+    MODEL_SHADER->SetInt("shadowMap", 1);
+    MODEL_SHADER->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
+}
+
+void ShadowMap::CreateShader() {
+    // 创建阴影深度着色器
+    Shader* shadow_depth = new Shader(
+        VSH_PATH + string("shadow_depth.glsl"),
+        FSH_PATH + string("shadow_depth.glsl")
+    );
+    m_ShadowShader = shadow_depth;
 }
 }   // namespace CubeDemo::Graphics

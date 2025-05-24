@@ -1,6 +1,6 @@
 // include/loaders/fonts.cpp
 
-#include "loaders/fonts.h"
+#include "loaders/font.h"
 #include "kits/file_system.h"
 #include <iostream>
 
@@ -29,9 +29,9 @@ void FL::LoadFonts() {
 
         // 模式选择
         if (font_config.custom_mode) {
-            BuildFromCustomChars(builder, font_config.custom_chars);
+            CustomChars(builder, font_config.custom_chars);
         } else {
-            BuildFromUnicodeRanges(builder, font_config.unicode_ranges);
+            UnicodeRanges(builder, font_config.unicode_ranges);
         }
 
         // 生成紧凑字符范围
@@ -53,7 +53,7 @@ void FL::LoadFonts() {
     }
 }
 
-void FL::BuildFromCustomChars(IFGRB& builder, const std::vector<string>& char_lines) {
+void FL::CustomChars(IFGRB& builder, const std::vector<string>& char_lines) {
     // 添加基础拉丁字符
     builder.AddRanges(ImGui::GetIO().Fonts->GetGlyphRangesDefault());
 
@@ -71,7 +71,7 @@ void FL::BuildFromCustomChars(IFGRB& builder, const std::vector<string>& char_li
 }
 
 // 从Unicode范围构建字符集
-void FL::BuildFromUnicodeRanges(IFGRB& builder, const std::vector<ImWchar>& ranges) {
+void FL::UnicodeRanges(IFGRB& builder, const std::vector<ImWchar>& ranges) {
     // 直接添加预定义的Unicode范围
     for (size_t i = 0; i < ranges.size(); ) {
         if (ranges[i] == 0) break;

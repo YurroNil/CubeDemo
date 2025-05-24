@@ -1,10 +1,10 @@
-// src/cleanup.cpp
+// src/main/cleanup.cpp
 #include <iostream>
 #include "kits/imgui.h"
 
-#include "cleanup.h"
+#include "main/cleanup.h"
 #include "resources/model.h"
-#include "scenes/mainScene.h"
+#include "scenes/default.h"
 
 namespace CubeDemo {
 

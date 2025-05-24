@@ -2,10 +2,17 @@
 
 // 项目头文件
 #include "resources/placeHolder.h"
+#include "threads/diagnostic.h"
+#include "loaders/texture.h"
+#include "resources/texture.h"
+
 // 标准库
 #include "kits/file_system.h"
+#include <iostream>
 
+// 别名
 using TLS = CubeDemo::Texture::LoadState;
+
 namespace CubeDemo {
 
 // 静态成员初始化
@@ -100,7 +107,6 @@ void TL::CreateTexAsync(const string& path, const string& type, TexLoadCallback 
         cb(tex);
     }, true);
 }
-
 
 // 同步加载纹理
 TexturePtr TL::LoadSync(const string& path, const string& type) {

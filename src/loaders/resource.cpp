@@ -3,8 +3,12 @@
 #include <thread>
 #include "loaders/resource.h"
 #include <iostream>
+#include "threads/diagnostic.h"
 
+// 别名
+using RL = CubeDemo::Loaders::Resource;
 using DTS = CubeDemo::Diagnostic::ThreadState;
+
 namespace CubeDemo {
 
 // 静态成员初始化

@@ -1,7 +1,7 @@
 // src/main.cpp
-#include "init.h"
-#include "loop.h"
-#include "cleanup.h"
+#include "main/init.h"
+#include "main/loop.h"
+#include "main/cleanup.h"
 
 int main() {
     RL::Init(1);

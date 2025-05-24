@@ -213,7 +213,6 @@ Mesh& Mesh::operator<<(const Mesh& other) {
     return *this;
 }
 
-
 void Mesh::ReleaseGLResources() {
     if(m_VAO) glDeleteVertexArrays(1, &m_VAO);
     if(m_VBO) glDeleteBuffers(1, &m_VBO);

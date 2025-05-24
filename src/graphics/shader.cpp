@@ -63,24 +63,6 @@ void Shader::Use() const {
     glUseProgram(ID);
 }
 
-void Shader::SetMat4(const string& name, const mat4& mat) const {
-    glUniformMatrix4fv(
-        glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]
-    );
-}
-
-void Shader::SetVec3(const string& name, const vec3& value) {
-    glUniform3fv(
-        glGetUniformLocation(ID, name.c_str()), 1, &value[0]
-    );
-}
-void Shader::SetFloat(const string& name, float value) {
-    glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
-}
-void Shader::SetInt(const string& name, int value) const {
-    glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
-}
-
 void Shader::ApplyCamera(const Camera& camera, float aspect) const {
     mat4 projection = glm::perspective(
         glm::radians(camera.attribute.zoom),
@@ -92,20 +74,49 @@ void Shader::ApplyCamera(const Camera& camera, float aspect) const {
     SetMat4("view", camera.GetViewMat());
     
 }
-
-void Shader::SetDirLight(const Graphics::DirLight* light) {
-    SetVec3("dirLight.direction", light->direction);
-    SetVec3("dirLight.ambient", light->ambient);
-    SetVec3("dirLight.diffuse", light->diffuse);
-    SetVec3("dirLight.specular", light->specular);
+// 平行光
+void Shader::SetDirLight(const string& name, const DL* light) {
+    SetVec3(name + ".direction", light->direction);
+    SetVec3(name + ".ambient", light->ambient);
+    SetVec3(name + ".diffuse", light->diffuse);
+    SetVec3(name + ".specular", light->specular);
 }
 
-void Shader::SetViewPos(const vec3& pos) {
-    SetVec3("viewPos", pos);
+// 聚光灯
+void Shader::SetSpotLight(const string& name, const SL& light) {
+
+    SetVec3(name + ".position", light.position);
+    SetVec3(name + ".direction", light.direction);
+    SetFloat(name + ".cutOff", glm::cos(glm::radians(light.cutOff)));
+    SetFloat(name + ".outerCutOff", glm::cos(glm::radians(light.outerCutOff)));
+
+    SetVec3(name + ".ambient", light.ambient);
+    SetVec3(name + ".diffuse", light.ambient);
+    SetVec3(name + ".specular", light.ambient);
+
+    SetFloat(name + ".constant", light.constant);
+    SetFloat(name + ".linear", light.linear);
+    SetFloat(name + ".quadratic", light.quadratic);
+
 }
 
-void Shader::SetLightSpaceMatrix(const mat4& matrix) {
-    SetMat4("lightSpaceMatrix", matrix);
+// 乱七八糟的Setters
+
+void Shader::SetViewPos(const vec3& pos) { SetVec3("viewPos", pos); }
+
+void Shader::SetLightSpaceMat(const mat4& matrix) { SetMat4("lightSpaceMatrix", matrix); }
+
+void Shader::SetMat4(const string& name, const mat4& mat) const {
+    glUniformMatrix4fv( glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0] );
+}
+void Shader::SetVec3(const string& name, const vec3& value) {
+    glUniform3fv( glGetUniformLocation(ID, name.c_str()), 1, &value[0] );
+}
+void Shader::SetFloat(const string& name, float value) {
+    glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+}
+void Shader::SetInt(const string& name, int value) const {
+    glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }
 
 }   // namespace CubeDemo
