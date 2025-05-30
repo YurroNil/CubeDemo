@@ -21,7 +21,7 @@ namespace CubeDemo {
     void render_scene(
         GLFWwindow* window,
         Camera* camera,
-        Scene& scene_inst,
+        Scene* scene_inst,
         const Light& light,
         ShadowMap* shadow_map
     );

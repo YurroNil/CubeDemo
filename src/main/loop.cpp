@@ -3,23 +3,22 @@
 #include "main/loop.h"
 #include "core/inputs.h"
 
+// 外部变量声明
+namespace CubeDemo {
+    extern Scene* SCENE_INST;
+    extern ShadowMap* SHADOW_MAP;
+}
+
 namespace CubeDemo {
 
 /* ---------------- 程序主循环 -------------- */
 
 void MainLoop(GLFWwindow* window, Camera* camera) {
 
-    Scene scene_inst; Light light;
+    Light light;
 
-    // 设置场景为默认场景
-    scene_inst.Current = SceneID::DEFAULT;
-
-    // 执行场景初始化
-    scene_inst.Init(light);
-
-    // 创建阴影(静态保持阴影贴图)
-    ShadowMap* shadow_map = new ShadowMap(2048, 2048);
-    shadow_map->CreateShader();
+    // 场景管理器初始化
+    SCENE_INST->Init(light);
 
     // 开始主循环
     while (!Window::ShouldClose()) {
@@ -41,13 +40,14 @@ void MainLoop(GLFWwindow* window, Camera* camera) {
         handle_window_settings(window);
 
         /* 渲染场景 */
-        render_scene(window, camera, scene_inst, light, shadow_map);
+        render_scene(window, camera, SCENE_INST, light, SHADOW_MAP);
         
         /* 结束帧 */
         end_frame_handling(window);
     }
 
-    scene_inst.CleanAllScenes(light);
+    // 清理场景资源
+    SCENE_INST->CleanAllScenes(light);
 }
 
 }   // Namespace CubeDemo

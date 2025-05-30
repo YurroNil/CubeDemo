@@ -1,17 +1,17 @@
 // src/main/cleanup.cpp
-#include <iostream>
-#include "kits/imgui.h"
 
+#include "kits/imgui.h"
 #include "main/cleanup.h"
-#include "resources/model.h"
-#include "scenes/default.h"
 
 namespace CubeDemo {
 
 // 外部变量声明
 extern std::vector<Model*> MODEL_POINTERS;
 extern Shader* MODEL_SHADER;
+extern Scene* SCENE_INST;
+extern ShadowMap* SHADOW_MAP;
 
+// 清理函数
 void Cleanup(GLFWwindow* window, Camera* camera) {
 
     // 确保资源释放顺序
@@ -24,10 +24,18 @@ void Cleanup(GLFWwindow* window, Camera* camera) {
 
     // 摄像机清理
     Camera::Delete(camera);
+
     // 模型清理
-    for(auto* thisModel : MODEL_POINTERS) { delete thisModel; thisModel = nullptr; } MODEL_POINTERS.clear();
-    // 着色器清理
-    delete MODEL_SHADER; MODEL_SHADER = nullptr;
+    Model::DeleteAll(MODEL_POINTERS);
+
+    // 模型着色器清理
+    Model::DeleteShader(MODEL_SHADER);
+
+    // 阴影着色器清理
+    SHADOW_MAP->DeleteShader();
+
+    // 阴影清理
+    ShadowMap::DeleteShadow(SHADOW_MAP);
 
     // ImGui清理
     ImGui_ImplOpenGL3_Shutdown();
@@ -40,5 +48,4 @@ void Cleanup(GLFWwindow* window, Camera* camera) {
     
     std::cout << "程序正常退出" << std::endl;
 }
-
-}
+}   // namespace CubeDemo

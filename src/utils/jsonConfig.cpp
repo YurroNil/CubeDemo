@@ -5,15 +5,19 @@
 
 namespace CubeDemo::Utils {
 
-StringArray JsonConfig::LoadModelList(const string& config_path) {
-
+json JsonConfig::GetFileData(const string& config_path) {
     std::ifstream file(config_path);
     if (!file.is_open()) {
         throw std::runtime_error("无法打开配置文件: " + config_path);
     }
-
-    nlohmann::json config;
+    json config;
     file >> config;
+    return config;
+}
+
+StringArray JsonConfig::LoadModelList(const string& config_path) {
+
+    json config = GetFileData(config_path);
 
     StringArray models;
     for (const auto& model_name : config["LoadModels"]) {
@@ -31,15 +35,10 @@ ImWchar JsonConfig::HexStringToImWchar(const string& hex_str) {
     ss >> value;
     return static_cast<ImWchar>(value);
 }
-
+// 加载字体配置
 FontConfig JsonConfig::LoadFontConfig(const string& config_path) {
-    std::ifstream file(config_path);
-    if (!file.is_open()) {
-        throw std::runtime_error("无法打开字体配置文件: " + config_path);
-    }
-
-    nlohmann::json config;
-    file >> config;
+    
+    json config = GetFileData(config_path);
 
     FontConfig font_config;
     
@@ -72,8 +71,4 @@ FontConfig JsonConfig::LoadFontConfig(const string& config_path) {
 
     return font_config;
 }
-
-
-
-
 }   // namespace CubeDemo::Utils

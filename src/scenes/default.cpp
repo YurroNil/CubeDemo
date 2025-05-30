@@ -14,15 +14,13 @@ namespace CubeDemo {
 namespace CubeDemo::Scenes {
 
 // DefaultScene实现
-void DefaultScene::Init(SceneMng& scene_inst, Light& light) {
+void DefaultScene::Init(SceneMng* scene_inst, Light& light) {
     if(s_isInited) return;
 
-    scene_inst.Current = SceneID::DEFAULT;
-    s_isInited = true;
+    scene_inst->Current = SceneID::DEFAULT;
 
     // 创建平行光源
     light.Get.SetDirLight(light.Create.DirLight());
-
 }
 
 void DefaultScene::Render(
@@ -64,12 +62,9 @@ void DefaultScene::Render(
 void DefaultScene::Cleanup(Light& light) {
     if(!s_isInited || s_isCleanup) return;
 
-    light.Remove.All();
-
-    s_isCleanup = true;
+    light.Remove.DirLight();
 }
 
 DefaultScene::~DefaultScene() {
 }
-
 }   // namespace CubeDemo::Scenes

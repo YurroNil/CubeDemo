@@ -10,7 +10,7 @@ public:
     ~DefaultScene();
 
     // 覆写
-    void Init(SceneMng& scene_inst, Light& light) override;
+    void Init(SceneMng* scene_inst, Light& light) override;
     void Cleanup(Light& light) override;
 
     // 主渲染阶段
@@ -21,4 +21,4 @@ public:
         ShadowMap* shadow_map
     ) override;
 };
-}
+}   // namespace CubeDemo::Scenes

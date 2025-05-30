@@ -14,4 +14,4 @@ void LightGetter::SetDirLight(DL* ptr) { m_DirLight = ptr; }
 void LightGetter::SetPointLight(PL* ptr) { m_PointLight = ptr; }
 void LightGetter::SetSpotLight(SL* ptr) { m_SpotLight = ptr; }
 
-}   // namespace CubeDemo
+}   // namespace CubeDemo::Prefabs
