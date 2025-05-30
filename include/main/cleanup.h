@@ -1,9 +1,6 @@
 // include/main/cleanup.h
-
 #pragma once
-
-#include "kits/glfw.h"
-#include "core/camera.h"
+#include "main/rendering.h"
 
 namespace CubeDemo {
 

@@ -7,7 +7,7 @@ namespace CubeDemo::Scenes {
 
 class SceneMng {
 public:
-    SceneMng() : Default(), Night() {}
+    SceneMng();
     ~SceneMng();
 
     enum class SceneID { DEFAULT, NIGHT, EMPTY } Current;
@@ -30,7 +30,14 @@ public:
     DefaultScene Default; 
     NightScene Night;
 
+    // 场景管理器实例创建\删除
+    static SceneMng* CreateSceneInst();
+    static void RemoveSceneInst(SceneMng* ptr);
+
 private:
+    // 统计场景管理器的数量. 不允许存在多个场景管理器
+    inline static unsigned int s_InstCount = 0;
+
     // 私有工具方法
     template <SceneID id>
     void CleanScene(Light& light);

@@ -24,4 +24,4 @@ void LightCleanner::SpotLight() {
     delete m_SpotLight; m_SpotLight = nullptr;
 }
 
-}   // namespace CubeDemo
+}   // namespace CubeDemo::Prefabs

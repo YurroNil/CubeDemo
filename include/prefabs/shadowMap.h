@@ -14,7 +14,11 @@ public:
     void BindForReading(GLenum textureUnit);
     mat4 GetLightSpaceMat(DL* sun) const;
     void RenderShadow(Camera* camera, const Light& light);
-    void CreateShader();
+    
+    // 创建/删除 阴影
+    static ShadowMap* CreateShadow(); static void DeleteShadow(ShadowMap* &ptr);
+    // 创建/删除 着色器
+    void CreateShader(); void DeleteShader();
 
 private:
     GLuint m_FBO, m_ShadowMap;

@@ -33,11 +33,9 @@ void RL::Init(int ioThreads) {
 
             // 线程启动运行循环
             RunningLoop(diag, tid);
-        
         });
     }
 }
-
 // s_Running = true时循环执行
 void RL::RunningLoop(Diagnostic& diag, const TID& tid) {
 
@@ -83,5 +81,4 @@ void RL::Shutdown() {
     // 处理剩余主线程任务
     TaskQueue::PushTaskSync([] {});
 }
-
 }

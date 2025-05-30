@@ -40,11 +40,9 @@ struct SpotLight {
     float constant;
     float linear;
     float quadratic;
+    
     float cutOff;
     float outerCutOff;
-
 };
 using SL = CubeDemo::Prefabs::SpotLight;
-
-
 } // namespace CubeDemo::Prefabs

@@ -1,4 +1,5 @@
 // src/prefabs/shadowMap.h
+
 #include "prefabs/shadowMap.h"
 #include "resources/model.h"
 #include "utils/defines.h"
@@ -64,7 +65,6 @@ mat4 ShadowMap::GetLightSpaceMat(DL* sun) const {
         0.1f, 
         2.0f * extend
     );
-
     return lightProjection * lightView;
 }
 
@@ -93,12 +93,24 @@ void ShadowMap::RenderShadow(Camera* camera, const Light& light) {
     MODEL_SHADER->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
 }
 
+// 创建/删除 阴影
+ShadowMap* ShadowMap::CreateShadow() {
+    return new ShadowMap(2048, 2048);
+}
+void ShadowMap::DeleteShadow(ShadowMap* &ptr) {
+    delete ptr; ptr = nullptr;
+}
+
+
+// 创建/删除 阴影深度着色器
 void ShadowMap::CreateShader() {
-    // 创建阴影深度着色器
     Shader* shadow_depth = new Shader(
         VSH_PATH + string("shadow_depth.glsl"),
         FSH_PATH + string("shadow_depth.glsl")
     );
     m_ShadowShader = shadow_depth;
+}
+void ShadowMap::DeleteShader() {
+    delete m_ShadowShader; m_ShadowShader = nullptr;
 }
 }   // namespace CubeDemo::Graphics

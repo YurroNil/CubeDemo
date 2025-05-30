@@ -50,6 +50,30 @@ Shader::Shader(const string& vertex_path, const string& fragment_path) {
     glAttachShader(ID, frag_shader);
     glLinkProgram(ID);
 
+    GLint success;
+    char infoLog[512];
+
+    // 顶点着色器编译检查
+    glGetShaderiv(vert_shader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(vert_shader, 512, NULL, infoLog);
+        std::cerr << "顶点着色器编译失败: " << infoLog << std::endl;
+    }
+
+    // 片段着色器编译检查
+    glGetShaderiv(frag_shader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(frag_shader, 512, NULL, infoLog);
+        std::cerr << "片段着色器编译失败: " << infoLog << std::endl;
+    }
+
+    // 程序链接检查
+    glGetProgramiv(ID, GL_LINK_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(ID, 512, NULL, infoLog);
+        std::cerr << "着色器程序链接失败: " << infoLog << std::endl;
+    }
+
     // 删除着色器对象
     glDeleteShader(vert_shader);
     glDeleteShader(frag_shader);
@@ -91,13 +115,12 @@ void Shader::SetSpotLight(const string& name, const SL& light) {
     SetFloat(name + ".outerCutOff", glm::cos(glm::radians(light.outerCutOff)));
 
     SetVec3(name + ".ambient", light.ambient);
-    SetVec3(name + ".diffuse", light.ambient);
-    SetVec3(name + ".specular", light.ambient);
+    SetVec3(name + ".diffuse", light.diffuse);
+    SetVec3(name + ".specular", light.specular);
 
     SetFloat(name + ".constant", light.constant);
     SetFloat(name + ".linear", light.linear);
     SetFloat(name + ".quadratic", light.quadratic);
-
 }
 
 // 乱七八糟的Setters

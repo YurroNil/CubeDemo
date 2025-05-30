@@ -1,4 +1,5 @@
 // include/main/rendering.h
+
 #pragma once
 #include "scenes/sceneMng.h"
 

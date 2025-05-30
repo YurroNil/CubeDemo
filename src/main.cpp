@@ -5,14 +5,23 @@
 
 int main() {
     RL::Init(1);
-    // 程序初始化
-    GLFWwindow* window = CubeDemo::Init();
-    CMR* camera = CMR::GetCamera(); // 加载摄像机的指针
 
-    // 程序主循环 (包含渲染循环)
+    /* --------------初始化------------- */
+
+    // 窗口创建
+    GLFWwindow* window = CubeDemo::Init();
+
+    // 加载摄像机的指针
+    CMR* camera = CMR::GetCamera();
+
+    /* --------------程序主循环------------- */
+
     CubeDemo::MainLoop(window, camera);
     
-    // 程序结束-资源清理
+
+    /* --------------资源清理------------- */
+
+    // 程序结束
     CubeDemo::Cleanup(window, camera);
     camera = nullptr;
 

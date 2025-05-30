@@ -2,8 +2,8 @@
 
 #include "prefabs/lights/creaters.h"
 #include <iostream>
-namespace CubeDemo::Prefabs {
 
+namespace CubeDemo::Prefabs {
 // 平行光源
 DL* LightCreater::DirLight() {
     // 创建太阳
@@ -25,4 +25,4 @@ SL* LightCreater::SpotLight() {
     return new SL();
 }
 
-}   // namespace CubeDemo
+}   // namespace CubeDemo::Prefabs

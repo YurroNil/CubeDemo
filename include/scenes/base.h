@@ -25,7 +25,7 @@ public:
     virtual ~SceneBase() = default;  // 虚析构函数
 
     // 场景初始化（加载资源）
-    virtual void Init(SceneMng&, Light&) = 0;
+    virtual void Init(SceneMng*, Light&) = 0;
 
     // 场景渲染
     virtual void Render(GLFWwindow*, Camera*, const Light&, ShadowMap*) = 0;
@@ -45,4 +45,4 @@ protected:
     bool s_isCleanup{false};
 
 };
-}
+}   // namespace CubeDemo::Scenes
