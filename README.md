@@ -27,25 +27,6 @@
 * [**ESC**] - Open/Close the Menu
 * [**F3**] - Open/Close the Debuginfo
 
-## How to Compile
-First you need to prepare the following some libraries into `include/` : `GLFW` (<a href="https://github.com/glfw/glfw" target="_blank">Link</a>) , `glad` (<a href="https://glad.dav1d.de/" target="_blank">Link</a>) , `glm` (<a href="https://github.com/g-truc/glm" target="_blank">Link</a>) , `json` (<a href="https://github.com/nlohmann/json" target="_blank">Link</a>) , `stb` (<a href="https://github.com/nothings/stb" target="_blank">Link</a>) , `OpenMesh` (<a href="https://www.graphics.rwth-aachen.de/software/openmesh/download" target="_blank">Link</a>) and `assimp` (<a href="https://github.com/assimp/assimp" target="_blank">Link</a>).  
-Finally, in the root directory of the workspace Run command (Here take MingW64 as an example) :
-```sh
-g++.exe -g\
-     "../src/core/*.cpp"\
-     "../src/graphics/*.cpp"\
-     "../src/resources/*.cpp"\
-     "../src/ui/*.cpp"\
-     "../src/utils/*.cpp"\
-     "../src/main/*.cpp"\
-     "../src/threads/*.cpp"\
-     "../src/loaders/*.cpp"\
-     "../src/scenes/*.cpp"\
--o ./bin/Demo.exe\
-     -Iinclude -Llib -lglfw3 -lopengl32 -lassimp  -lOpenMeshCored -lOpenMeshToolsd -std=c++23
-```
-to compile successfully.
-
 ## Changelog
 * [**1.0.7**]
      - (2025.05.15)  
