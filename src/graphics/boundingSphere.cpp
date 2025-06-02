@@ -1,6 +1,6 @@
 
 #include "graphics/boundingSphere.h"
-#include <iostream>
+
 
 namespace CubeDemo {
 

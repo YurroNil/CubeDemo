@@ -1,7 +1,6 @@
 // include/loaders/asyncTex.h
 
 #include "loaders/texture.h"
-#include <future>
 
 namespace CubeDemo {
 using TexPtrArray = std::vector<TexturePtr>;

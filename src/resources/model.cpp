@@ -1,7 +1,7 @@
 // src/resources/model.cpp
 
 #include "resources/model.h"
-#include "kits/glfw.h"
+#include "graphics/shader.h"
 
 using ML = CubeDemo::Loaders::Model;
 namespace CubeDemo {

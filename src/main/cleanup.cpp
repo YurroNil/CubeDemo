@@ -2,6 +2,10 @@
 
 #include "kits/imgui.h"
 #include "main/cleanup.h"
+#include "resources/model.h"
+#include "loaders/resource.h"
+
+using RL = CubeDemo::Loaders::Resource;
 
 namespace CubeDemo {
 

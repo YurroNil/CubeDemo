@@ -2,7 +2,6 @@
 
 #include "core/camera.h"
 #include "core/window.h"
-#include <algorithm>
 
 namespace CubeDemo {
 
@@ -20,7 +19,7 @@ mat4 Camera::GetViewMat() const {
 }
 // 获取投影矩阵
 mat4 Camera::GetProjectionMat(float aspect) const {
-    return glm::perspective(glm::radians(attribute.zoom), aspect, frustumPlane.near, frustumPlane.far);
+    return glm::perspective(glm::radians(attribute.zoom), aspect, frustumPlane.near_plane, frustumPlane.far_plane);
 }
 
 // 处理鼠标移动
@@ -69,15 +68,15 @@ void Camera::Delete(Camera* c) { delete c; m_SaveCameraPtr = nullptr; }
 Camera::Frustum Camera::GetFrustum(float aspectRatio) const {
 
     Frustum frustum;
-    const float half_v_side = frustumPlane.far * tanf(glm::radians(attribute.zoom) * 0.5f);
+    const float half_v_side = frustumPlane.far_plane * tanf(glm::radians(attribute.zoom) * 0.5f);
     const float half_h_side = half_v_side * aspectRatio;
-    const vec3 front_mult_far = frustumPlane.far * direction.front;
+    const vec3 front_mult_far = frustumPlane.far_plane * direction.front;
 
     frustum.planes[0] = { glm::normalize(glm::cross(direction.up, front_mult_far + direction.right * half_h_side)), Position }; // 左平面
     frustum.planes[1] = { glm::normalize(glm::cross(front_mult_far - direction.right * half_h_side, direction.up)), Position }; // 右平面
     frustum.planes[2] = { glm::normalize(glm::cross(direction.right, front_mult_far - direction.up * half_v_side)), Position };  // 下平面
     frustum.planes[3] = { glm::normalize(glm::cross(front_mult_far + direction.up * half_v_side, direction.right)), Position };  // 上平面
-    frustum.planes[4] = { direction.front, Position + direction.front * frustumPlane.near }; // 近平面
+    frustum.planes[4] = { direction.front, Position + direction.front * frustumPlane.near_plane }; // 近平面
     frustum.planes[5] = { -direction.front, Position + front_mult_far };     // 远平面
 
     return frustum;

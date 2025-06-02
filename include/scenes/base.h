@@ -3,7 +3,6 @@
 #pragma once
 #include "core/camera.h"
 #include "prefabs/shadowMap.h"
-#include "resources/model.h"
 #include "core/window.h"
 
 namespace CubeDemo::Scenes {

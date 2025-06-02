@@ -32,6 +32,9 @@ build/*
 /textures/*
 /resources/fonts/*.ttf
 !/resources/fonts/*.json
+*.a
+*.o
+*.gch
 
 #Libraries
 /.3rdParty/

@@ -2,6 +2,8 @@
 
 #include "main/init.h"
 #include "loaders/modelIniter.h"
+#include "ui/uiMng.h"
+#include "core/inputs.h"
 
 namespace CubeDemo {
 

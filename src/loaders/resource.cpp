@@ -1,9 +1,6 @@
 // src/loaders/resource.cpp
 
-#include <thread>
 #include "loaders/resource.h"
-#include <iostream>
-#include "threads/diagnostic.h"
 
 // 别名
 using RL = CubeDemo::Loaders::Resource;

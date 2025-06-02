@@ -1,6 +1,7 @@
 // include/scenes/night.h
 #pragma once
 #include "scenes/base.h"
+#include "graphics/mesh.h"
 
 using SL = CubeDemo::Prefabs::SpotLight;
 

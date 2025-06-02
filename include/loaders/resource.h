@@ -1,11 +1,10 @@
 // include/loaders/resource.h
 
 #pragma once
-#include "threads/loaders.h"
+#include "loaders/base.h"
 #include "threads/taskQueue.h"
 
 namespace CubeDemo {
-class Diagnostic;
 
 class Loaders::Resource {
 public:

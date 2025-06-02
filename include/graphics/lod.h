@@ -1,6 +1,7 @@
 // include/graphics/lod.h
 
 #pragma once
+#include "graphics/base.h"
 #include "utils/msaConv.h"
 
 using MeshArray = std::vector<CubeDemo::Mesh>;

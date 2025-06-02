@@ -1,8 +1,5 @@
 // include/resources/texture.h
 #pragma once
-
-#include <atomic>
-#include <mutex>
 #include "resources/textureBase.h"
 
 namespace CubeDemo {

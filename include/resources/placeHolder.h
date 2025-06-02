@@ -1,7 +1,6 @@
 // include/resources/placeHolder.h
 #pragma once
 #include "loaders/image.h"
-#include "kits/glfw.h"
 #include "resources/textureBase.h"
 
 namespace CubeDemo {

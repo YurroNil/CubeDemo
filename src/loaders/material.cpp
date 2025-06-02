@@ -1,9 +1,5 @@
 // src/loaders/material.cpp
-// 标准库
 
-#include <iostream>
-#include "kits/file_system.h"
-// 项目头文件
 #include "loaders/material.h"
 #include "threads/taskQueue.h"
 

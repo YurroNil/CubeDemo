@@ -5,6 +5,7 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include "utils/defines.h"
 #include "utils/jsonConfig.h"
+#include "resources/model.h"
 
 // 外部变量声明
 namespace CubeDemo {
@@ -111,8 +112,8 @@ void NightScene::RenderVolumetricBeam(Camera* camera) {
         "projection", 
         glm::perspective(glm::radians(camera->attribute.zoom),
         Window::GetAspectRatio(),
-        camera->frustumPlane.near,
-        camera->frustumPlane.far
+        camera->frustumPlane.near_plane,
+        camera->frustumPlane.far_plane
     ));
     m_VolumetricShader->SetVec3("lightColor", m_SpotLight->diffuse);
 
@@ -174,62 +175,12 @@ Mesh* NightScene::CreateLightCone(float radius, float height) {
 }
 
 void NightScene::SetLightsData(const string& config_path, SL* spot_light, DL* moon_light) {
+    namespace JsonMapper = CubeDemo::Prefabs::Lights::JsonMapper;
 
     json config = Utils::JsonConfig::GetFileData(config_path);
     
-    const auto& spot = config["LightArgs"]["SpotLight"];
-    const auto& moon = config["LightArgs"]["MoonLight"];
-
-    // 位置
-    spot_light->position.x = spot["position"][0].get<float>();
-    spot_light->position.y = spot["position"][1].get<float>();
-    spot_light->position.z = spot["position"][2].get<float>();
-    
-    moon_light->position.x = moon["position"][0].get<float>();
-    moon_light->position.y = moon["position"][1].get<float>();
-    moon_light->position.z = moon["position"][2].get<float>();
- 
-    // 方向向量
-    spot_light->direction.x = spot["direction"][0].get<float>();
-    spot_light->direction.y = spot["direction"][1].get<float>();
-    spot_light->direction.z = spot["direction"][2].get<float>();
-    
-    moon_light->direction.x = moon["direction"][0].get<float>();
-    moon_light->direction.y = moon["direction"][1].get<float>();
-    moon_light->direction.z = moon["direction"][2].get<float>();
- 
-    // 颜色分量
-    spot_light->ambient.x = spot["ambient"][0].get<float>();
-    spot_light->ambient.y = spot["ambient"][1].get<float>();
-    spot_light->ambient.z = spot["ambient"][2].get<float>();
-
-    moon_light->ambient.x = moon["ambient"][0].get<float>();
-    moon_light->ambient.y = moon["ambient"][1].get<float>();
-    moon_light->ambient.z = moon["ambient"][2].get<float>();
-
-    // 漫反射
-    spot_light->diffuse.x = spot["diffuse"][0].get<float>();
-    spot_light->diffuse.y = spot["diffuse"][1].get<float>();
-    spot_light->diffuse.z = spot["diffuse"][2].get<float>();
-    
-    moon_light->diffuse.x = moon["diffuse"][0].get<float>();
-    moon_light->diffuse.y = moon["diffuse"][1].get<float>();
-    moon_light->diffuse.z = moon["diffuse"][2].get<float>();
-
-    // 镜面反射
-    spot_light->specular.x = spot["specular"][0].get<float>();
-    spot_light->specular.y = spot["specular"][1].get<float>();
-    spot_light->specular.z = spot["specular"][2].get<float>();
-    
-    moon_light->specular.x = moon["specular"][0].get<float>();
-    moon_light->specular.y = moon["specular"][1].get<float>();
-    moon_light->specular.z = moon["specular"][2].get<float>();
-
-    spot_light->constant = spot["constant"].get<float>();
-    spot_light->linear = spot["linear"].get<float>();
-    spot_light->quadratic = spot["quadratic"].get<float>();
-    spot_light->cutOff = spot["cutOff"].get<float>();
-    spot_light->outerCutOff = spot["outerCutOff"].get<float>();
+    JsonMapper::MapLightData(config["LightArgs"]["SpotLight"], *spot_light);
+    JsonMapper::MapLightData(config["LightArgs"]["MoonLight"], *moon_light);
 }
 
 NightScene::NightScene() {}

@@ -1,9 +1,6 @@
 // include/resources/textureBase.h
 #pragma once
-
-#include <unordered_map>
-#include <memory>
-#include "kits/strings.h"
+#include "pch.h"
 
 namespace CubeDemo {
     // 前向声明

@@ -1,6 +1,10 @@
 // src/loaders/modelIniter.cpp
 
 #include "loaders/modelIniter.h"
+#include "utils/jsonConfig.h"
+#include "threads/taskQueue.h"
+#include "graphics/shader.h"
+#include "utils/defines.h"
 
 // 别名
 using MIL = CubeDemo::Loaders::ModelIniter;

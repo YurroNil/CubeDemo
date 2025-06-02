@@ -1,7 +1,6 @@
 // src/core/inputs.cpp
 
 #include "core/inputs.h"
-#include "kits/imgui.h"
 
 namespace CubeDemo {
 

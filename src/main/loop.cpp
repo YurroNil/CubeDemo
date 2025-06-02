@@ -2,6 +2,7 @@
 
 #include "main/loop.h"
 #include "core/inputs.h"
+#include "threads/taskQueue.h"
 
 // 外部变量声明
 namespace CubeDemo {

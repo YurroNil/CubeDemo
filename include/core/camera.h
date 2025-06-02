@@ -1,7 +1,7 @@
 // include/core/camera.h
 
 #pragma once
-#include "kits/glm.h"
+#include "pch.h"
 
 namespace CubeDemo {
 
@@ -22,7 +22,7 @@ public:
     } attribute;
 
     struct FrustumPlane {
-        vec3 normal, distance; float near{0.1f}, far{100.0f};
+        vec3 normal, distance; float near_plane{0.1f}, far_plane{100.0f};
     }frustumPlane;
     // 顺序：左、右、下、上、近、远
     struct Frustum { FrustumPlane planes[6]; };

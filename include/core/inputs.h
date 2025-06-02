@@ -1,9 +1,8 @@
 // include/core/inputs.h
 
 #pragma once
-#include "kits/glfw.h"
 #include "core/camera.h"
-#include <iostream>
+
 namespace CubeDemo {
 
 class Inputs {

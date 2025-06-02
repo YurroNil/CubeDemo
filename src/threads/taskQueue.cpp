@@ -1,8 +1,7 @@
 // src/threads/taskQueue.cpp
 
-#include <iostream>
 #include "threads/taskQueue.h"
-#include "threads/diagnostic.h"
+
 
 namespace CubeDemo {
 

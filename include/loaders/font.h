@@ -1,6 +1,6 @@
 // include/loaders/font.h
 #pragma once
-#include "threads/loaders.h"
+#include "loaders/base.h"
 #include "utils/jsonConfig.h"
 
 using FL = CubeDemo::Loaders::Font;

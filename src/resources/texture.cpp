@@ -1,7 +1,6 @@
 // src/resources/texture.cpp
 
 #include "resources/texture.h"
-#include "kits/glfw.h"
 #include "threads/taskQueue.h"
 
 namespace CubeDemo {

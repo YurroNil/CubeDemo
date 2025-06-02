@@ -1,10 +1,7 @@
 // include/threads/taskQueue.h
 #pragma once
 
-#include <deque>
-#include <mutex>
-#include <functional>
-#include <future>
+#include "pch.h"
 #include <condition_variable>
 
 // 乱七八糟的别名

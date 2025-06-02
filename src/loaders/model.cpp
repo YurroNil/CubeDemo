@@ -1,6 +1,7 @@
 // src/loaders/model.cpp
 
 #include "loaders/model.h"
+#include "loaders/resource.h"
 
 // 别名
 using MaL = CubeDemo::Loaders::Material;

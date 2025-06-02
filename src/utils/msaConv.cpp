@@ -1,8 +1,6 @@
 // src/utils/MsaConv.cpp
 #include "utils/msaConv.h"
-#include <iostream>
-#include <vector>
-
+#include "graphics/mesh.h"
 
 namespace CubeDemo::Graphics {
 
@@ -92,7 +90,7 @@ CubeDemo::Mesh conv_from_openMesh(const MeshType& trimesh, const CubeDemo::Mesh&
     }
 
     // 索引收集
-    CubeDemo::UnsignedArray indices;
+    UnsignedArray indices;
     for (auto fh : trimesh.faces()) {
         for (auto fv : trimesh.fv_range(fh)) {
             indices.push_back(fv.idx());

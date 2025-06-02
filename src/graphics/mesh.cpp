@@ -1,8 +1,8 @@
 // src/graphics/mesh.cpp
 
-#include "glad/glad.h"
 #include "graphics/mesh.h"
-#include <iostream>
+#include "graphics/shader.h"
+#include "resources/texture.h"
 
 namespace CubeDemo {
 

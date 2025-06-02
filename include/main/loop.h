@@ -1,6 +1,5 @@
 // include/main/loop.h
 #pragma once
-
 #include "main/rendering.h"
 
 namespace CubeDemo {

@@ -2,11 +2,14 @@
 #include "main/init.h"
 #include "main/loop.h"
 #include "main/cleanup.h"
+#include "loaders/resource.h"
 
 int main() {
-    RL::Init(1);
 
     /* --------------初始化------------- */
+
+    // 线程初始化
+    CubeDemo::Loaders::Resource::Init(1);
 
     // 窗口创建
     GLFWwindow* window = CubeDemo::Init();
@@ -17,7 +20,6 @@ int main() {
     /* --------------程序主循环------------- */
 
     CubeDemo::MainLoop(window, camera);
-    
 
     /* --------------资源清理------------- */
 

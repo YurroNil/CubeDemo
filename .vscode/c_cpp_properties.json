@@ -9,10 +9,7 @@
                 "D:/PDT-C/include",
                 "D:/PDT-C/include/imgui",
                 "D:/PDT-C/include/assimp",
-                "D:/PDT-C/include/stb",
-                "D:/PDT-C/include/boost",
-                "D:/PDT-C/include/gmp_6_3_0",
-                "D:/PDT-C/include/mpfr"
+                "D:/PDT-C/include/stb"
 
             ],
             "defines": [

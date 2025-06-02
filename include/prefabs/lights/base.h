@@ -1,6 +1,6 @@
 // include/prefabs/lights/base.h
 #pragma once
-#include "kits/glm.h"
+#include "pch.h"
 
 namespace CubeDemo::Prefabs {
 
@@ -46,3 +46,5 @@ struct SpotLight {
 };
 using SL = CubeDemo::Prefabs::SpotLight;
 } // namespace CubeDemo::Prefabs
+
+#include "prefabs/lights/json_mapper.inl"

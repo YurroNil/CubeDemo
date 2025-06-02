@@ -1,9 +1,8 @@
 // include/graphics/shader.h
 
 #pragma once
-#include "core/camera.h"
-#include "kits/strings.h"
 #include "prefabs/light.h"
+#include "core/camera.h"
 
 // 别名
 using DL = CubeDemo::Prefabs::DirLight;

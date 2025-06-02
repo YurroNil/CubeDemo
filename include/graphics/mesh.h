@@ -1,15 +1,11 @@
 // include/graphics/mesh.h
 
 #pragma once
-#include "graphics/shader.h"
-#include "resources/texture.h"
-#include <vector>
-
+#include "graphics/base.h"
+#include "resources/textureBase.h"
 // 前置声明
 
 namespace CubeDemo {
-
-class Shader;
 
 struct Vertex {
     vec3 Position;
@@ -18,10 +14,8 @@ struct Vertex {
     vec3 Tangent;
 };
 
-// 别名
 using TexPtrArray = std::vector<TexturePtr>;
 using VertexArray = std::vector<Vertex>;
-using UnsignedArray = std::vector<unsigned>;
 
 class Mesh {
 public:

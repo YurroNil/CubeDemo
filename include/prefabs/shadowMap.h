@@ -1,7 +1,5 @@
 // include/prefabs/shadowMap.h
 #pragma once
-#include <glad/glad.h>
-#include "prefabs/light.h"
 #include "graphics/shader.h"
 
 namespace CubeDemo::Prefabs {

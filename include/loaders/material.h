@@ -2,9 +2,7 @@
 
 #pragma once
 #include "graphics/mesh.h"
-#include "kits/assimp.h"
 #include "loaders/asyncTex.h"
-
 
 namespace CubeDemo {
 

@@ -3,7 +3,7 @@
 #include "graphics/lod.h"
 #include "loaders/model.h"
 #include <future>
-#include <iostream>
+
 
 using ML = CubeDemo::Loaders::Model;
 namespace CubeDemo::Graphics {

@@ -1,8 +1,6 @@
 // src/graphics/shader.cpp
 
 #include "graphics/shader.h"
-#include "kits/glfw.h"
-#include "kits/streams.h"
 
 using ifs = std::ifstream;
 namespace CubeDemo {
@@ -91,8 +89,8 @@ void Shader::ApplyCamera(const Camera& camera, float aspect) const {
     mat4 projection = glm::perspective(
         glm::radians(camera.attribute.zoom),
         aspect,    // 使用宽高比而不是固定分辨率
-        camera.frustumPlane.near,
-        camera.frustumPlane.far
+        camera.frustumPlane.near_plane,
+        camera.frustumPlane.far_plane
     );
     SetMat4("projection", projection);
     SetMat4("view", camera.GetViewMat());

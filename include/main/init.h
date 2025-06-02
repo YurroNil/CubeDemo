@@ -1,8 +1,8 @@
 // include/main/init.h
 
 #pragma once
-#include "main/includes.h"
 #include "main/rendering.h"
+#include "resources/model.h"
 
 // 乱七八糟的别名
 using RL = CubeDemo::Loaders::Resource;

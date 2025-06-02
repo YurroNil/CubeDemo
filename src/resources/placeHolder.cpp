@@ -1,10 +1,6 @@
 // src/resources/placeHolder.cpp
 
-// 项目头文件
 #include "resources/placeHolder.h"
-#include "resources/texture.h"
-// 标准库
-#include <iostream>
 
 // 别名
 using millisec = std::chrono::milliseconds;

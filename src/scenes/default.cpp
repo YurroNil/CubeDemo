@@ -3,6 +3,7 @@
 #include "core/window.h"
 #include "graphics/renderer.h"
 #include "scenes/sceneMng.h"
+#include "resources/model.h"
 
 // 外部变量声明
 namespace CubeDemo {

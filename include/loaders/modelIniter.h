@@ -1,12 +1,12 @@
 // include/loaders/modelIniter.h
 #pragma once
-#include "utils/defines.h"
-#include "utils/jsonConfig.h"
 #include "resources/model.h"
 
 namespace CubeDemo {
 
 class Loaders::ModelIniter {
+
+    using csclock = std::chrono::steady_clock;
 public:
     static void InitModels();
     

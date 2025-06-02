@@ -1,8 +1,6 @@
 // include/ui/uiMng.h
 #pragma once
 #include "core/camera.h"
-#include "kits/glfw.h"
-#include "kits/imgui.h"
 
 namespace CubeDemo {
 

@@ -3,7 +3,7 @@
 namespace std {
 using TLS = CubeDemo::Texture::LoadState;
 
-template<>
+template<> 
 struct formatter<TLS> : formatter<string_view> {
     auto format(TLS state, format_context& ctx) {
         string_view name = "Unknown";

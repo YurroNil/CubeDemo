@@ -2,13 +2,8 @@
 #pragma once
 
 // 项目头文件
-#include "threads/loaders.h"
+#include "loaders/base.h"
 #include "resources/texture.h"
-
-// 标准库
-#include <functional>
-#include <unordered_set>
-#include <chrono>
 
 namespace CubeDemo {
 
