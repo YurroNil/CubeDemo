@@ -1,14 +1,9 @@
 // src/loaders/texture.cpp
-
-// 项目头文件
+#include "pch.h"
 #include "resources/placeHolder.h"
 #include "threads/diagnostic.h"
 #include "loaders/texture.h"
 #include "resources/texture.h"
-
-// 标准库
-#include "kits/file_system.h"
-
 
 // 别名
 using TLS = CubeDemo::Texture::LoadState;

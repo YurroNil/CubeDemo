@@ -1,7 +1,9 @@
 // include/main/rendering.h
-
 #pragma once
 #include "scenes/sceneMng.h"
+#include "core/window.h"
+#include "core/camera.h"
+#include "prefabs/shadowMap.h"
 
 // 别名
 using Scene = CubeDemo::Scenes::SceneMng;

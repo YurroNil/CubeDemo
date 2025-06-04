@@ -1,9 +1,11 @@
-#include "kits/file_system.h"
+// src/ui/uiMng.cpp
+#include "pch.h"
 #include "ui/uiMng.h"
 #include "core/inputs.h"
 #include "core/window.h"
 #include "core/monitor.h"
 #include "core/time.h"
+#include "core/camera.h"
 #include "loaders/font.h"
 
 namespace CubeDemo {
@@ -19,7 +21,7 @@ void UIMng::Init() {
 }
 
 // 渲染循环，用于在每一帧中更新和渲染UI
-void UIMng::RenderLoop(GLFWwindow* window, Camera camera) {
+void UIMng::RenderLoop(GLFWwindow* window, Camera* camera) {
     HandlePauseMenu(window);    // 处理暂停菜单逻辑
 
     if (Inputs::s_isDebugVisible) {
@@ -47,9 +49,9 @@ void UIMng::ConfigureImGuiStyle() {
 }
 
 // 渲染控制面板
-void UIMng::RenderControlPanel(Camera& camera) {
+void UIMng::RenderControlPanel(Camera* camera) {
     ImGui::Begin("控制面板"); // 开始一个新的ImGui窗口，标题为"Control Panel"
-    ImGui::SliderFloat("移动速度", &camera.attribute.movementSpeed, 0.1f, 10.0f); // 添加一个滑动条，用于调整相机移动速度
+    ImGui::SliderFloat("移动速度", &camera->attribute.movementSpeed, 0.1f, 10.0f); // 添加一个滑动条，用于调整相机移动速度
     
     if (ImGui::Button("全屏")) { // 添加一个按钮，用于切换全屏模式
         Window::ToggleFullscreen(Window::GetWindow());
@@ -113,7 +115,7 @@ void UIMng::RenderPauseMenuContent(GLFWwindow* window) {
 }
 
 // 渲染调试面板
-void UIMng::RenderDebugPanel(const Camera& camera) {
+void UIMng::RenderDebugPanel(const Camera* camera) {
    const ImGuiWindowFlags window_flags = 
         ImGuiWindowFlags_NoTitleBar |
         ImGuiWindowFlags_NoResize |
@@ -129,7 +131,7 @@ void UIMng::RenderDebugPanel(const Camera& camera) {
         ImGui::Text("FPS: %d", Time::FPS());
         
         // 摄像机坐标
-        const auto& pos = camera.Position;
+        const auto& pos = camera->Position;
         ImGui::Text("位置 X: %.1f, Y: %.1f, Z: %.1f)", pos.x, pos.y, pos.z);
         
         // 内存使用

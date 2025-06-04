@@ -1,6 +1,6 @@
 // include/resources/texture.h
 #pragma once
-#include "resources/textureBase.h"
+#include "resources/texture_fwd.h"
 
 namespace CubeDemo {
 

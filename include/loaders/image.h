@@ -1,6 +1,5 @@
 // include/loaders/image.h
 #pragma once
-
 #include "loaders/texture.h"
 #include "loaders/resource.h"
 

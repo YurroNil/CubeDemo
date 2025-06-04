@@ -1,11 +1,6 @@
 // src/scenes/night.cpp
-
-#include "scenes/sceneMng.h"
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/rotate_vector.hpp>
-#include "utils/defines.h"
-#include "utils/jsonConfig.h"
-#include "resources/model.h"
+#include "pch.h"
+#include "scenes/night_inc.h"
 
 // 外部变量声明
 namespace CubeDemo {
@@ -66,7 +61,7 @@ void NightScene::Render(GLFWwindow* window,
     shadow_map->BindForReading(GL_TEXTURE1);
 
     // 摄像机参数传递
-    MODEL_SHADER->ApplyCamera(*camera, Window::GetAspectRatio());
+    MODEL_SHADER->ApplyCamera(camera, Window::GetAspectRatio());
 
     // 模型绘制循环
     for (auto* model : MODEL_POINTERS) {
@@ -88,7 +83,7 @@ void NightScene::Render(GLFWwindow* window,
     MODEL_SHADER->SetViewPos(camera->Position);
 
     // 设置聚光灯
-    MODEL_SHADER->SetSpotLight("spotLight", *m_SpotLight);
+    MODEL_SHADER->SetSpotLight("spotLight", m_SpotLight);
     
     // 体积光渲染
     RenderVolumetricBeam(camera);

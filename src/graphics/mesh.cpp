@@ -1,5 +1,5 @@
 // src/graphics/mesh.cpp
-
+#include "pch.h"
 #include "graphics/mesh.h"
 #include "graphics/shader.h"
 #include "resources/texture.h"

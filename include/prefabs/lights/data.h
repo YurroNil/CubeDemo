@@ -1,6 +1,6 @@
-// include/prefabs/lights/base.h
+// include/prefabs/lights/data.h
 #pragma once
-#include "pch.h"
+#include "prefabs/lights/fwd.h"
 
 namespace CubeDemo::Prefabs {
 
@@ -12,7 +12,6 @@ struct DirLight {
     vec3 diffuse;
     vec3 specular;
 };
-using DL = CubeDemo::Prefabs::DirLight;
 
 // 点光源（如灯泡）
 struct PointLight {
@@ -26,7 +25,6 @@ struct PointLight {
     float linear;
     float quadratic;
 };
-using PL = CubeDemo::Prefabs::PointLight;
 
 // 聚光灯
 struct SpotLight {
@@ -44,7 +42,6 @@ struct SpotLight {
     float cutOff;
     float outerCutOff;
 };
-using SL = CubeDemo::Prefabs::SpotLight;
 } // namespace CubeDemo::Prefabs
 
 #include "prefabs/lights/json_mapper.inl"

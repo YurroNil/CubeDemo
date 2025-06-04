@@ -1,5 +1,4 @@
 // include/core/time.h
-
 #pragma once
 namespace CubeDemo {
 

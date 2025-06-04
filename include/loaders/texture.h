@@ -1,8 +1,6 @@
 // include/loaders/texture.h
 #pragma once
-
-// 项目头文件
-#include "loaders/base.h"
+#include "loaders/fwd.h"
 #include "resources/texture.h"
 
 namespace CubeDemo {

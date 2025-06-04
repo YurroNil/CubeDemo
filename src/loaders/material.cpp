@@ -1,7 +1,8 @@
 // src/loaders/material.cpp
-
+#include "pch.h"
 #include "loaders/material.h"
 #include "threads/taskQueue.h"
+#include "loaders/texture.h"
 
 // 别名
 using MaL = CubeDemo::Loaders::Material;

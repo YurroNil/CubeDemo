@@ -1,7 +1,6 @@
 // include/loaders/asyncTex.cpp
-
+#include "pch.h"
 #include "loaders/asyncTex.h"
-
 
 using ATL = CubeDemo::Loaders::AsyncTexture;
 using TLS = CubeDemo::Texture::LoadState;

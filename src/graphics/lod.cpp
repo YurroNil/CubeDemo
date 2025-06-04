@@ -1,9 +1,8 @@
 // src/graphics/lod.cpp
-
+#include "pch.h"
 #include "graphics/lod.h"
 #include "loaders/model.h"
-#include <future>
-
+#include "utils/msaConv.h"
 
 using ML = CubeDemo::Loaders::Model;
 namespace CubeDemo::Graphics {
@@ -45,7 +44,6 @@ void LODSystem::Init(
         );
     }
 }
-
 
 // LODLevel实现
 LODLevel::LODLevel(LODLevel&& other) noexcept 

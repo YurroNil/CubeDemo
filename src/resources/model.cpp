@@ -1,5 +1,5 @@
 // src/resources/model.cpp
-
+#include "pch.h"
 #include "resources/model.h"
 #include "graphics/shader.h"
 
@@ -30,9 +30,9 @@ void Model::NormalDraw(Shader& shader) {
 void Model::LodDraw(Shader& shader, const vec3& camera_pos) {
     shader.SetMat4("model", GetModelMatrix());
 
-    const Graphics::LODLevel& level = GetLODSystem().SelectLevel(bounds.Center, camera_pos);
+    const Graphics::LODLevel* level = &GetLODSystem()->SelectLevel(bounds.Center, camera_pos);
 
-    for (const Mesh& mesh : level.GetMeshes()) {
+    for (const Mesh& mesh : level->GetMeshes()) {
         mesh.Draw(shader);
     }
 }
@@ -48,8 +48,8 @@ void Model::DrawSimple() const {
 /* ------------ 清理器 ------------ */
 
 // 删除指定模型
-void Model::Delete(Model* &model) {
-    delete model; model = nullptr;
+void Model::Delete(Model** model) {
+    delete *model; *model = nullptr;
 }
 // 删除所有模型
 void Model::DeleteAll(std::vector<Model*> &models) {
@@ -59,11 +59,11 @@ void Model::DeleteAll(std::vector<Model*> &models) {
     models.clear();
 }
 // 删除着色器
-void Model::DeleteShader(Shader* &shader) {
-    delete shader; shader = nullptr;
+void Model::DeleteShader(Shader** shader) {
+    delete *shader; *shader = nullptr;
 }
 void Model::DeleteAllShader(std::vector<Shader*> &shaders) {
-    for(auto* &shader : shaders) {
+    for(auto* shader : shaders) {
         delete shader; shader = nullptr;
     }
     shaders.clear();

@@ -1,10 +1,10 @@
 // include/graphics/lod.h
-
 #pragma once
-#include "graphics/base.h"
 #include "utils/msaConv.h"
 
+// 别名
 using MeshArray = std::vector<CubeDemo::Mesh>;
+
 namespace CubeDemo::Graphics {
 
 class LODLevel {
@@ -75,4 +75,4 @@ private:
 
 };
 
-} // namespace CubeDemo::Graphics
+} // namespace

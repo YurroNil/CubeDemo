@@ -1,4 +1,5 @@
 // src/scenes/sceneMng.cpp
+#include "pch.h"
 #include "scenes/sceneMng.h"
 
 namespace CubeDemo::Scenes {

@@ -3,9 +3,6 @@
 
 // 别名
 using json = nlohmann::json;
-using DL = CubeDemo::Prefabs::DirLight;
-using PL = CubeDemo::Prefabs::PointLight;
-using SL = CubeDemo::Prefabs::SpotLight;
 
 namespace CubeDemo::Prefabs::Lights::JsonMapper {
 

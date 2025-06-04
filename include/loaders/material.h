@@ -1,7 +1,6 @@
 // include/loaders/material.h
-
 #pragma once
-#include "graphics/mesh.h"
+#include "graphics/fwd.h"
 #include "loaders/asyncTex.h"
 
 namespace CubeDemo {

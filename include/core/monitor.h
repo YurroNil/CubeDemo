@@ -1,7 +1,5 @@
 // include/core/monitor.h
 #pragma once
-
-#include "pch.h"
 #ifdef _WIN32
 #include <psapi.h>
 #else

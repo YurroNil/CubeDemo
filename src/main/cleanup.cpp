@@ -1,6 +1,5 @@
 // src/main/cleanup.cpp
-
-#include "kits/imgui.h"
+#include "pch.h"
 #include "main/cleanup.h"
 #include "resources/model.h"
 #include "loaders/resource.h"
@@ -33,7 +32,7 @@ void Cleanup(GLFWwindow* window, Camera* camera) {
     Model::DeleteAll(MODEL_POINTERS);
 
     // 模型着色器清理
-    Model::DeleteShader(MODEL_SHADER);
+    Model::DeleteShader(&MODEL_SHADER);
 
     // 阴影着色器清理
     SHADOW_MAP->DeleteShader();

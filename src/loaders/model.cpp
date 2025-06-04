@@ -1,5 +1,5 @@
 // src/loaders/model.cpp
-
+#include "pch.h"
 #include "loaders/model.h"
 #include "loaders/resource.h"
 
@@ -203,7 +203,7 @@ void ML::LoadSync(ModelLoadCallback cb) {
 
 // 乱七八糟的Getters
 bool ML::IsReady() const { return ML::m_MeshesReady.load(std::memory_order_acquire); }
-const Graphics::LODSystem& ML::GetLODSystem() const { return m_LODSystem; }
+const Graphics::LODSystem* ML::GetLODSystem() const { return &m_LODSystem; }
 const std::atomic<bool>& ML::isLoading() const { return m_IsLoading; }
 const MeshArray& ML::GetMeshes() const { return m_meshes; }
 const mat4& ML::GetModelMatrix() const { return m_ModelMatrix; }

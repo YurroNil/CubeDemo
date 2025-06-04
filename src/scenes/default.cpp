@@ -1,8 +1,12 @@
 // src/scenes/default.cpp
-
+#include "pch.h"
 #include "core/window.h"
 #include "graphics/renderer.h"
 #include "scenes/sceneMng.h"
+#include "resources/model.h"
+#include "core/camera.h"
+#include "prefabs/light.h"
+#include "prefabs/shadowMap.h"
 #include "resources/model.h"
 
 // 外部变量声明
@@ -37,7 +41,7 @@ void DefaultScene::Render(
     shadow_map->BindForReading(GL_TEXTURE1);
 
     // 摄像机参数传递
-    MODEL_SHADER->ApplyCamera(*camera, Window::GetAspectRatio());
+    MODEL_SHADER->ApplyCamera(camera, Window::GetAspectRatio());
 
     // 模型绘制循环
     for (auto* model : MODEL_POINTERS) {

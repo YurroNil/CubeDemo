@@ -1,8 +1,6 @@
 // src/core/time.cpp
-
+#include "pch.h"
 #include "core/time.h"
-#include "kits/glfw.h"
-
 
 namespace CubeDemo {
 

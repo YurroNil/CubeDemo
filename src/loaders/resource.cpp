@@ -1,5 +1,5 @@
 // src/loaders/resource.cpp
-
+#include "pch.h"
 #include "loaders/resource.h"
 
 // 别名

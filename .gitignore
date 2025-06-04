@@ -17,8 +17,7 @@ logs/
 
 
 # Build Tools
-/.tools/
-/.tools/*
+/.tools/*.exe
 build/
 build/*
 

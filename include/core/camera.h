@@ -1,7 +1,5 @@
 // include/core/camera.h
-
 #pragma once
-#include "pch.h"
 
 namespace CubeDemo {
 

@@ -3,7 +3,6 @@
 #include "graphics/shader.h"
 
 namespace CubeDemo::Prefabs {
-
 class ShadowMap {
 public:
     ShadowMap(int width = 1024, int height = 1024);

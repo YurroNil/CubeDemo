@@ -1,21 +1,19 @@
-// include/scenes/sceneBase.h
-
+// include/scenes/base.h
 #pragma once
-#include "core/camera.h"
-#include "prefabs/shadowMap.h"
-#include "core/window.h"
-
-namespace CubeDemo::Scenes {
-
-// 乱七八糟的别名
-using DL = CubeDemo::Prefabs::DirLight;
-using Camera = CubeDemo::Camera;
-using Shader = CubeDemo::Shader;
-using Light = Prefabs::Light;
-using ShadowMap = Prefabs::ShadowMap;
+#include "scenes/fwd.h"
+#include "prefabs/lights/fwd.h"
 
 // 向前声明
-class SceneMng; class DefaultScene; class NightScene;
+namespace CubeDemo {
+    class Camera; class Shader;
+}
+// 乱七八糟的别名
+using Camera = CubeDemo::Camera;
+using Shader = CubeDemo::Shader;
+using Light = CubeDemo::Prefabs::Light;
+using ShadowMap = CubeDemo::Prefabs::ShadowMap;
+
+namespace CubeDemo::Scenes {
 
 // 场景基类
 class SceneBase {
@@ -44,4 +42,4 @@ protected:
     bool s_isCleanup{false};
 
 };
-}   // namespace CubeDemo::Scenes
+}   // namespace

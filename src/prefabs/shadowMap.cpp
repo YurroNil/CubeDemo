@@ -1,8 +1,10 @@
 // src/prefabs/shadowMap.h
-
+#include "pch.h"
 #include "prefabs/shadowMap.h"
 #include "resources/model.h"
 #include "utils/defines.h"
+#include "prefabs/light.h"
+#include "core/camera.h"
 
 // 外部变量声明
 namespace CubeDemo {

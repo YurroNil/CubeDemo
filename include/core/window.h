@@ -1,7 +1,5 @@
 // include/core/window.h
-
 #pragma once
-#include "resources/texture.h"
 
 namespace CubeDemo {
 

@@ -1,5 +1,5 @@
 // src/threads/diagnostic.cpp
-
+#include "pch.h"
 #include "threads/diagnostic.h"
 
 namespace CubeDemo {

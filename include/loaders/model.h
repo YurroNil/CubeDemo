@@ -2,6 +2,7 @@
 #pragma once
 #include "graphics/boundingSphere.h"
 #include "graphics/lod.h"
+#include "loaders/material.h"
 
 using ModelLoadCallback = std::function<void()>;  // 模型加载回调
 
@@ -10,8 +11,8 @@ namespace CubeDemo {
 // Loader:Model类
 class Loaders::Model : public Loaders::Material {
 private:
-
-    Graphics::LODSystem m_LODSystem; // 新增LOD系统成员
+    // 创建LOD系统实例
+    Graphics::LODSystem m_LODSystem;
 
     MeshArray m_meshes;
     MeshArray m_meshes_copy;
@@ -31,6 +32,7 @@ private:
     Mesh ProcMesh(aiMesh* mesh, const aiScene* scene);
 
 public:
+    // 创建包维球实例
     BoundingSphere bounds;
 
     Model(const string& path);
@@ -40,7 +42,7 @@ public:
     void LoadModel(const string& path); // 加载模型
 
     // 乱七八糟的Getters
-    const Graphics::LODSystem& GetLODSystem() const;
+    const Graphics::LODSystem* GetLODSystem() const;
     const std::atomic<bool>& isLoading() const;
     const MeshArray& GetMeshes() const;
     const mat4& GetModelMatrix() const;

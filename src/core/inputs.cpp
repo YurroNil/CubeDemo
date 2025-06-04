@@ -1,6 +1,7 @@
 // src/core/inputs.cpp
-
+#include "pch.h"
 #include "core/inputs.h"
+#include "core/camera.h"
 
 namespace CubeDemo {
 
@@ -33,7 +34,7 @@ void Inputs::ScrollCallback(double yoffset) {
 }
 
 // 游戏暂停
-void Inputs::PauseTheGame(GLFWwindow* &window) {
+void Inputs::PauseTheGame(GLFWwindow* window) {
     if (!glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) return;
 
 /* --------若点击了ESC键则：----------*/
@@ -52,7 +53,7 @@ void Inputs::PauseTheGame(GLFWwindow* &window) {
 }
 
 // 输入处理
-void Inputs::ProcKeyboard(GLFWwindow* &window, float delta_time) {
+void Inputs::ProcKeyboard(GLFWwindow* window, float delta_time) {
     // WASD 移动
     float velocity = 2* s_Camera->attribute.movementSpeed * delta_time;
 
@@ -87,13 +88,13 @@ void Inputs::ProcKeyboard(GLFWwindow* &window, float delta_time) {
 }
 
 // 回到游戏(解除暂停状态)
-void Inputs::ResumeTheGame(GLFWwindow* &window) {
+void Inputs::ResumeTheGame(GLFWwindow* window) {
     isGamePaused = false;
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 // 程序主循环中，ESC按键高频检测
-void Inputs::isEscPressed(GLFWwindow* &window) {
+void Inputs::isEscPressed(GLFWwindow* window) {
     static float last_esc_press_time = 0.0f;
     const float current_time = glfwGetTime();
     

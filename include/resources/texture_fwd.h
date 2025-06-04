@@ -1,6 +1,5 @@
-// include/resources/textureBase.h
+// include/resources/texture_fwd.h
 #pragma once
-#include "pch.h"
 
 namespace CubeDemo {
     // 前向声明

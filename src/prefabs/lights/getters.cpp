@@ -1,5 +1,5 @@
 // src/prefabs/lights/getters.cpp
-
+#include "pch.h"
 #include "prefabs/lights/getters.h"
 
 namespace CubeDemo::Prefabs {

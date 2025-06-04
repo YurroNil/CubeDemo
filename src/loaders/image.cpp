@@ -1,5 +1,5 @@
 // src/loaders/image.cpp
-
+#include "pch.h"
 #include "loaders/image.h"
 
 #define STB_IMAGE_IMPLEMENTATION

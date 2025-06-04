@@ -1,4 +1,5 @@
 // src/utils/stringConvert.cpp
+#include "pch.h"
 #include <codecvt>  // 用于wstring_convert
 #include <locale>   // 用于wstring_convert
 #include "utils/stringConvertor.h"

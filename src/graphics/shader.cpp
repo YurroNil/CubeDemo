@@ -1,6 +1,7 @@
 // src/graphics/shader.cpp
-
+#include "pch.h"
 #include "graphics/shader.h"
+#include "core/camera.h"
 
 using ifs = std::ifstream;
 namespace CubeDemo {
@@ -85,15 +86,15 @@ void Shader::Use() const {
     glUseProgram(ID);
 }
 
-void Shader::ApplyCamera(const Camera& camera, float aspect) const {
+void Shader::ApplyCamera(const Camera* camera, float aspect) const {
     mat4 projection = glm::perspective(
-        glm::radians(camera.attribute.zoom),
+        glm::radians(camera->attribute.zoom),
         aspect,    // 使用宽高比而不是固定分辨率
-        camera.frustumPlane.near_plane,
-        camera.frustumPlane.far_plane
+        camera->frustumPlane.near_plane,
+        camera->frustumPlane.far_plane
     );
     SetMat4("projection", projection);
-    SetMat4("view", camera.GetViewMat());
+    SetMat4("view", camera->GetViewMat());
     
 }
 // 平行光
@@ -105,20 +106,20 @@ void Shader::SetDirLight(const string& name, const DL* light) {
 }
 
 // 聚光灯
-void Shader::SetSpotLight(const string& name, const SL& light) {
+void Shader::SetSpotLight(const string& name, const SL* light) {
 
-    SetVec3(name + ".position", light.position);
-    SetVec3(name + ".direction", light.direction);
-    SetFloat(name + ".cutOff", glm::cos(glm::radians(light.cutOff)));
-    SetFloat(name + ".outerCutOff", glm::cos(glm::radians(light.outerCutOff)));
+    SetVec3(name + ".position", light->position);
+    SetVec3(name + ".direction", light->direction);
+    SetFloat(name + ".cutOff", glm::cos(glm::radians(light->cutOff)));
+    SetFloat(name + ".outerCutOff", glm::cos(glm::radians(light->outerCutOff)));
 
-    SetVec3(name + ".ambient", light.ambient);
-    SetVec3(name + ".diffuse", light.diffuse);
-    SetVec3(name + ".specular", light.specular);
+    SetVec3(name + ".ambient", light->ambient);
+    SetVec3(name + ".diffuse", light->diffuse);
+    SetVec3(name + ".specular", light->specular);
 
-    SetFloat(name + ".constant", light.constant);
-    SetFloat(name + ".linear", light.linear);
-    SetFloat(name + ".quadratic", light.quadratic);
+    SetFloat(name + ".constant", light->constant);
+    SetFloat(name + ".linear", light->linear);
+    SetFloat(name + ".quadratic", light->quadratic);
 }
 
 // 乱七八糟的Setters

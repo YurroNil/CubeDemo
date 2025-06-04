@@ -1,5 +1,5 @@
 // src/prefabs/lights/cleanners.cpp
-
+#include "pch.h"
 #include "prefabs/lights/cleanners.h"
 
 namespace CubeDemo::Prefabs {

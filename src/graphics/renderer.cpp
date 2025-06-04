@@ -1,7 +1,6 @@
 // src/graphics/renderer.cpp
-
+#include "pch.h"
 #include "graphics/renderer.h"
-#include "kits/imgui.h"
 
 namespace CubeDemo {
 

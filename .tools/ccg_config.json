@@ -1,0 +1,35 @@
+{
+"args_count": 3,
+
+"paths": {
+    "include": [
+        "../include",
+        "../.3rdParty/include",
+        "%PDT_I%",
+        "%PDT_I%/imgui",
+        "%PDT_I%/assimp",
+        "%PDT_I%/stb",
+        "%PDT_I%/OpenMesh"
+    ],
+
+    "lib": [
+        "../lib",
+        "%PDT_L%"
+    ],
+    "source_code": [
+        "../src",
+        "../src/scenes"
+    ]
+},
+"arguments": {
+    "cmd_prefix" : "g++.exe ",
+    "output" : " -o ../bin/Demo.exe",
+    "lib_suffix" : [
+
+        "-lmain", "-lui", "-lcore", "-lloaders", "-lresources", "-lgraphics",  "-lthreads", "-lutils", "-lprefabs", "-l3rd_party",
+
+        "-lglfw3", "-lopengl32", "-lassimp", "-lOpenMeshCored", "-lOpenMeshToolsd", "-mwindows", "-std=c++23", "-Winvalid-pch", "-fexec-charset=UTF-8", "-g"
+    ]
+}
+
+}

@@ -1,5 +1,4 @@
 // include/main/init.h
-
 #pragma once
 #include "main/rendering.h"
 #include "resources/model.h"

@@ -1,5 +1,4 @@
 // include/graphics/renderer.h
-
 #pragma once
 #include "kits/glfw.h"
 

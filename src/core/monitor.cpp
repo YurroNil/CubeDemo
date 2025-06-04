@@ -1,5 +1,5 @@
 // src/core/monitor.cpp
-
+#include "pch.h"
 #include "core/monitor.h"
 
 namespace CubeDemo {

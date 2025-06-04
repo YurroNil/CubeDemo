@@ -1,7 +1,6 @@
 // include/loaders/resource.h
-
 #pragma once
-#include "loaders/base.h"
+#include "loaders/fwd.h"
 #include "threads/taskQueue.h"
 
 namespace CubeDemo {

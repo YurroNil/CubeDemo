@@ -1,5 +1,5 @@
 // src/main/rendering.cpp
-
+#include "pch.h"
 #include "main/rendering.h"
 
 namespace CubeDemo {

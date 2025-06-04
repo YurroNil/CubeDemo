@@ -1,5 +1,4 @@
 // include/scenes/default.h
-
 #pragma once
 #include "scenes/base.h"
 

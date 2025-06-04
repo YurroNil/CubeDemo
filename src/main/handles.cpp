@@ -1,6 +1,7 @@
 // src/main/handles.cpp
-
+#include "pch.h"
 #include "main/handles.h"
+#include "core/camera.h"
 
 namespace CubeDemo {
 
@@ -14,7 +15,7 @@ void handle_input(GLFWwindow* window) {
 void begin_frame(Camera* camera) {
     Renderer::BeginFrame();
     Time::Update();
-    UIMng::RenderLoop(Window::GetWindow(), *camera);
+    UIMng::RenderLoop(Window::GetWindow(), camera);
 }
 
 // 结束帧

@@ -1,7 +1,10 @@
 // src/main.cpp
+#include "pch.h"
+// 主程序模块
 #include "main/init.h"
 #include "main/loop.h"
 #include "main/cleanup.h"
+// 加载器模块
 #include "loaders/resource.h"
 
 int main() {

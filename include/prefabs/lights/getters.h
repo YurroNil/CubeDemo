@@ -1,6 +1,6 @@
 // include/prefabs/lights/getters.h
 #pragma once
-#include "prefabs/lights/base.h"
+#include "prefabs/lights/data.h"
 
 namespace CubeDemo::Prefabs {
 

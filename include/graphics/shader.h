@@ -1,16 +1,9 @@
 // include/graphics/shader.h
-
 #pragma once
-#include "prefabs/light.h"
-#include "core/camera.h"
-
-// 别名
-using DL = CubeDemo::Prefabs::DirLight;
-using PL = CubeDemo::Prefabs::PointLight;
-using SL = CubeDemo::Prefabs::SpotLight;
+#include "prefabs/lights/data.h"
 
 namespace CubeDemo {
-
+class Camera;
 class Shader {
 public:
 
@@ -21,7 +14,7 @@ public:
     static string Load(const string& path);
 
     // Setters
-    void ApplyCamera(const Camera& camera, float aspect) const;
+    void ApplyCamera(const Camera* camera, float aspect) const;
     void SetMat4(const string& name, const mat4& mat) const;
     void SetVec3(const string& name, const vec3& value);
     void SetFloat(const string& name, float value);
@@ -30,7 +23,7 @@ public:
     void SetLightSpaceMat(const mat4& matrix);
 
     void SetDirLight(const string& name, const DL* light);
-    void SetSpotLight(const string& name, const SL& light);
+    void SetSpotLight(const string& name, const SL* light);
 
 private:
     unsigned int ID; 

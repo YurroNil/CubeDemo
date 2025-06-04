@@ -31,3 +31,8 @@
 // 项目头文件
 #include "threads/diagnostic.h"
 #include "graphics/renderer.h"
+#include "core/camera.h"
+#include "graphics/mesh.h"
+#include "utils/msaConv.h"
+#include "utils/jsonConfig.h"
+#include "utils/stringConvertor.h"
