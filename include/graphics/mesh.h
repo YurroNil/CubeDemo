@@ -1,7 +1,7 @@
 // include/graphics/mesh.h
 #pragma once
 #include "graphics/fwd.h"
-#include "resources/texture_fwd.h"
+#include "resources/fwd.h"
 
 namespace CubeDemo {
 

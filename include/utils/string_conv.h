@@ -1,4 +1,4 @@
-// include/utils/stringConvert.h
+// include/utils/string_conv.h
 #pragma once
 
 using wstring = std::wstring;

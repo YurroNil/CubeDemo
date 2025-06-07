@@ -1,4 +1,4 @@
-// include/loaders/modelIniter.h
+// include/loaders/model_initer.h
 #pragma once
 #include "resources/model.h"
 

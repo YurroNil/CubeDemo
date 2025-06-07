@@ -1,7 +1,7 @@
 // include/loaders/material.h
 #pragma once
 #include "graphics/fwd.h"
-#include "loaders/asyncTex.h"
+#include "loaders/async_tex.h"
 
 namespace CubeDemo {
 // 别名

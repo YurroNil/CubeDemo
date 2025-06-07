@@ -1,11 +1,10 @@
-// include/utils/jsonConfig.h
+// include/utils/json_config.h
 #pragma once
 
 using json = nlohmann::json;
 
 namespace CubeDemo::Utils {
 using StringArray = std::vector<string>;
-
 
 struct FontConfig {
     bool custom_mode;

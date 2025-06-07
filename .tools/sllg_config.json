@@ -1,9 +1,9 @@
 {
-    "library_name": "utils",
+    "library_name": "ui",
     
     "paths": {
         "source_code": [
-            "../src/utils"
+            "../src/ui"
         ],
         "include": [
             "../include",
@@ -11,15 +11,14 @@
             "%PDT_I%",
             "%PDT_I%/imgui",
             "%PDT_I%/assimp",
-            "%PDT_I%/stb",
-            "%PDT_I%/OpenMesh"
+            "%PDT_I%/stb"
         ]
     },
     
     "arguments": {
         "cmd_prefix": "g++.exe -c",
         "lib_suffix": [
-            "-lglfw3", "-lopengl32", "-lassimp", "-lOpenMeshCored", "-lOpenMeshToolsd", "-mwindows", "-std=c++23", "-Winvalid-pch", "-fexec-charset=UTF-8", "-g"
+            "-lglfw3", "-lopengl32", "-lassimp", "-mwindows", "-std=c++23", "-Winvalid-pch", "-fexec-charset=UTF-8", "-g"
         ],
         "output": "../lib"
     }

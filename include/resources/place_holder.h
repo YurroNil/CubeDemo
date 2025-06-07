@@ -1,7 +1,7 @@
-// include/resources/placeHolder.h
+// include/resources/place_holder.h
 #pragma once
 #include "loaders/image.h"
-#include "resources/texture_fwd.h"
+#include "resources/fwd.h"
 
 namespace CubeDemo {
 

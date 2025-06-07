@@ -1,6 +1,6 @@
-// src/graphics/boundingSphere.cpp
+// src/graphics/bound_sphere.cpp
 #include "pch.h"
-#include "graphics/boundingSphere.h"
+#include "graphics/bound_sphere.h"
 #include "graphics/mesh.h"
 
 namespace CubeDemo {

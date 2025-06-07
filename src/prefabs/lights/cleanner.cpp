@@ -1,6 +1,6 @@
-// src/prefabs/lights/cleanners.cpp
+// src/prefabs/lights/cleanner.cpp
 #include "pch.h"
-#include "prefabs/lights/cleanners.h"
+#include "prefabs/lights/cleanner.h"
 
 namespace CubeDemo::Prefabs {
 

@@ -1,4 +1,4 @@
-// include/graphics/boundingSphere.h
+// include/graphics/bound_sphere.h
 #pragma once
 
 namespace CubeDemo {

@@ -1,4 +1,4 @@
-// src/core/camera->cpp
+// src/core/camera.cpp
 #include "pch.h"
 #include "core/camera.h"
 #include "core/window.h"

@@ -1,6 +1,6 @@
-// include/prefabs/lights/cleanners.h
+// include/prefabs/lights/cleanner.h
 #pragma once
-#include "prefabs/lights/getters.h"
+#include "prefabs/lights/getter.h"
 
 namespace CubeDemo::Prefabs {
 

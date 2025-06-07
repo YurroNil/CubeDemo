@@ -4,7 +4,7 @@
 #include "kits/file_system.h"
 
 // 外部函数声明
-extern int utf8_to_unicode_conv(unsigned int* out_char, const char* in_text, const char* in_text_end);
+extern int utf8_conv_unicode(unsigned int* out_char, const char* in_text, const char* in_text_end);
 
 namespace CubeDemo {
 
@@ -61,7 +61,7 @@ void FL::CustomChars(IFGRB& builder, const std::vector<string>& char_lines) {
         const char* p = line.c_str();
         while (*p) {
             unsigned int c = 0;
-            int bytes = utf8_to_unicode_conv(&c, p, nullptr);
+            int bytes = utf8_conv_unicode(&c, p, nullptr);
             if (bytes == 0) break;
             builder.AddChar(static_cast<ImWchar>(c));
             p += bytes;

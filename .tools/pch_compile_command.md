@@ -1,1 +1,1 @@
-g++.exe -I"../include" -I"../.3rdParty/include" -I"D:/PDT-C/include" -I"D:/PDT-C/include/imgui" -I"D:/PDT-C/include/assimp" -I"D:/PDT-C/include/stb" -I"D:/PDT-C/include/OpenMesh" -c "../include/pch.h" -o "../include/pch.h.gch" -fexec-charset=UTF-8 -std=c++23 -g -mwindows -Winvalid-pch
+g++.exe -I"../include" -I"../.3rdParty/include" -I"D:/PDT-C/include" -I"D:/PDT-C/include/imgui" -I"D:/PDT-C/include/assimp" -I"D:/PDT-C/include/stb" -c "../include/pch.h" -o "../include/pch.h.gch" -fexec-charset=UTF-8 -std=c++23 -g -mwindows -Winvalid-pch

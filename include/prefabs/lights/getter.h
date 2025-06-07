@@ -1,4 +1,4 @@
-// include/prefabs/lights/getters.h
+// include/prefabs/lights/getter.h
 #pragma once
 #include "prefabs/lights/data.h"
 

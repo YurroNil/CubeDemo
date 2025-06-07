@@ -47,5 +47,5 @@ using SceneID = SceneMng::SceneID;
 }   // namespace CubeDemo::Scenes
 
 // 模板实现
-#include "scenes/sceneUtils.inl"
+#include "scenes/scene_utils.inl"
 #include "scenes/sceneMng.inl"

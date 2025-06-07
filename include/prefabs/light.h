@@ -1,7 +1,7 @@
 // include/prefabs/light.h
 #pragma once
-#include "prefabs/lights/creaters.h"
-#include "prefabs/lights/cleanners.h"
+#include "prefabs/lights/creater.h"
+#include "prefabs/lights/cleanner.h"
 
 namespace CubeDemo::Prefabs {
 class Light {

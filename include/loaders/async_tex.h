@@ -1,4 +1,4 @@
-// include/loaders/asyncTex.h
+// include/loaders/async_tex.h
 #pragma once
 #include "loaders/fwd.h"
 #include "resources/texture.h"

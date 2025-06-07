@@ -1,7 +1,7 @@
 // src/main/init.cpp
 #include "pch.h"
 #include "main/init.h"
-#include "loaders/modelIniter.h"
+#include "loaders/model_initer.h"
 #include "ui/uiMng.h"
 #include "core/inputs.h"
 

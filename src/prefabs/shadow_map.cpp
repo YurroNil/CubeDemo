@@ -1,6 +1,6 @@
-// src/prefabs/shadowMap.h
+// src/prefabs/shadow_map.h
 #include "pch.h"
-#include "prefabs/shadowMap.h"
+#include "prefabs/shadow_map.h"
 #include "resources/model.h"
 #include "utils/defines.h"
 #include "prefabs/light.h"

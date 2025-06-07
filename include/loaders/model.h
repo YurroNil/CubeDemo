@@ -1,6 +1,6 @@
 // include/loaders/model.h
 #pragma once
-#include "graphics/boundingSphere.h"
+#include "graphics/bound_sphere.h"
 #include "loaders/material.h"
 
 using ModelLoadCallback = std::function<void()>;  // 模型加载回调

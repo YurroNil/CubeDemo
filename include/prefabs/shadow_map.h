@@ -1,4 +1,4 @@
-// include/prefabs/shadowMap.h
+// include/prefabs/shadow_map.h
 #pragma once
 #include "graphics/shader.h"
 

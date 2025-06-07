@@ -1,7 +1,7 @@
 // include/loaders/font.h
 #pragma once
 #include "loaders/fwd.h"
-#include "utils/jsonConfig.h"
+#include "utils/json_config.h"
 
 using FL = CubeDemo::Loaders::Font;
 using IFGRB = ImFontGlyphRangesBuilder;

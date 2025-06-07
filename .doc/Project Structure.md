@@ -6,18 +6,20 @@
 │     │    └── camera, inputs, time, window, monitor
 │     │
 │     ├── graphics/ (图形渲染模块)
-│     │    └── base, boundingSphere, renderer, mesh, shader
+│     │    └── base, bound_sphere, renderer, mesh, shader
 │     │
 │     ├── resources/ (资源模块)
 │     │    └── model, textureBase, texture, placeHolder
 │     │
 │     ├── threads/ (线程模块)
-│     │    └── diagnostic, taskQueue
+│     │    └── diagnostic, task_queue
 │     │
 │     ├── loaders/ (加载器模块)
-│     │    └── base, material, model, modelIniter, resource, texture, image, asyncTex, fonts
+│     │    └── base, material, model, model_initer, resource, texture, image, async_tex, fonts
 │     │
 │     ├── ui/ (UI模块)
+│     │    └── panels/
+│     │         └── pause, debug, control
 │     │    └── uiMng
 │     │
 │     ├── scenses/ (场景布置模块)
@@ -26,10 +28,10 @@
 │     ├── prefabs/ (预制体模块，如光源、雨雪、烟雾、粒子效果等计算几何体)
 │     │    ├── lights/
 │     │    │    └── base, cleanners, creaters, getters
-│     │    └── light, shadowMap
+│     │    └── light, shadow_map
 │     │
 │     ├── utils/ (工具模块)
-│     │    └── stringConvertor, jsonConfig, defines
+│     │    └── string_conv, json_config, defines
 │     │
 │     ├── main/ (main主程序模块)
 │     │    └── init, loop, cleanup, includes, rendering, handles
@@ -40,7 +42,7 @@
 │     ├── ... (目录与include保持镜像结构)
 │     └── main.cpp
 │          1. `src/`与`include/`不同的是: src独有main.cpp
-│          2. 没有任何头文件独有的镜像源文件, 如: 带`base`, `defines`, `pch`等字样。
+│          2. 没有任何头文件独有的镜像源文件, 如: 带`base`, `fwd`, `defines`, `pch`等字样。
 │
 ├── resources/
 │     ├── animations/ (动画文件)

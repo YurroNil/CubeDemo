@@ -7,7 +7,7 @@ logs/
 /.vscode/
 /.vscode/*
 !.vscode/extensions.json
-
+*.code-workspace
 .DS_Store
 
 
@@ -25,13 +25,8 @@ build/*
 # Text files
 *.txt
 
-#Bin and Resources files
+#Bin files
 /bin/*
-/resources/models/*
-!/resources/models/*.json
-/textures/*
-/resources/fonts/*.ttf
-!/resources/fonts/*.json
 *.a
 *.o
 *.gch
@@ -39,3 +34,10 @@ build/*
 #Libraries
 /.3rdParty/
 /.3rdParty/*
+
+# Resources
+/textures/*
+/resources/models/*
+!/resources/models/*.json
+/resources/fonts/*.ttf
+!/resources/fonts/*.json

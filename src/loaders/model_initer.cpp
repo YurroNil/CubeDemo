@@ -1,8 +1,8 @@
-// src/loaders/modelIniter.cpp
+// src/loaders/model_initer.cpp
 #include "pch.h"
-#include "loaders/modelIniter.h"
-#include "utils/jsonConfig.h"
-#include "threads/taskQueue.h"
+#include "loaders/model_initer.h"
+#include "utils/json_config.h"
+#include "threads/task_queue.h"
 #include "graphics/shader.h"
 #include "utils/defines.h"
 

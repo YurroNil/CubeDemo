@@ -8,8 +8,7 @@
         "%PDT_I%",
         "%PDT_I%/imgui",
         "%PDT_I%/assimp",
-        "%PDT_I%/stb",
-        "%PDT_I%/OpenMesh"
+        "%PDT_I%/stb"
     ],
 
     "lib": [
@@ -28,8 +27,7 @@
 
         "-lmain", "-lui", "-lcore", "-lloaders", "-lgraphics", "-lresources", "-lthreads", "-lutils", "-lprefabs", "-l3rd_party",
 
-        "-lglfw3", "-lopengl32", "-lassimp", "-lOpenMeshCored", "-lOpenMeshToolsd", "-mwindows", "-std=c++23", "-Winvalid-pch", "-fexec-charset=UTF-8", "-g"
+        "-lglfw3", "-lopengl32", "-lassimp", "-mwindows", "-std=c++23", "-Winvalid-pch", "-fexec-charset=UTF-8", "-g"
     ]
 }
-
 }

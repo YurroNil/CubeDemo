@@ -1,6 +1,6 @@
-// src/prefabs/lights/creaters.cpp
+// src/prefabs/lights/creater.cpp
 #include "pch.h"
-#include "prefabs/lights/creaters.h"
+#include "prefabs/lights/creater.h"
 
 namespace CubeDemo::Prefabs {
 // 平行光源

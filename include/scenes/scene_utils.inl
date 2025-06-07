@@ -1,4 +1,4 @@
-// include/scenes/sceneUtils.inl
+// include/scenes/scene_utils.inl
 #pragma once
 
 #include <unordered_map>

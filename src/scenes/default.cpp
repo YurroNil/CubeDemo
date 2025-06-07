@@ -3,10 +3,9 @@
 #include "core/window.h"
 #include "graphics/renderer.h"
 #include "scenes/sceneMng.h"
-#include "resources/model.h"
-#include "core/camera.h"
 #include "prefabs/light.h"
-#include "prefabs/shadowMap.h"
+#include "prefabs/shadow_map.h"
+#include "resources/model.h"
 #include "resources/model.h"
 
 // 外部变量声明

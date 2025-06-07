@@ -1,5 +1,5 @@
 // include/scenes/fwd.h
 #pragma once
 namespace CubeDemo::Scenes {
-    class SceneMng; class DefaultScene; class NightScene;
+    class SceneBase; class SceneMng; class DefaultScene; class NightScene;
 }
