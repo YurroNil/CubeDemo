@@ -1,0 +1,26 @@
+{
+    "library_name": "utils",
+    
+    "paths": {
+        "source_code": [
+            "../src/utils"
+        ],
+        "include": [
+            "../include",
+            "../.3rdParty/include",
+            "%PDT_I%",
+            "%PDT_I%/imgui",
+            "%PDT_I%/assimp",
+            "%PDT_I%/stb",
+            "%PDT_I%/OpenMesh"
+        ]
+    },
+    
+    "arguments": {
+        "cmd_prefix": "g++.exe -c",
+        "lib_suffix": [
+            "-lglfw3", "-lopengl32", "-lassimp", "-lOpenMeshCored", "-lOpenMeshToolsd", "-mwindows", "-std=c++23", "-Winvalid-pch", "-fexec-charset=UTF-8", "-g"
+        ],
+        "output": "../lib"
+    }
+}

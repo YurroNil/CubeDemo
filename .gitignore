@@ -1,0 +1,41 @@
+# Logs
+logs/
+*.log
+
+
+# Editor directories and files
+/.vscode/
+/.vscode/*
+!.vscode/extensions.json
+
+.DS_Store
+
+
+# IDE files
+*.sln
+.idea
+
+
+# Build Tools
+/.tools/*.exe
+!/.tools/*.json
+build/
+build/*
+
+# Text files
+*.txt
+
+#Bin and Resources files
+/bin/*
+/resources/models/*
+!/resources/models/*.json
+/textures/*
+/resources/fonts/*.ttf
+!/resources/fonts/*.json
+*.a
+*.o
+*.gch
+
+#Libraries
+/.3rdParty/
+/.3rdParty/*

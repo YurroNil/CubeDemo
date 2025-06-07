@@ -1,0 +1,37 @@
+// src/kits/pch.h
+#pragma once
+// STL基础库
+#include <vector>
+#include <atomic>
+#include <memory>
+#include <functional>
+#include <future>
+#include <mutex>
+#include <thread>
+#include <unordered_map>
+#include <map>
+#include <future>
+#include <deque>
+#include <functional>
+#include <unordered_set>
+#include <chrono>
+#include <windows.h>
+#include <algorithm>
+#include "kits/strings.h"
+#include "kits/streams.h"
+#include "kits/file_system.h"
+
+// 第三方库文件
+#include "kits/assimp.h"
+#include "kits/glfw.h"
+#include "kits/glm.h"
+#include "kits/imgui.h"
+#include "nlohmann/json.hpp"
+
+// 项目头文件
+#include "threads/diagnostic.h"
+#include "graphics/renderer.h"
+#include "core/camera.h"
+#include "graphics/mesh.h"
+#include "utils/jsonConfig.h"
+#include "utils/stringConvertor.h"
