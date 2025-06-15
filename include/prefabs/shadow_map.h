@@ -10,7 +10,7 @@ public:
     void BindForWriting();
     void BindForReading(GLenum textureUnit);
     mat4 GetLightSpaceMat(DL* sun) const;
-    void RenderShadow(Camera* camera, const Light& light);
+    void RenderShadow(Camera* camera);
     
     // 创建/删除 阴影
     static ShadowMap* CreateShadow(); static void DeleteShadow(ShadowMap* &ptr);

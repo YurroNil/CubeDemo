@@ -1,4 +1,3 @@
-// src/graphics/mesh.cpp
 #include "pch.h"
 #include "graphics/mesh.h"
 #include "graphics/shader.h"
@@ -51,6 +50,10 @@ Mesh::Mesh(
     glEnableVertexAttribArray(3);
     glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
 
+    // emitColor
+    glEnableVertexAttribArray(4);
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, emitColor));
+
     glBindVertexArray(0);
 
     // 添加OpenGL错误检查
@@ -77,7 +80,7 @@ void Mesh::UpdateTextures(const TexPtrArray& newTextures) {
 }
 
 // 渲染循环中网格绘制
-void Mesh::Draw(Shader& shader) const {
+void Mesh::Draw(Shader* shader) const {
 
      // 检查VAO有效性
     if(m_VAO == 0) {
@@ -110,7 +113,12 @@ void Mesh::Draw(Shader& shader) const {
         string type = tex->Type;
         string uniform_name;
 
-        // 动态生成uniform名称
+
+        /* 动态生成uniform名称
+            注意：名称后缀有数字, 因此在glsl代码设置uniform时, 一定要加上数字后缀
+            如：texture_diffuse1, texture_specular1.
+        */
+
         if (type == "texture_diffuse") {
             uniform_name = type + std::to_string(diffuse_count++);
         } else if (type == "texture_specular") {
@@ -124,7 +132,7 @@ void Mesh::Draw(Shader& shader) const {
         }
 
         // 设置Shader参数并绑定纹理
-        shader.SetInt(uniform_name.c_str(), i);
+        shader->SetInt(uniform_name.c_str(), i);
         tex->Bind(i);
     }
 
@@ -202,6 +210,10 @@ Mesh& Mesh::operator<<(const Mesh& other) {
     
     glEnableVertexAttribArray(3);
     glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
+
+    // emitColor
+    glEnableVertexAttribArray(4);
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, emitColor));
 
     glBindVertexArray(0);
 

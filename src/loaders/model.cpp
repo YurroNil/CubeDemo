@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "loaders/model.h"
 #include "loaders/resource.h"
+#include "resources/model.h"
 
 // 别名
 using MaL = CubeDemo::Loaders::Material;
@@ -16,7 +17,9 @@ extern bool DEBUG_ASYNC_MODE;
 std::unordered_set<string> ML::s_PrintedPaths;
 std::mutex ML::s_PrintMutex; 
 
-ML::Model(const string& path) : Rawpath(path) {
+ML::Model(const string& path, ::CubeDemo::Model* model)
+    : Rawpath(path), m_owner(model)
+{
     Directory = path.substr(0, path.find_last_of('/'));
 }
 
@@ -41,9 +44,9 @@ void ML::LoadModel(const string& path) {
 
 
 /* -------计算包围球------- */
-    bounds.Calc(m_meshes);
+    m_owner->bounds.Calc(m_owner->GetMeshes());
 
-    std::cout << "    总网格数: " << m_meshes.size() << "\n    包围球半径: " << bounds.Rad << "\n=== 加载完成 ===\n" << std::endl;
+    std::cout << "    总网格数: " << m_owner->GetMeshes().size() << "\n    包围球半径: " << m_owner->bounds.Rad << "\n=== 加载完成 ===\n" << std::endl;
 
 }
 
@@ -55,14 +58,9 @@ void ML::ProcNode(aiNode* node, const aiScene* scene) {
 
         // 生成原始网格
         Mesh original = ProcMesh(mesh, scene);
-        Mesh copy;
-        copy << original; // 深拷贝
 
-        // 主列表：移动语义转移所有权
-        m_meshes.push_back(std::move(original));
-
-        m_meshes_copy.push_back(std::move(copy));
-
+        // 移动语义转移所有权
+        m_owner->GetMeshes().push_back(std::move(original));
     }
 
     // 递归处理子节点
@@ -134,7 +132,7 @@ Mesh ML::ProcMesh(aiMesh* mesh, const aiScene* scene) {
 
 // 异步加载模型
 void ML::LoadAsync(ModelLoadCallback cb) {
-    m_IsLoading = true;
+    m_owner->SetMeshMarker() = true;
     RL::EnqueueIOJob([this, cb]{
 
         std::cout << "\n---[ModelAsyncLoader] 开始加载模型..." << std::endl;
@@ -144,37 +142,29 @@ void ML::LoadAsync(ModelLoadCallback cb) {
         
         TaskQueue::AddTasks([this, cb]{
             // 通知所有网格更新纹理引用
-            ML::m_MeshesReady.store(true, std::memory_order_release);
+            m_owner->SetMeshMarker().store(true, std::memory_order_release);
 
-            for(auto& mesh : m_meshes) mesh.UpdateTextures(mesh.m_textures);
+            for(auto& mesh : m_owner->GetMeshes()) mesh.UpdateTextures(mesh.m_textures);
 
-            m_IsLoading = false; cb();
+            m_owner->SetLoadingMarker() = false; cb();
         }, true);
     });
 }
 
 // 同步加载模型
 void ML::LoadSync(ModelLoadCallback cb) {
-    m_IsLoading = true;
+    m_owner->SetLoadingMarker() = true;
     std::cout << "\n---[模型加载器] 使用同步加载模式加载模型..." << std::endl;
 
     this->LoadModel(Rawpath);
     
     TaskQueue::AddTasks([this, cb]{
         // 通知所有网格更新纹理引用
-        ML::m_MeshesReady.store(true, std::memory_order_release);
-        // for(auto& mesh : m_meshes) mesh.UpdateTextures(mesh.m_textures);
-        m_IsLoading = false; cb();
+        m_owner->SetMeshMarker().store(true, std::memory_order_release);
+        // for(auto& mesh : m_owner->GetMeshes()) mesh.UpdateTextures(mesh.m_textures);
+        m_owner->SetLoadingMarker() = false; cb();
     }, true);
 
     std::cout << "---[模型加载器] 加载模型结束\n" << std::endl;
 }
-
-// 乱七八糟的Getters
-bool ML::IsReady() const { return ML::m_MeshesReady.load(std::memory_order_acquire); }
-const std::atomic<bool>& ML::isLoading() const { return m_IsLoading; }
-const MeshArray& ML::GetMeshes() const { return m_meshes; }
-const mat4& ML::GetModelMatrix() const { return m_ModelMatrix; }
-
-
 } // namespace CubeDemo

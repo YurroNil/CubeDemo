@@ -1,8 +1,8 @@
-// include/prefabs/lights/creater.h
+// include/managers/light/creater.h
 #pragma once
-#include "prefabs/lights/getter.h"
+#include "managers/light/getter.h"
 
-namespace CubeDemo::Prefabs {
+namespace CubeDemo::Managers {
 
 class LightCreater : public LightGetter {
 public:

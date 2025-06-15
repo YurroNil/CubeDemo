@@ -33,6 +33,9 @@ void Window::Init(int width, int height, const char* title) {
 
     // 添加窗口大小回调来更新窗口
     glfwSetFramebufferSizeCallback(s_Window, [](GLFWwindow* window, int width, int height) { glViewport(0, 0, width, height); }); 
+
+    // 输出OpenGL版本
+    std::cout << "OpenGL版本: " << glGetString(GL_VERSION) << std::endl;
 }
 
 bool Window::ShouldClose() { return glfwWindowShouldClose(s_Window); }

@@ -4,19 +4,20 @@
 
 namespace CubeDemo {
 
+extern SceneMng* SCENE_MNG;
+extern LightMng* LIGHT_MNG;
+
 /* <------------ 渲  染  循  环 ------------> */
 void render_scene(
     GLFWwindow* window,
     Camera* camera,
-    Scene* scene_inst,
-    const Light& light,
     ShadowMap* shadow_map)
 {
     // 阴影渲染阶段
-    shadow_map->RenderShadow(camera, light);
+    shadow_map->RenderShadow(camera);
 
     // 主渲染阶段
-    scene_inst->Rendering(scene_inst->Current, window, camera, light, shadow_map);
+    SCENE_MNG->Rendering(SCENE_MNG->Current, window, camera, shadow_map);
 }
 
 // 模型变换(如旋转)

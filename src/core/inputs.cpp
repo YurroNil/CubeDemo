@@ -1,7 +1,7 @@
 // src/core/inputs.cpp
 #include "pch.h"
 #include "core/inputs.h"
-#include "core/camera.h"
+#include "core/window.h"
 
 namespace CubeDemo {
 
@@ -54,6 +54,19 @@ void Inputs::PauseTheGame(GLFWwindow* window) {
 
 // 输入处理
 void Inputs::ProcKeyboard(GLFWwindow* window, float delta_time) {
+    
+    // T键切换编辑模式
+    if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {
+        ToggleEditMode(window);
+    }
+    // 处理模型放置
+    if (s_isEditMode) {
+        HandleModelPlacement(window);
+    }
+
+    // 编辑模式下禁用相机控制
+    if (s_isEditMode || isGamePaused) return;
+    
     // WASD 移动
     float velocity = 2* s_Camera->attribute.movementSpeed * delta_time;
 
@@ -98,11 +111,62 @@ void Inputs::isEscPressed(GLFWwindow* window) {
     static float last_esc_press_time = 0.0f;
     const float current_time = glfwGetTime();
     
-    if ((current_time - last_esc_press_time) > Inputs::escCoolDown) {
+    if ((current_time - last_esc_press_time) > Inputs::s_EscCoolDown) {
         last_esc_press_time = current_time;
         if (!Inputs::isGamePaused) Inputs::PauseTheGame(window);
         else if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) Inputs::ResumeTheGame(window);
     }
 }
+void Inputs::ToggleEditMode(GLFWwindow* window) {
+    float currentTime = glfwGetTime();
+    if (currentTime - s_LastToggleTime < s_ToggleCD) return;
+    
+    s_LastToggleTime = currentTime;
+    s_isEditMode = !s_isEditMode;
+    
+    // 编辑模式下显示鼠标，禁用摄像机
+    if (s_isEditMode) {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        s_FirstMouse = true; // 重置鼠标初始位置
+    } else {
+        if (!isGamePaused) {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+    }
+}
 
+void Inputs::SetPlacementModel(const string& model_id) {
+    s_PlacementModelID = model_id;
+}
+
+void Inputs::ClearPlacementModel() {
+    s_PlacementModelID = "";
+}
+
+void Inputs::HandleModelPlacement(GLFWwindow* window) {
+    if (s_PlacementModelID.empty()) return;
+    
+    // 鼠标左键点击放置模型
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+        double x, y;
+        glfwGetCursorPos(window, &x, &y);
+        
+        // 转换屏幕坐标到世界坐标
+        vec3 worldPos = Camera::ScreenToWorld(
+            x, y, s_Camera, // 传入鼠标坐标与摄像机指针
+            0.5f, // 深度值设为0.5（场景中间）
+            Window::GetWidth(), Window::GetHeight() // 屏幕分辨率
+        );
+        
+        // 实例化模型
+        // ModelCreater::CreateInstance(s_PlacementModelID, worldPos);
+        
+        // 添加冷却时间防止连续放置
+        static float lastPlaceTime = 0.0f;
+        float currentTime = glfwGetTime();
+        if (currentTime - lastPlaceTime > 0.5f) {
+            lastPlaceTime = currentTime;
+        }
+    }
+}
 }

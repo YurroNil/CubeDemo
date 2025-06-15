@@ -1,8 +1,8 @@
-// include/prefabs/lights/getter.h
+// include/managers/light/getter.h
 #pragma once
 #include "prefabs/lights/data.h"
 
-namespace CubeDemo::Prefabs {
+namespace CubeDemo::Managers {
 
 class LightGetter {
 public:
@@ -12,9 +12,9 @@ public:
     SL* SpotLight() const;
 
     // Setters
-    void SetDirLight(DL* ptr);
-    void SetPointLight(PL* ptr);
-    void SetSpotLight(SL* ptr);
+    LightGetter& SetDirLight(DL* ptr);
+    LightGetter& SetPointLight(PL* ptr);
+    LightGetter& SetSpotLight(SL* ptr);
 
 protected:
     DL* m_DirLight = nullptr;

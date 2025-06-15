@@ -1,8 +1,8 @@
-// include/ui/uiMng.h
+// include/managers/uiMng.h
 #pragma once
+#include "managers/fwd.h"
 
 namespace CubeDemo {
-class Camera;
 class UIMng {
 public:
 

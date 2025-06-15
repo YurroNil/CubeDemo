@@ -2,15 +2,17 @@
 #include "pch.h"
 #include "main/init.h"
 #include "loaders/model_initer.h"
-#include "ui/uiMng.h"
+#include "managers/uiMng.h"
 #include "core/inputs.h"
+#include "managers/lightMng.h"
 
 namespace CubeDemo {
 
 // 全局变量
 ModelPtrArray MODEL_POINTERS;
 Shader* MODEL_SHADER;
-Scene* SCENE_INST;
+SceneMng* SCENE_MNG;
+LightMng* LIGHT_MNG;
 ShadowMap* SHADOW_MAP;
 
 // 暂时采用同步模式
@@ -36,10 +38,12 @@ GLFWwindow* Init() {
 
 /* ---------- 场景与预制体初始化 ------------ */
 
-    // 创建场景管理器
-    SCENE_INST = Scene::CreateSceneInst();
-    // 设置场景为默认场景
-    SCENE_INST->Current = SceneID::NIGHT;
+    // 创建场景和光源管理器
+    SCENE_MNG = SceneMng::CreateInst();
+    LIGHT_MNG = LightMng::CreateInst();
+
+    // 设置场景为
+    SCENE_MNG->Current = SceneID::NIGHT;
     // 创建阴影
     SHADOW_MAP = ShadowMap::CreateShadow();
     // 创建阴影着色器
@@ -49,8 +53,7 @@ GLFWwindow* Init() {
     Camera* camera = new Camera(
         vec3(0.5f, 0.5f, 3.0f),
         vec3(0.0f, 1.0f, 0.0f),
-        -90.0f,
-        0.0f
+        -90.0f, 0.0f
     );
 
     if (!camera) {
@@ -69,5 +72,4 @@ GLFWwindow* Init() {
     std::cout << "[INITER] 初始化阶段结束" << std::endl;
     return Window::GetWindow();
 }
-
 }   // namespace CubeDemo

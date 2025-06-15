@@ -1,15 +1,17 @@
 // src/prefabs/shadow_map.h
 #include "pch.h"
 #include "prefabs/shadow_map.h"
+#include "managers/lightMng.h"
 #include "resources/model.h"
 #include "utils/defines.h"
-#include "prefabs/light.h"
-#include "core/camera.h"
+#include "managers/sceneMng.h"
 
 // 外部变量声明
 namespace CubeDemo {
     extern Shader* MODEL_SHADER;
     extern std::vector<Model*> MODEL_POINTERS;
+    extern SceneMng* SCENE_MNG;
+    extern LightMng* LIGHT_MNG;
 }
 
 // 别名
@@ -71,14 +73,14 @@ mat4 ShadowMap::GetLightSpaceMat(DL* sun) const {
 }
 
 // 渲染深度到阴影贴图
-void ShadowMap::RenderShadow(Camera* camera, const Light& light) {
+void ShadowMap::RenderShadow(Camera* camera) {
     
     BindForWriting();
     m_ShadowShader->Use();
     
     // 阴影矩阵计算
-    const auto lightSpaceMatrix = GetLightSpaceMat(light.Get.DirLight());
-    m_ShadowShader->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
+    const auto light_space_mat = GetLightSpaceMat(LIGHT_MNG->Get.DirLight());
+    m_ShadowShader->SetMat4("lightSpaceMatrix", light_space_mat);
 
     // 简化绘制模型（仅位置属性）
     for (auto* model : MODEL_POINTERS) {
@@ -92,7 +94,7 @@ void ShadowMap::RenderShadow(Camera* camera, const Light& light) {
     // 传递阴影贴图
     BindForReading(GL_TEXTURE1);
     MODEL_SHADER->SetInt("shadowMap", 1);
-    MODEL_SHADER->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
+    MODEL_SHADER->SetMat4("lightSpaceMatrix", light_space_mat);
 }
 
 // 创建/删除 阴影

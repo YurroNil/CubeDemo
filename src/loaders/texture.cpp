@@ -178,7 +178,6 @@ TexturePtr TL::LoadSync(const string& path, const string& type) {
     }
 }
 
-
 TexturePtr TL::CreateFromData(ImagePtr data, const string& path, const string& type) {
     auto& diag = Diagnostic::Get();
     // 确保在主线程创建
@@ -226,7 +225,6 @@ try {
     std::cerr << "[TEXTURE] 创建失败 路径:" << path << "\n";
     throw;
 }
-
 }
 
 string TL::GetStatePrint(TexturePtr tex) {

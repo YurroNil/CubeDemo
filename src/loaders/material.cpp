@@ -49,20 +49,16 @@ void MaL::ProcMaterial(aiMesh*& mesh, const aiScene*& scene, TexPtrArray& textur
     }
 }
 
+// 加载入口(根据是否是异步模式选择)
 TexPtrArray MaL::LoadTex(aiMaterial* mat, aiTextureType type, const string& type_name, bool is_async) {
     if (is_async) {
-        return LoadTextures(mat, type, type_name,
-            [](const string& path, const string& type, auto&& cb) { // 通用回调
-                TL::LoadAsync(path, type, std::forward<decltype(cb)>(cb));
-            }
-        );
+        return LoadTextures(mat, type, type_name, [](const string& path, const string& type, auto&& cb) {
+            TL::LoadAsync(path, type, std::forward<decltype(cb)>(cb));
+        });
     } else {
-        return LoadTextures(mat, type, type_name,
-            [](const string& path, const string& type) {
-                return TL::LoadSync(path, type);
-            }
-        );
+        return LoadTextures(mat, type, type_name, [](const string& path, const string& type) {
+            return TL::LoadSync(path, type);
+        });
     }
 }
-
 }

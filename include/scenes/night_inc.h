@@ -5,18 +5,14 @@
 */
 
 // 场景模块
-#include "scenes/sceneMng.h"
+#include "managers/sceneMng.h"
 // 资源模块
 #include "resources/model.h"
 // 预制体模块
-#include "prefabs/light.h"
+#include "managers/lightMng.h"
 #include "prefabs/shadow_map.h"
 // 核心模块
 #include "core/camera.h"
 #include "core/window.h"
 // 工具模块
 #include "utils/defines.h"
-#include "utils/json_config.h"
-// 第三方库
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/rotate_vector.hpp>

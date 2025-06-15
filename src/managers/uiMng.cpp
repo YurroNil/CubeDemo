@@ -1,10 +1,11 @@
-// src/ui/uiMng.cpp
+// src/managers/uiMng.cpp
 #include "pch.h"
 // UI模块
-#include "ui/uiMng.h"
+#include "managers/uiMng.h"
 #include "ui/panels/pause.h"
 #include "ui/panels/control.h"
 #include "ui/panels/debug.h"
+#include "ui/panels/edit.h"
 // 核心模块
 #include "core/inputs.h"
 #include "core/window.h"
@@ -32,24 +33,52 @@ void UIMng::RenderLoop(GLFWwindow* window, Camera* camera) {
         UI::ControlPanel::Render(camera); // 控制面板
         UI::DebugPanel::Render(camera);   // 调试面板
     }
+    // 新增编辑面板渲染
+    if (Inputs::s_isEditMode) {
+        UI::EditPanel::Render();
+    }
 }
 
 // 初始化ImGui库
 void UIMng::InitImGui() {
     IMGUI_CHECKVERSION(); // 检查ImGui版本
     ImGui::CreateContext(); // 创建ImGui上下文
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    
     ImGui_ImplGlfw_InitForOpenGL(Window::GetWindow(), true); // 初始化ImGui的GLFW后端
     ImGui_ImplOpenGL3_Init("#version 330"); // 初始化ImGui的OpenGL3后端，指定着色器版本
+    
 }
 
 // 配置ImGui的样式
 void UIMng::ConfigureImGuiStyle() {
-    ImGuiStyle& style = ImGui::GetStyle();   // 获取ImGui样式对象
-    style.WindowPadding = ImVec2(15, 15);    // 设置窗口内边距
-    style.FramePadding = ImVec2(10, 10);     // 设置控件内边距
-    style.ItemSpacing = ImVec2(10, 15);      // 设置控件之间的间距
-    style.ScaleAllSizes(1.5f);               // 放大所有尺寸以适配高DPI屏幕
-    ImGui::StyleColorsDark();                // 使用深色主题
+    ImGuiStyle& style = ImGui::GetStyle();
+    
+    // 圆角
+    style.FrameRounding = 6.0f;
+    style.GrabRounding = 6.0f;
+    style.WindowRounding = 8.0f;
+    style.PopupRounding = 6.0f;
+    
+    // 颜色
+    ImVec4* colors = style.Colors;
+    colors[ImGuiCol_Text] = ImVec4(0.95f, 0.95f, 0.95f, 1.00f);
+    colors[ImGuiCol_WindowBg] = ImVec4(0.10f, 0.10f, 0.10f, 0.94f);
+    colors[ImGuiCol_Border] = ImVec4(0.25f, 0.25f, 0.25f, 0.50f);
+    colors[ImGuiCol_FrameBg] = ImVec4(0.18f, 0.18f, 0.18f, 0.54f);
+    colors[ImGuiCol_FrameBgHovered] = ImVec4(0.22f, 0.22f, 0.22f, 0.54f);
+    colors[ImGuiCol_FrameBgActive] = ImVec4(0.26f, 0.26f, 0.26f, 0.54f);
+    colors[ImGuiCol_Button] = ImVec4(0.26f, 0.59f, 0.98f, 0.40f);
+    colors[ImGuiCol_ButtonHovered] = ImVec4(0.26f, 0.59f, 0.98f, 0.60f);
+    colors[ImGuiCol_ButtonActive] = ImVec4(0.06f, 0.53f, 0.98f, 1.00f);
+    
+    // 间距
+    style.WindowPadding = ImVec2(12, 12);
+    style.FramePadding = ImVec2(10, 6);
+    style.ItemSpacing = ImVec2(10, 8);
+    style.ItemInnerSpacing = ImVec2(8, 6);
 }
 
 // 获取窗口中心位置

@@ -1,9 +1,9 @@
-// src/prefabs/lights/creater.cpp
+// src/managers/light/creater.cpp
 #include "pch.h"
-#include "prefabs/lights/creater.h"
+#include "managers/light/creater.h"
 
-namespace CubeDemo::Prefabs {
-// 平行光源
+namespace CubeDemo::Managers {
+// 方向光
 DL* LightCreater::DirLight() {
     // 创建太阳
     return new DL {
@@ -19,9 +19,9 @@ PL* LightCreater::PointLight() {
     return new PL();
 }
 
-// 聚光灯
+// 聚光
 SL* LightCreater::SpotLight() {
     return new SL();
 }
 
-}   // namespace CubeDemo::Prefabs
+}   // namespace CubeDemo::Managers

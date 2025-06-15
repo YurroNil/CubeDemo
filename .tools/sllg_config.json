@@ -1,9 +1,9 @@
 {
-    "library_name": "ui",
+    "library_name": "3rd_party",
     
     "paths": {
         "source_code": [
-            "../src/ui"
+            "../.3rdParty/src"
         ],
         "include": [
             "../include",

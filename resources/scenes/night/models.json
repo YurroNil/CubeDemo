@@ -1,0 +1,26 @@
+{
+    "LoadModels": [
+        {
+            "id": "kokomi",
+            "type": "model.character",
+            "name": "心海",
+            "path": "kokomi/kokomi.obj",
+            "attributes": {
+                "position": [0, 0, 0],
+                "rotation": 90.0,
+                "scale": [0.3, 0.3, 0.3]
+            }
+        },
+        {
+            "id": "room",
+            "type": "model.scene",
+            "name": "room",
+            "path": "room/room.obj",
+            "attributes": {
+                "position": [0, 8.2, 10],
+                "rotation": 0.0,
+                "scale": [0.1, 0.1, 0.1]
+            }
+        }
+    ]
+}

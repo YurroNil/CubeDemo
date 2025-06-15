@@ -1,11 +1,8 @@
-// include/scenes/scene_utils.inl
+// include/managers/scene/utils.inl
 #pragma once
 
-#include <unordered_map>
-
-namespace CubeDemo::Scenes {
-
-namespace Internal {
+namespace CubeDemo::Managers {
+namespace SceneInternal {
 
 // 调用场景类方法
 template <typename SceneT, typename... Args>
@@ -24,11 +21,11 @@ auto& GetSceneInstance(SceneMng* mng) {
 // 定义场景注册表的列表
 struct SceneRegistryEntry {
     std::string_view name;
-    std::reference_wrapper<SceneBase> instance;
+    std::reference_wrapper<Scenes::SceneBase> instance;
     
     explicit SceneRegistryEntry(
         std::string_view name_, 
-        SceneBase& scene
+        Scenes::SceneBase& scene
     ) : name(name_), instance(scene) {}
 };
 
@@ -46,4 +43,16 @@ inline auto& GetSceneRegistry(SceneMng* mng) {
     }
     return registry;
 }
-}} // namespace
+}// namespace SceneInternal
+
+// 清理场景模板
+template <SceneMng::SceneID id>
+void SceneMng::CleanScene() {
+
+    auto& scene = SceneInternal::GetSceneInstance<id>(this);
+    if (scene.s_isInited && !scene.s_isCleanup) {
+        scene.Cleanup();
+        scene.s_isCleanup = true; scene.s_isInited = false;
+    }
+}
+} // namespace CubeDemo::Managers

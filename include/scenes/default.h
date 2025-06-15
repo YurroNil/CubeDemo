@@ -9,15 +9,13 @@ public:
     ~DefaultScene();
 
     // 覆写
-    void Init(SceneMng* scene_inst, Light& light) override;
-    void Cleanup(Light& light) override;
+    void Init() override;
+    void Cleanup() override;
 
     // 主渲染阶段
-    void Render(
-        GLFWwindow* window,
-        Camera* camera,
-        const Light& light,
-        ShadowMap* shadow_map
-    ) override;
+    void Render(GLFWwindow* window, Camera* camera, ShadowMap* shadow_map) override;
+
+private:
+    DL* m_DirLight = nullptr;
 };
 }   // namespace CubeDemo::Scenes

@@ -33,5 +33,4 @@ void DebugPanel::Render(Camera* camera) {
     }
     ImGui::End();
 }
-
 }

@@ -1,7 +1,7 @@
 // src/ui/panels/pause.cpp
 #include "pch.h"
 // UI模块
-#include "ui/uiMng.h"
+#include "managers/uiMng.h"
 #include "ui/panels/pause.h"
 // 核心模块
 #include "core/window.h"
@@ -37,14 +37,17 @@ void PausePanel::Render(GLFWwindow* window) {
         first_render = false;
     }
 }
-
-
 // 渲染暂停菜单内容
 void PausePanel::SetMenuContent(GLFWwindow* window) {
     // 居中显示标题
     ImGui::SetCursorPosX((400 - ImGui::CalcTextSize("Game Paused").x) * 0.5f); // 计算标题的水平居中位置
     ImGui::Text("游戏已暂停."); // 显示标题
     ImGui::Separator(); // 添加分隔线
+
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 6.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(20, 15));
+
+    const ImVec4 primaryColor = ImVec4(0.26f, 0.59f, 0.98f, 0.60f);
 
     // 按钮布局
     const ImVec2 button_size(280, 60); // 按钮的尺寸
@@ -53,8 +56,13 @@ void PausePanel::SetMenuContent(GLFWwindow* window) {
         ImGui::CloseCurrentPopup(); // 关闭弹出窗口
     }
 
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.15f, 0.15f, 0.15f, 0.60f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.25f, 0.25f, 0.25f, 0.80f));
+
     if (ImGui::Button("退出到桌面", button_size)) { // 添加"退出到桌面"按钮
         glfwSetWindowShouldClose(window, true); // 设置窗口关闭标志
     }
+    ImGui::PopStyleColor(2);
+    ImGui::PopStyleVar(2);
 }
 }

@@ -35,5 +35,4 @@ private:
     inline static float s_InitMouseX = 0.0f;
     inline static float s_InitMouseY = 0.0f;
 };
-
 }
