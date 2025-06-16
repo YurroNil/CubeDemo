@@ -1,9 +1,9 @@
 {
-    "library_name": "3rd_party",
+    "library_name": "main",
     
     "paths": {
         "source_code": [
-            "../.3rdParty/src"
+            "../src/main"
         ],
         "include": [
             "../include",
@@ -18,7 +18,7 @@
     "arguments": {
         "cmd_prefix": "g++.exe -c",
         "lib_suffix": [
-            "-lglfw3", "-lopengl32", "-lassimp", "-mwindows", "-std=c++23", "-Winvalid-pch", "-fexec-charset=UTF-8", "-g"
+            "-lglfw3", "-lopengl32", "-lassimp", "-std=c++23", "-Winvalid-pch", "-fexec-charset=UTF-8", "-g"
         ],
         "output": "../lib"
     }
