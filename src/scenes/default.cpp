@@ -18,6 +18,11 @@ namespace CubeDemo {
 
 namespace CubeDemo::Scenes {
 
+DefaultScene::DefaultScene() {
+    name = "默认场景";
+    id = "default";
+}
+
 // DefaultScene实现
 void DefaultScene::Init() {
     if(s_isInited) return;
@@ -27,17 +32,17 @@ void DefaultScene::Init() {
 
     // 创建方向光
     m_DirLight = LIGHT_MNG->Create.DirLight();
-    LIGHT_MNG->Get.SetDirLight(m_DirLight);
-
+    
     // 使用配置文件的数据来设置光源参数
     LightMng::SetLightsData(SCENE_CONF_PATH + string("default/lights.json"), m_DirLight);
+
+    MODEL_SHADER->Use();
+    MODEL_SHADER->SetBool("useDayLighting", true);
 }
 
 void DefaultScene::Render(GLFWwindow* window, Camera* camera, ShadowMap* shadow_map) {
     // 设置视口
     glViewport(0, 0, Window::GetWidth(), Window::GetHeight());
-    // 主着色器配置
-    MODEL_SHADER->Use();
 
     shadow_map->BindForReading(GL_TEXTURE1);
 
@@ -55,7 +60,10 @@ void DefaultScene::Render(GLFWwindow* window, Camera* camera, ShadowMap* shadow_
 void DefaultScene::Cleanup() {
     if(!s_isInited || s_isCleanup) return;
 
-    LIGHT_MNG->Remove.DirLight();
+    if(m_DirLight != nullptr) {
+        delete m_DirLight; m_DirLight = nullptr;
+    }
+    s_isInited = false;
 }
 
 DefaultScene::~DefaultScene() {}

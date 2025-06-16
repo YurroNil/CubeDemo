@@ -60,6 +60,7 @@ mat4 ShadowMap::GetLightSpaceMat(DL* sun) const {
     // 计算光源方向对齐的AABB
     vec3 center = vec3(0.0f); // 假设场景中心在原点
     float extend = sceneRadius;
+    // -(light.direciton)
     mat4 lightView = glm::lookAt(-sun->direction * extend, center, vec3(0,1,0));
     
     // 动态计算正交投影范围
@@ -79,7 +80,7 @@ void ShadowMap::RenderShadow(Camera* camera) {
     m_ShadowShader->Use();
     
     // 阴影矩阵计算
-    const auto light_space_mat = GetLightSpaceMat(LIGHT_MNG->Get.DirLight());
+    const mat4 light_space_mat = {}; // = GetLightSpaceMat();
     m_ShadowShader->SetMat4("lightSpaceMatrix", light_space_mat);
 
     // 简化绘制模型（仅位置属性）

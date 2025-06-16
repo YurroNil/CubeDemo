@@ -5,6 +5,10 @@
             "type": "model.character",
             "name": "心海",
             "path": "kokomi/kokomi.obj",
+            "shaders": {
+                "vertex": "model.glsl",
+                "fragment": "model_night.glsl"
+            },
             "attributes": {
                 "position": [0, 0, 0],
                 "rotation": 90.0,
@@ -14,8 +18,12 @@
         {
             "id": "room",
             "type": "model.scene",
-            "name": "room",
+            "name": "工厂仓库",
             "path": "room/room.obj",
+            "shaders": {
+                "vertex": "model.glsl",
+                "fragment": "model_night.glsl"
+            },
             "attributes": {
                 "position": [0, 8.2, 10],
                 "rotation": 0.0,

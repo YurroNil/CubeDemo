@@ -2,7 +2,6 @@
 #pragma once
 #include "managers/fwd.h"
 #include "managers/light/creater.h"
-#include "managers/light/cleanner.h"
 
 namespace CubeDemo::Managers {
 class LightMng {
@@ -10,7 +9,9 @@ class LightMng {
     inline static unsigned int s_InstCount = 0;
 
 public:
-    LightGetter Get; LightCreater Create; LightCleanner Remove;
+    LightMng();
+
+    LightCreater Create;
 
     static LightMng* CreateInst();
 

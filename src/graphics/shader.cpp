@@ -119,5 +119,7 @@ void Shader::SetFloat(const string& name, float value) {
 void Shader::SetInt(const string& name, int value) const {
     glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }
-
+void Shader::SetBool(const string& name, bool value) {
+    glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
+}
 }   // namespace CubeDemo

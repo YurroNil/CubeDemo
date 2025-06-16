@@ -8,19 +8,22 @@ using namespace glm;
 // 别名
 using TLS = CubeDemo::Texture::LoadState;
 
+VolumBeam::VolumBeam() {
+}
+
 // 设置动态效果+应用着色器
 void VolumBeam::SetFx(Camera* camera, SL* spot_light) {
     // 别名
-    const auto& s = m_VolumShader;
-    const auto& fx = m_effects;
+    const auto& s = VolumShader;
+    const auto& fx = Effects;
 
     // 计算闪烁效果
     float flicker_factor = 1.0f;
-    if (m_effects.flicker.enable) {
+    if (Effects.flicker.enable) {
         flicker_factor = mix(
-            m_effects.flicker.min, 
-            m_effects.flicker.max, 
-            0.5f + 0.5f * sin(glfwGetTime() * m_effects.flicker.speed)
+            Effects.flicker.min, 
+            Effects.flicker.max, 
+            0.5f + 0.5f * sin(glfwGetTime() * Effects.flicker.speed)
         );
     }
 
@@ -52,8 +55,8 @@ void VolumBeam::SetFx(Camera* camera, SL* spot_light) {
     s->SetVec2("attenuationFactors", fx.attenuationFactors);
     s->SetFloat("alphaMultiplier", fx.alphaMultiplier);
     s->SetFloat("time", glfwGetTime());
-    s->SetFloat("density", m_effects.density);
-    s->SetFloat("scatterAnisotropy", m_effects.scatterAnisotropy);
+    s->SetFloat("density", Effects.density);
+    s->SetFloat("scatterAnisotropy", Effects.scatterAnisotropy);
 }
 
 // 渲染体积光束
@@ -64,28 +67,28 @@ void VolumBeam::Render(Camera* camera, SL* spot_light) {
 
 
     // 绑定噪声纹理（如果可用且已加载完成）
-    if (m_noiseTexture && m_noiseTexture->State.load() == TLS::Ready) {
+    if (NoiseTexture && NoiseTexture->State.load() == TLS::Ready) {
         // 确保在主线程绑定纹理
         TaskQueue::PushTaskSync([this] {
-            GLuint texId = m_noiseTexture->ID.load();
+            GLuint texId = NoiseTexture->ID.load();
             if (texId != 0) {
                 glActiveTexture(GL_TEXTURE0);
                 glBindTexture(GL_TEXTURE_2D, texId);
-                m_VolumShader->SetInt("noiseTex", 0);
+                VolumShader->SetInt("noiseTex", 0);
             }
         });
     } else {
         // 没有可用纹理时使用默认值
-        m_VolumShader->SetInt("noiseTex", 0);
+        VolumShader->SetInt("noiseTex", 0);
     }
 
-    m_VolumShader->Use();
+    VolumShader->Use();
     
     // 设置效果
     SetFx(camera, spot_light);
 
     // 绘制体积光束
-    m_LightVolume->Draw(m_VolumShader);
+    LightVolume->Draw(VolumShader);
 
     glDepthMask(GL_TRUE);
     glDisable(GL_BLEND);
@@ -131,7 +134,7 @@ void VolumBeam::CreateLightCone(float radius, float height) {
     const int segments = 128; // 圆周分段数（值越高锥面越平滑）
     const float centerY = height; // 圆锥顶点Y坐标（底部在Y=0处）
     
-    // ============== 1. 生成底面圆周顶点 ==============
+    // 生成底面圆周顶点
     for(int i = 0; i < segments; ++i) {
         // 计算圆周角度（0~360度）
         float angle = glm::radians(360.0f * i / segments);
@@ -187,11 +190,11 @@ void VolumBeam::CreateLightCone(float radius, float height) {
     // }
     
     // 创建网格对象
-    m_LightVolume = new Mesh(vertices, indices, {});
+    LightVolume = new Mesh(vertices, indices, {});
 }
 // 创建光锥着色器
 void VolumBeam::CreateVolumShader() {
-    m_VolumShader = new Shader(
+    VolumShader = new Shader(
         VSH_PATH + string("volumetric.glsl"),
         FSH_PATH + string("volumetric.glsl")
     );
@@ -201,12 +204,12 @@ void VolumBeam::SetTextureArgs(const string& path) {
     const string& full_path = TEX_PATH + path;
 try {
     // 同步加载纹理
-    m_noiseTexture = TL::LoadSync(full_path, "noise");
+    NoiseTexture = TL::LoadSync(full_path, "noise");
     
     // 设置纹理参数（在纹理创建后立即设置）
     TaskQueue::AddTasks([this] {
-        if (m_noiseTexture && m_noiseTexture->State == TLS::Ready) {
-            GLuint texId = m_noiseTexture->ID.load();
+        if (NoiseTexture && NoiseTexture->State == TLS::Ready) {
+            GLuint texId = NoiseTexture->ID.load();
             glBindTexture(GL_TEXTURE_2D, texId);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -216,24 +219,19 @@ try {
 } 
 catch (const std::exception& e) {
     std::cerr << "加载噪声纹理失败(" << full_path << "): " << e.what() << std::endl;
-    m_noiseTexture = nullptr;
+    NoiseTexture = nullptr;
 }}
 
 void VolumBeam::Configure(const BeamEffects& effects) {
-    m_effects = effects;
+    Effects = effects;
     // 加载噪声纹理
     if (!effects.noiseTexture.empty()) SetTextureArgs(effects.noiseTexture);
 }
 
 void VolumBeam::LoadNoiseTexture(const string& path) {
     // 释放旧纹理引用
-    if (m_noiseTexture) m_noiseTexture = nullptr;
+    if (NoiseTexture) NoiseTexture = nullptr;
     // 加载噪声纹理
     SetTextureArgs(path);
 }
-
-// Getters
-Shader* VolumBeam::GetVolumShader() const { return m_VolumShader; }
-Mesh* VolumBeam::GetLightVolume() const { return m_LightVolume; }
-const BeamEffects& VolumBeam::GetEffects() const { return m_effects; }
 }

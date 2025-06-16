@@ -9,7 +9,7 @@ namespace CubeDemo::Managers {
     // UI管理器
     class uiMng;
     // 光源管理器
-    class LightMng; class LightCreater; class LightCleanner; class LightGetter;
+    class LightMng; class LightCreater;
     // 场景管理器
     class SceneMng; class SceneMng; class SceneGetter;
 }

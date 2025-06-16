@@ -98,11 +98,11 @@ void EditPanel::ScenePanel() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));
     ImGui::Begin("场景管理", nullptr, ImGuiWindowFlags_NoCollapse);
     
-    // 标题栏（带图标）
+    // 标题栏
     ImGui::TextColored(ImVec4(0.2f, 0.8f, 1.0f, 1.0f), "场景控制");
     ImGui::Separator();
     
-    // 场景选择按钮组（Photoshop工具栏风格）
+    // 场景选择按钮组
     if (ImGui::Button("夜晚场景", ImVec2(-1, 30))) SCENE_MNG->SwitchTo(SceneID::NIGHT);
     if (ImGui::Button("默认场景", ImVec2(-1, 30))) SCENE_MNG->SwitchTo(SceneID::DEFAULT);
     

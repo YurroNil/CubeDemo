@@ -13,8 +13,8 @@ void render_scene(
     Camera* camera,
     ShadowMap* shadow_map)
 {
-    // 阴影渲染阶段
-    shadow_map->RenderShadow(camera);
+    // 阴影渲染阶段(暂不使用)
+    // shadow_map->RenderShadow(camera);
 
     // 主渲染阶段
     SCENE_MNG->Rendering(SCENE_MNG->Current, window, camera, shadow_map);

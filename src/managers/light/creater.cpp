@@ -1,8 +1,13 @@
 // src/managers/light/creater.cpp
 #include "pch.h"
 #include "managers/light/creater.h"
+#include "prefabs/lights/data.h"
 
 namespace CubeDemo::Managers {
+
+LightCreater::LightCreater() {
+}
+
 // 方向光
 DL* LightCreater::DirLight() {
     // 创建太阳

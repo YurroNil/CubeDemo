@@ -7,33 +7,37 @@
 namespace CubeDemo {
     extern Shader* MODEL_SHADER;
     extern std::vector<Model*> MODEL_POINTERS;
-    extern Managers::SceneMng* SCENE_MNG;
 }
 
 namespace CubeDemo::Managers {
 
+// 别名
+namespace Internal = SceneInternal;
+
+// 获取当前场景名称
+std::string SceneGetter::Name() const {
+    switch (m_owner->Current) {
+        case SceneID::NIGHT:
+            return m_owner->Night.GetName();
+
+        case SceneID::DEFAULT:
+        default:
+            return m_owner->Default.GetName();
+    }
+    return "null";
+}
+
 SceneGetter::SceneGetter(const SceneMng* inst)
     : m_owner(inst) {}
 
-string SceneGetter::Name() const {
-    switch (SCENE_MNG->Current) {
-        case SceneID::NIGHT:
-            return "夜晚场景";
-
-        case SceneID::DEFAULT:
-        default:
-            return "默认场景";
-    }
-}
-
 string SceneGetter::ID() const {
-    switch (SCENE_MNG->Current) {
+    switch (m_owner->Current) {
         case SceneID::NIGHT:
-            return "night";
+            return m_owner->Night.GetID();
 
         case SceneID::DEFAULT:
         default:
-            return "default";
+            return m_owner->Default.GetID();
     }
     return "null";
 }

@@ -68,6 +68,14 @@ void JsonConfig::AnalyzeModelAttri(const auto& model, std::vector<ModelConfig>& 
     model_config.name = model.value("name", "");
     model_config.path = model.value("path", "");
     
+    // 解析着色器路径
+    if (model.find("shaders") != model.end()) {
+
+        const auto& shaders = model["shaders"];
+        model_config.vsh_path = shaders.value("vertex", "");
+        model_config.fsh_path = shaders.value("fragment", "");
+    }
+
     // 解析属性
     if (model.find("attributes") != model.end()) {
 

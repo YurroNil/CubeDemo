@@ -19,6 +19,8 @@ public:
     const string GetID() const;
     const string GetName() const;
     const string GetType() const;
+    const string GetVshPath() const;
+    const string GetFshPath() const;
 
     // Setters
     std::atomic<bool>& SetMeshMarker();
@@ -30,6 +32,7 @@ public:
     const void SetRotation(float rotation);
     const void SetScale(vec3 scale);
     const void SetTransform(const vec3& pos, float rotation, const vec3& scale);
+    const void SetShaderPaths(const string& vsh_path, const string& fsh_path);
 
 private:
     ::CubeDemo::Model* m_owner;

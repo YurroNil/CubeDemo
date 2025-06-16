@@ -45,6 +45,10 @@ const void ModelGetter::SetTransform(const vec3& pos, float rotation, const vec3
     m_owner->m_Scale = scale;
     m_owner->UpdateModelMatrix();
 }
+const void ModelGetter::SetShaderPaths(const string& vsh_path, const string& fsh_path) {
+    m_owner->m_vshPath = vsh_path;
+    m_owner->m_fshPath = fsh_path;
+}
 
 /* ----------- Getters ----------- */
 const string ModelGetter::GetID() const {
@@ -76,5 +80,11 @@ bool ModelGetter::IsReady() const {
 }
 const AtomBool& ModelGetter::isLoading() const {
     return m_owner->m_isLoading;
+}
+const string ModelGetter::GetVshPath() const {
+    return m_owner->m_vshPath;
+}
+const string ModelGetter::GetFshPath() const {
+    return m_owner->m_fshPath;
 }
 }   // namespace CubeDemo::Managers

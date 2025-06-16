@@ -10,6 +10,11 @@ using Shader = CubeDemo::Shader;
 namespace CubeDemo {
 namespace Managers {
 
+LightMng::LightMng() {
+    // 显式初始化成员
+    Create = LightCreater();
+}
+
 // 创建场景管理器
 LightMng* LightMng::CreateInst() {
     if(s_InstCount > 0) {

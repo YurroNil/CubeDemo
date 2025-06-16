@@ -66,6 +66,7 @@ void MIL::LoadSingleModel(const string& model_path, const Utils::ModelConfig& co
         model->SetPosition(config.position);
         model->SetRotation(config.rotation);
         model->SetScale(config.scale);
+        model->SetShaderPaths(config.vsh_path, config.fsh_path);
 
         LoadModelData(model_loaded, &model_loader, DEBUG_ASYNC_MODE);
         WaitForModelLoad(model_loaded);

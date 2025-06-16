@@ -11,7 +11,8 @@ using VolumBeam = CubeDemo::Prefabs::VolumBeam;
 namespace CubeDemo::Scenes {
 class NightScene : public SceneBase {
 public:
-    NightScene(); ~NightScene();
+    NightScene();
+    ~NightScene();
     
     void Init() override;
     void Render(GLFWwindow* window, Camera* camera, ShadowMap* shadow_map) override;

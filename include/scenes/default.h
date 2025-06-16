@@ -5,7 +5,7 @@
 namespace CubeDemo::Scenes {
 class DefaultScene : public SceneBase {
 public:
-    DefaultScene() = default;
+    DefaultScene();
     ~DefaultScene();
 
     // 覆写

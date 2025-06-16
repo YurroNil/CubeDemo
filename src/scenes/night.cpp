@@ -12,6 +12,12 @@ namespace CubeDemo {
 
 namespace CubeDemo::Scenes {
 
+NightScene::NightScene() {
+    name = "夜晚场景";
+    id = "night";
+    Beam = VolumBeam();
+}
+
 // 场景初始化
 void NightScene::Init() {
     if(s_isInited) return;
@@ -21,9 +27,6 @@ void NightScene::Init() {
     // 创建聚光（光束）
     m_SpotLight = LIGHT_MNG->Create.SpotLight();
 
-    // 将指针储存进LIGHT_MNG->Get成员中
-    LIGHT_MNG->Get.SetDirLight(m_MoonLight).SetSpotLight(m_SpotLight);
-
     // 使用配置文件的数据来设置光源参数
     LightMng::SetLightsData(SCENE_CONF_PATH + string("night/lights.json"), m_SpotLight, m_MoonLight);
 
@@ -32,25 +35,38 @@ void NightScene::Init() {
 
     // 创建光束几何体
     Beam.CreateLightCone(
-        Beam.GetEffects().radius,
-        Beam.GetEffects().height
+        Beam.Effects.radius,
+        Beam.Effects.height
     );
-
+    
+    // 使用配置文件的数据来设置光源参数
     LightMng::SetLightsData(SCENE_CONF_PATH + string("night/lights.json"), &Beam);
-
-    // 设置场景ID
-    SCENE_MNG->Current = SceneID::NIGHT;
 }
 
 // 场景清理
 void NightScene::Cleanup() {
     if(!s_isInited || s_isCleanup) return;
 
+    // 删除光束着色器
+    if(Beam.VolumShader != nullptr) {
+        delete Beam.VolumShader; Beam.VolumShader = nullptr;
+    }
     // 删除光束
-    Shader* shader = Beam.GetVolumShader();
-    Beam.Remove.VolumShader().LightCone().NoiseTexture();
+    if(Beam.LightVolume != nullptr) {
+        delete Beam.LightVolume; Beam.LightVolume = nullptr;
+    }
+    // 删除噪声纹理 (因为是智能指针，因此不需要delete)
+    if(Beam.NoiseTexture != nullptr) Beam.NoiseTexture = nullptr;
+
     // 删除定向光与聚光
-    LIGHT_MNG->Remove.DirLight().SpotLight();
+    if(m_MoonLight != nullptr) {
+        delete m_MoonLight; m_MoonLight = nullptr;
+    }
+    if(m_SpotLight != nullptr) {
+        delete m_SpotLight; m_SpotLight = nullptr;
+    }
+
+    s_isInited = false;
 }
 
 // 渲染场景
@@ -81,7 +97,6 @@ void NightScene::Render(GLFWwindow* window, Camera* camera, ShadowMap* shadow_ma
     Beam.Render(camera, m_SpotLight);
 }
 
-NightScene::NightScene() {}
 NightScene::~NightScene() {}
 
 } // namespace

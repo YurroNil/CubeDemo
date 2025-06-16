@@ -17,6 +17,7 @@ struct ModelConfig {
     vec3 position = vec3(0.0f);
     float rotation = 0.0f; // 绕Y轴旋转角度（度）
     vec3 scale = vec3(1.0f);
+    string vsh_path, fsh_path;
 };
 
 class JsonConfig {

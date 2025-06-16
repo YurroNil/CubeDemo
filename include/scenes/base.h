@@ -2,6 +2,7 @@
 #pragma once
 #include "scenes/fwd.h"
 #include "prefabs/lights/fwd.h"
+#include "managers/fwd.h"
 
 // 向前声明
 namespace CubeDemo {
@@ -15,8 +16,11 @@ namespace CubeDemo::Scenes {
 
 // 场景基类
 class SceneBase {
-    friend Managers::SceneMng;
+    friend SceneMng;
 public:
+    virtual string GetName() const { return name; }
+    virtual string GetID() const { return id; }
+    
     virtual ~SceneBase() = default;  // 虚析构函数
 
     // 场景初始化（加载资源）
@@ -38,6 +42,7 @@ public:
 protected:
     bool s_isInited{false};
     bool s_isCleanup{false};
+    string name = "unnamed", id  = "none";
 
 };
 }   // namespace

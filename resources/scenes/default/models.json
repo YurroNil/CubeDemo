@@ -5,6 +5,10 @@
             "type": "model.character",
             "name": "心海",
             "path": "kokomi/kokomi.obj",
+            "shaders": {
+                "vertex": "model.glsl",
+                "fragment": "model_day.glsl"
+            },
             "attributes": {
                 "position": [0, 0, 0],
                 "rotation": 90.0,
@@ -16,6 +20,10 @@
             "type": "model.scene",
             "name" : "树",
             "path": "tree/tree.obj",
+            "shaders": {
+                "vertex": "model.glsl",
+                "fragment": "model_day.glsl"
+            },
             "attributes": {
                 "position": [0, 0, 0],
                 "rotation": 0.0,

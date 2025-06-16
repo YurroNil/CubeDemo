@@ -20,7 +20,7 @@ private:
     // 模型的基本属性 (不可见)
 
     // 基本要素
-    string m_ID, m_Name, m_Type, m_Path;
+    string m_ID, m_Name, m_Type, m_Path, m_vshPath, m_fshPath;
 
     MeshArray m_Meshes;              // 网格数据
     mat4 m_ModelMatrix{mat4(1.0f)};  // 模型矩阵(用于控制模型在世界空间的变换，如偏移,旋转,缩放)
