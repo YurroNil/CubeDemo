@@ -25,6 +25,5 @@ private:
     static void CheckForTimeout(const std::chrono::time_point<csclock>& start_time);
     static void ValidateModelData(::CubeDemo::Model* model);
     static void LoadSingleModel(const string& model_path, const Utils::ModelConfig& config);
-    static void InitModelShader(const string& vsh_path, const string& fsh_path);
 };
 }

@@ -1,11 +1,10 @@
-// src/scenes/night.cpp
+// src/managers/scene/getter.cpp
 #include "pch.h"
 #include "managers/sceneMng.h"
 #include "resources/model.h"
 
 // 外部变量声明
 namespace CubeDemo {
-    extern Shader* MODEL_SHADER;
     extern std::vector<Model*> MODEL_POINTERS;
 }
 

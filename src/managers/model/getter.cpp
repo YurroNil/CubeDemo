@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "managers/model/getter.h"
 #include "resources/model.h"
+#include "graphics/shader.h"
 
 using AtomBool = std::atomic<bool>;
 
@@ -86,5 +87,11 @@ const string ModelGetter::GetVshPath() const {
 }
 const string ModelGetter::GetFshPath() const {
     return m_owner->m_fshPath;
+}
+const void ModelGetter::CreateShader() {
+    m_owner->ModelShader = new Shader(
+        m_owner->m_vshPath,
+        m_owner->m_fshPath
+    );
 }
 }   // namespace CubeDemo::Managers

@@ -35,7 +35,7 @@ public:
 
     // 场景管理器实例创建/删除
     static SceneMng* CreateInst();
-    static void RemoveSceneInst(SceneMng* ptr);
+    static void RemoveInst(SceneMng** ptr);
 
     string PrintCurrent(SceneID& inst);
     

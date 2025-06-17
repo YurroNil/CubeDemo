@@ -6,8 +6,8 @@
 
 // 外部变量声明
 namespace CubeDemo {
-    extern Shader* MODEL_SHADER;
     extern std::vector<Model*> MODEL_POINTERS;
+    
     extern SceneMng* SCENE_MNG;
 }
 

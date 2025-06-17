@@ -31,7 +31,7 @@
 │     │
 │     ├── managers/ (管理器模块)
 │     │    ├── light/
-│     │    │    └── cleanner, creater, getter
+│     │    │    └── creater
 │     │    ├── model/
 │     │    │    └── cleanner, creater, getter
 │     │    ├── scene/

@@ -4,11 +4,15 @@
 
 // 外部变量声明
 namespace CubeDemo {
-    extern Shader* MODEL_SHADER;
     extern std::vector<Model*> MODEL_POINTERS;
+    // 管理器
+    extern ModelMng* MODEL_MNG;
     extern LightMng* LIGHT_MNG;
     extern SceneMng* SCENE_MNG;
 }
+
+// 别名
+using MIL = CubeDemo::Loaders::ModelIniter;
 
 namespace CubeDemo::Scenes {
 
@@ -22,6 +26,9 @@ NightScene::NightScene() {
 void NightScene::Init() {
     if(s_isInited) return;
     
+    // 创建模型与着色器
+    MIL::InitModels();
+
     // 创建月光（方向光）
     m_MoonLight = LIGHT_MNG->Create.DirLight();
     // 创建聚光（光束）
@@ -65,6 +72,8 @@ void NightScene::Cleanup() {
     if(m_SpotLight != nullptr) {
         delete m_SpotLight; m_SpotLight = nullptr;
     }
+    // 删除模型与着色器
+    MODEL_MNG->RmvAllShaders(); MODEL_MNG->RmvAllModels();
 
     s_isInited = false;
 }
@@ -75,23 +84,13 @@ void NightScene::Render(GLFWwindow* window, Camera* camera, ShadowMap* shadow_ma
     // 视口设置
     glViewport(0, 0, Window::GetWidth(), Window::GetHeight());
     // 主着色器配置
-    MODEL_SHADER->Use();
 
     shadow_map->BindForReading(GL_TEXTURE1);
 
-    // 摄像机参数传递
-    MODEL_SHADER->ApplyCamera(camera, Window::GetAspectRatio());
+    MODEL_MNG->AllUseShader(camera, Window::GetAspectRatio(), m_MoonLight, m_SpotLight, nullptr);
 
     // 模型绘制循环
-    for (auto* model : MODEL_POINTERS) model->DrawCall(MODEL_SHADER, camera);
-
-    MODEL_SHADER->SetViewPos(camera->Position);
-
-    // 设置月光
-    m_MoonLight->SetShader(*MODEL_SHADER);
-
-    // 设置聚光着色器
-    m_SpotLight->SetShader(*MODEL_SHADER);
+    for (auto* model : MODEL_POINTERS) model->DrawCall(camera);
     
     // 渲染体积光
     Beam.Render(camera, m_SpotLight);

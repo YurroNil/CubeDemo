@@ -2,20 +2,22 @@
 #include "pch.h"
 #include "main/cleanup.h"
 #include "resources/model.h"
-#include "managers/model/cleanner.h"
 #include "loaders/resource.h"
+
+#include "managers/modelMng.h"
 
 namespace CubeDemo {
 
 // 别名与外部变量声明
 using RL = Loaders::Resource;
 using MMC = Managers::ModelCleanner;
-
 extern std::vector<Model*> MODEL_POINTERS;
-extern Shader* MODEL_SHADER;
+extern ShadowMap* SHADOW_MAP;
+
+// 管理器
 extern SceneMng* SCENE_MNG;
 extern LightMng* LIGHT_MNG;
-extern ShadowMap* SHADOW_MAP;
+extern ModelMng* MODEL_MNG;
 
 // 清理函数
 void Cleanup(GLFWwindow* window, Camera* camera) {
@@ -31,11 +33,10 @@ void Cleanup(GLFWwindow* window, Camera* camera) {
     // 摄像机清理
     Camera::Delete(camera);
 
-    // 模型清理
-    MMC::DeleteAll(MODEL_POINTERS);
-
-    // 模型着色器清理
-    MMC::DeleteShader(&MODEL_SHADER);
+    // 先清理模型着色器
+    MODEL_MNG->RmvAllShaders();
+    // 再清理所有模型
+    MODEL_MNG->RmvAllModels();
 
     // 阴影着色器清理
     SHADOW_MAP->DeleteShader();
@@ -46,6 +47,7 @@ void Cleanup(GLFWwindow* window, Camera* camera) {
     // 管理器清理
     delete SCENE_MNG; SCENE_MNG = nullptr;
     delete LIGHT_MNG; LIGHT_MNG = nullptr;
+    delete MODEL_MNG; MODEL_MNG = nullptr;
 
     // ImGui清理
     ImGui_ImplOpenGL3_Shutdown();

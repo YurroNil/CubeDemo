@@ -83,10 +83,10 @@ SceneMng* SceneMng::CreateInst() {
     return new SceneMng();
 }
 // 删除场景管理器
-void SceneMng::RemoveSceneInst(SceneMng* ptr) {
+void SceneMng::RemoveInst(SceneMng** ptr) {
     if(s_InstCount = 0) return;
     s_InstCount--;
-    delete ptr; ptr = nullptr;
+    delete *ptr; *ptr = nullptr;
 }
 
 }   // namespace CubeDemo::Scenes

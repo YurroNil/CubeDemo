@@ -15,7 +15,6 @@ using UMC = Utils::JsonConfig;
 // 外部变量声明
 extern bool DEBUG_ASYNC_MODE;
 extern std::vector<::CubeDemo::Model*> MODEL_POINTERS;
-extern Shader* MODEL_SHADER;
 extern SceneMng* SCENE_MNG;
 
 void MIL::InitModels() {
@@ -30,12 +29,6 @@ void MIL::InitModels() {
 
         // 加载模型列表
         const auto model_list = UMC::LoadModelConfig(scene_config_path);
-        
-        // 初始化着色器（所有模型共享）
-        MODEL_SHADER = new Shader(
-            VSH_PATH + string("model.glsl"),
-            FSH_PATH + string("model.glsl")
-        );
 
         // 加载每个模型
         for (const auto& config : model_list) {
@@ -53,7 +46,10 @@ void MIL::InitModels() {
 
 void MIL::LoadSingleModel(const string& model_path, const Utils::ModelConfig& config) {
     try {
+        // 创建模型实例
         ::CubeDemo::Model* model = new ::CubeDemo::Model(model_path);
+
+        // 设置加载装填
         std::atomic<bool> model_loaded{false};
 
         // 创建模型加载器实例，并绑定当前函数创建的model指针
@@ -67,6 +63,9 @@ void MIL::LoadSingleModel(const string& model_path, const Utils::ModelConfig& co
         model->SetRotation(config.rotation);
         model->SetScale(config.scale);
         model->SetShaderPaths(config.vsh_path, config.fsh_path);
+
+        // 创建模型着色器
+        model->CreateShader();
 
         LoadModelData(model_loaded, &model_loader, DEBUG_ASYNC_MODE);
         WaitForModelLoad(model_loaded);
@@ -119,14 +118,6 @@ void MIL::CheckForTimeout(const std::chrono::time_point<csclock>& start_time) {
     if (csclock::now() > start_time + timeout) {
         throw std::runtime_error("模型加载超时");
     }
-}
-
-// 着色器初始化
-void MIL::InitModelShader(const string& vsh_path, const string& fsh_path) {
-    if (MODEL_SHADER != nullptr) {
-        delete MODEL_SHADER;
-    }
-    MODEL_SHADER = new Shader(vsh_path, fsh_path);
 }
 
 // 模型数据验证

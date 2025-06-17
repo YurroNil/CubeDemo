@@ -2,18 +2,24 @@
 #include "pch.h"
 #include "main/init.h"
 #include "loaders/model_initer.h"
-#include "managers/uiMng.h"
 #include "core/inputs.h"
+// 管理器模块
 #include "managers/lightMng.h"
+#include "managers/modelMng.h"
+#include "managers/uiMng.h"
 
 namespace CubeDemo {
 
-// 全局变量
+// 全局变量 (生命周期是到程序结束)
+
 ModelPtrArray MODEL_POINTERS;
-Shader* MODEL_SHADER;
+
+// 管理器
 SceneMng* SCENE_MNG;
 LightMng* LIGHT_MNG;
+ModelMng* MODEL_MNG;
 ShadowMap* SHADOW_MAP;
+
 
 // 暂时采用同步模式
 bool DEBUG_ASYNC_MODE = false;
@@ -41,6 +47,7 @@ GLFWwindow* Init() {
     // 创建场景和光源管理器
     SCENE_MNG = SceneMng::CreateInst();
     LIGHT_MNG = LightMng::CreateInst();
+    MODEL_MNG = ModelMng::CreateInst();
 
     // 设置场景为
     SCENE_MNG->Current = SceneID::NIGHT;

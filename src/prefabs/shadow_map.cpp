@@ -8,7 +8,6 @@
 
 // 外部变量声明
 namespace CubeDemo {
-    extern Shader* MODEL_SHADER;
     extern std::vector<Model*> MODEL_POINTERS;
     extern SceneMng* SCENE_MNG;
     extern LightMng* LIGHT_MNG;
@@ -94,8 +93,8 @@ void ShadowMap::RenderShadow(Camera* camera) {
 
     // 传递阴影贴图
     BindForReading(GL_TEXTURE1);
-    MODEL_SHADER->SetInt("shadowMap", 1);
-    MODEL_SHADER->SetMat4("lightSpaceMatrix", light_space_mat);
+    // MODEL_SHADER->SetInt("shadowMap", 1);
+    // MODEL_SHADER->SetMat4("lightSpaceMatrix", light_space_mat);
 }
 
 // 创建/删除 阴影
