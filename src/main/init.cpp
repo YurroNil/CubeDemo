@@ -1,20 +1,28 @@
 // src/main/init.cpp
 #include "pch.h"
 #include "main/init.h"
-#include "loaders/modelIniter.h"
-#include "ui/uiMng.h"
+#include "loaders/model_initer.h"
 #include "core/inputs.h"
+// 管理器模块
+#include "managers/lightMng.h"
+#include "managers/modelMng.h"
+#include "managers/uiMng.h"
 
 namespace CubeDemo {
 
-// 全局变量
+// 全局变量 (生命周期是到程序结束)
+
 ModelPtrArray MODEL_POINTERS;
-Shader* MODEL_SHADER;
-Scene* SCENE_INST;
+
+// 管理器
+SceneMng* SCENE_MNG;
+LightMng* LIGHT_MNG;
+ModelMng* MODEL_MNG;
 ShadowMap* SHADOW_MAP;
 
-// 暂时采用同步模式, 以及不采用LOD系统
-bool DEBUG_ASYNC_MODE = false, DEBUG_LOD_MODE = false;
+
+// 暂时采用同步模式
+bool DEBUG_ASYNC_MODE = false;
 
 // Init函数
 GLFWwindow* Init() {
@@ -36,10 +44,13 @@ GLFWwindow* Init() {
 
 /* ---------- 场景与预制体初始化 ------------ */
 
-    // 创建场景管理器
-    SCENE_INST = Scene::CreateSceneInst();
-    // 设置场景为默认场景
-    SCENE_INST->Current = SceneID::NIGHT;
+    // 创建场景和光源管理器
+    SCENE_MNG = SceneMng::CreateInst();
+    LIGHT_MNG = LightMng::CreateInst();
+    MODEL_MNG = ModelMng::CreateInst();
+
+    // 设置场景为
+    SCENE_MNG->Current = SceneID::NIGHT;
     // 创建阴影
     SHADOW_MAP = ShadowMap::CreateShadow();
     // 创建阴影着色器
@@ -49,8 +60,7 @@ GLFWwindow* Init() {
     Camera* camera = new Camera(
         vec3(0.5f, 0.5f, 3.0f),
         vec3(0.0f, 1.0f, 0.0f),
-        -90.0f,
-        0.0f
+        -90.0f, 0.0f
     );
 
     if (!camera) {
@@ -69,5 +79,4 @@ GLFWwindow* Init() {
     std::cout << "[INITER] 初始化阶段结束" << std::endl;
     return Window::GetWindow();
 }
-
 }   // namespace CubeDemo

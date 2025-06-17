@@ -2,26 +2,31 @@
 #include "pch.h"
 #include "loaders/font.h"
 #include "kits/file_system.h"
+#include "utils/defines.h"
 
 // 外部函数声明
-extern int utf8_to_unicode_conv(unsigned int* out_char, const char* in_text, const char* in_text_end);
-
+extern int utf8_conv_unicode(unsigned int* out_char, const char* in_text, const char* in_text_end);
 namespace CubeDemo {
 
 // 加载自定义字体
 void FL::LoadFonts() {
-    constexpr const char* FONT_CONFIG_PATH = "../resources/fonts/custom_chars.json";
-    constexpr const char* FONT_FILE_PATH = "../resources/fonts/simhei.ttf";
+    
+    const char* font_type = "simhei.ttf";
+    
+    const int LEN = strlen(font_type) + strlen(FONT_PATH) + 1;
+    char FONT_FILE_PATH[LEN];
+    strcpy(FONT_FILE_PATH, FONT_PATH);
+    strcat(FONT_FILE_PATH, font_type);
 
     // 检查字体文件存在性
-    if (!fs::exists(FONT_FILE_PATH)) {
+    if (!fs::exists((const char*)FONT_FILE_PATH)) {
         std::cerr << "字体文件不存在: " << FONT_FILE_PATH << std::endl;
         return;
     }
 
     try {
         // 加载字体配置
-        auto font_config = Utils::JsonConfig::LoadFontConfig(FONT_CONFIG_PATH);
+        auto font_config = Utils::JsonConfig::LoadFontConfig(FONT_PATH + string("custom_chars.json"));
         
         ImGuiIO& io = ImGui::GetIO();
         ImFontGlyphRangesBuilder builder;
@@ -61,7 +66,7 @@ void FL::CustomChars(IFGRB& builder, const std::vector<string>& char_lines) {
         const char* p = line.c_str();
         while (*p) {
             unsigned int c = 0;
-            int bytes = utf8_to_unicode_conv(&c, p, nullptr);
+            int bytes = utf8_conv_unicode(&c, p, nullptr);
             if (bytes == 0) break;
             builder.AddChar(static_cast<ImWchar>(c));
             p += bytes;

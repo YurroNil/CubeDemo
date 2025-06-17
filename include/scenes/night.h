@@ -2,8 +2,11 @@
 #pragma once
 #include "scenes/base.h"
 #include "graphics/mesh.h"
+#include "prefabs/lights/volum_beam.h"
 
+// 别名
 using SL = CubeDemo::Prefabs::SpotLight;
+using VolumBeam = CubeDemo::Prefabs::VolumBeam;
 
 namespace CubeDemo::Scenes {
 class NightScene : public SceneBase {
@@ -11,24 +14,19 @@ public:
     NightScene();
     ~NightScene();
     
-    void Init(SceneMng* scene_inst, Light& light) override;
-    void Render(GLFWwindow* window, Camera* camera, const Light& light, ShadowMap* shadow_map) override;
-    void Cleanup(Light& light) override;
-    void SetLightsData(const string& config_path, SL* spot_light, DL* moon_light);
-
+    void Init() override;
+    void Render(GLFWwindow* window, Camera* camera, ShadowMap* shadow_map) override;
+    void Cleanup() override;
     // Getters
     SL* GetSpotLight() { return m_SpotLight; }
     DL* GetMoonLight() { return m_MoonLight; }
 
+    // 光束实例
+    VolumBeam Beam;
+
 private:
     SL* m_SpotLight = nullptr;
     DL* m_MoonLight = nullptr;
-    Shader* m_VolumetricShader = nullptr;
-    Mesh* m_LightVolume = nullptr;
-
-    void RenderVolumetricBeam(Camera* camera);
-    mat4 CalcBeamTransform();
-    Mesh* CreateLightCone(float radius, float height);
 
 };
 }   // CubeDemo::Scenes

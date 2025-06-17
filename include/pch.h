@@ -33,6 +33,5 @@
 #include "graphics/renderer.h"
 #include "core/camera.h"
 #include "graphics/mesh.h"
-#include "utils/msaConv.h"
-#include "utils/jsonConfig.h"
-#include "utils/stringConvertor.h"
+#include "utils/json_config.h"
+#include "utils/string_conv.h"

@@ -20,8 +20,9 @@ public:
     } attribute;
 
     struct FrustumPlane {
-        vec3 normal, distance; float near_plane{0.1f}, far_plane{100.0f};
-    }frustumPlane;
+        vec3 normal, distance;
+        float near_plane{0.1f}, far_plane{100.0f};
+    } frustumPlane;
     // 顺序：左、右、下、上、近、远
     struct Frustum { FrustumPlane planes[6]; };
 
@@ -40,6 +41,12 @@ public:
     
     static void SaveCamera(Camera* c);  // 保存摄像机对象的指针
     static void Delete(Camera* c);  // Cleanner
+    
+    static vec3 ScreenToWorld(
+        float screenX, float screenY,
+        Camera* camera, float depth,
+        int viewport_width, int viewport_height
+    );
 
 private:
     void UpdateCameraVec();

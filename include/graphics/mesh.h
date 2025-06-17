@@ -1,7 +1,7 @@
 // include/graphics/mesh.h
 #pragma once
 #include "graphics/fwd.h"
-#include "resources/texture_fwd.h"
+#include "resources/fwd.h"
 
 namespace CubeDemo {
 
@@ -10,6 +10,7 @@ struct Vertex {
     vec3 Normal;
     vec2 TexCoords;
     vec3 Tangent;
+    vec3 emitColor;
 };
 
 using TexPtrArray = std::vector<TexturePtr>;
@@ -41,7 +42,7 @@ public:
     // 构造函数的深拷贝实现(左移运算符重载)
     Mesh& operator<<(const Mesh& other);
 
-    void Draw(Shader& shader) const;
+    void Draw(Shader* shader) const;
     void UpdateTextures(const TexPtrArray& newTextures);
 
     // Getters

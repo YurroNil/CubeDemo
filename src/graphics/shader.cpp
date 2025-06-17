@@ -3,7 +3,9 @@
 #include "graphics/shader.h"
 #include "core/camera.h"
 
+// 别名
 using ifs = std::ifstream;
+
 namespace CubeDemo {
 
 string Shader::Load(const string& path) {
@@ -97,39 +99,16 @@ void Shader::ApplyCamera(const Camera* camera, float aspect) const {
     SetMat4("view", camera->GetViewMat());
     
 }
-// 平行光
-void Shader::SetDirLight(const string& name, const DL* light) {
-    SetVec3(name + ".direction", light->direction);
-    SetVec3(name + ".ambient", light->ambient);
-    SetVec3(name + ".diffuse", light->diffuse);
-    SetVec3(name + ".specular", light->specular);
-}
-
-// 聚光灯
-void Shader::SetSpotLight(const string& name, const SL* light) {
-
-    SetVec3(name + ".position", light->position);
-    SetVec3(name + ".direction", light->direction);
-    SetFloat(name + ".cutOff", glm::cos(glm::radians(light->cutOff)));
-    SetFloat(name + ".outerCutOff", glm::cos(glm::radians(light->outerCutOff)));
-
-    SetVec3(name + ".ambient", light->ambient);
-    SetVec3(name + ".diffuse", light->diffuse);
-    SetVec3(name + ".specular", light->specular);
-
-    SetFloat(name + ".constant", light->constant);
-    SetFloat(name + ".linear", light->linear);
-    SetFloat(name + ".quadratic", light->quadratic);
-}
 
 // 乱七八糟的Setters
-
 void Shader::SetViewPos(const vec3& pos) { SetVec3("viewPos", pos); }
-
 void Shader::SetLightSpaceMat(const mat4& matrix) { SetMat4("lightSpaceMatrix", matrix); }
 
 void Shader::SetMat4(const string& name, const mat4& mat) const {
     glUniformMatrix4fv( glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0] );
+}
+void Shader::SetVec2(const string& name, const vec2& value) {
+    glUniform2fv( glGetUniformLocation(ID, name.c_str()), 1, &value[0] );
 }
 void Shader::SetVec3(const string& name, const vec3& value) {
     glUniform3fv( glGetUniformLocation(ID, name.c_str()), 1, &value[0] );
@@ -140,5 +119,7 @@ void Shader::SetFloat(const string& name, float value) {
 void Shader::SetInt(const string& name, int value) const {
     glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 }
-
+void Shader::SetBool(const string& name, bool value) {
+    glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
+}
 }   // namespace CubeDemo

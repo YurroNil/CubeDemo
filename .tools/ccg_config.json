@@ -8,8 +8,7 @@
         "%PDT_I%",
         "%PDT_I%/imgui",
         "%PDT_I%/assimp",
-        "%PDT_I%/stb",
-        "%PDT_I%/OpenMesh"
+        "%PDT_I%/stb"
     ],
 
     "lib": [
@@ -18,7 +17,17 @@
     ],
     "source_code": [
         "../src",
-        "../src/scenes"
+
+        "../src/prefabs",
+        "../src/prefabs/lights",
+        "../src/ui",
+        "../src/ui/panels",
+
+        "../src/scenes",
+        "../src/managers",
+        "../src/managers/light",
+        "../src/managers/model",
+        "../src/managers/scene"
     ]
 },
 "arguments": {
@@ -26,10 +35,9 @@
     "output" : " -o ../bin/Demo.exe",
     "lib_suffix" : [
 
-        "-lmain", "-lui", "-lcore", "-lloaders", "-lresources", "-lgraphics",  "-lthreads", "-lutils", "-lprefabs", "-l3rd_party",
+        "-lmain", "-lcore", "-lloaders", "-lgraphics", "-lresources", "-lthreads", "-lutils", "-l3rd_party",
 
-        "-lglfw3", "-lopengl32", "-lassimp", "-lOpenMeshCored", "-lOpenMeshToolsd", "-mwindows", "-std=c++23", "-Winvalid-pch", "-fexec-charset=UTF-8", "-g"
+        "-lglfw3", "-lopengl32", "-lassimp", "-std=c++23", "-Winvalid-pch", "-fexec-charset=UTF-8", "-g"
     ]
 }
-
 }

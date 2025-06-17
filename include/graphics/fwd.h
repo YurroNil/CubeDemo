@@ -9,8 +9,5 @@ struct BoundingSphere;
 struct Vertex;
 class Mesh;
 class Shader;
-namespace Graphics {
-    class LODSystem;
-}
 }
 using UnsignedArray = std::vector<unsigned>;

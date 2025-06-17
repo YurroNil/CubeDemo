@@ -16,14 +16,13 @@ public:
     // Setters
     void ApplyCamera(const Camera* camera, float aspect) const;
     void SetMat4(const string& name, const mat4& mat) const;
+    void SetVec2(const string& name, const vec2& value);
     void SetVec3(const string& name, const vec3& value);
     void SetFloat(const string& name, float value);
     void SetInt(const string& name, int value) const;
+    void SetBool(const string& name, bool value);
     void SetViewPos(const vec3& pos);
     void SetLightSpaceMat(const mat4& matrix);
-
-    void SetDirLight(const string& name, const DL* light);
-    void SetSpotLight(const string& name, const SL* light);
 
 private:
     unsigned int ID; 
