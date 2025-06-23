@@ -14,8 +14,8 @@ namespace CubeDemo {
 extern bool DEBUG_ASYNC_MODE;
 
 // 静态成员初始化
-std::unordered_set<string> ML::s_PrintedPaths;
-std::mutex ML::s_PrintMutex; 
+std::unordered_set<string> ML::m_PrintedPaths;
+std::mutex ML::m_PrintMutex; 
 
 ML::Model(const string& path, ::CubeDemo::Model* model)
     : Rawpath(path), m_owner(model)

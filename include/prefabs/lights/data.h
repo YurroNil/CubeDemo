@@ -6,19 +6,24 @@ namespace CubeDemo::Prefabs {
 
 // 方向光（如太阳）
 struct DirLight {
-    string name, id, type;
+    string name = "方向光", id = "dir_light", type;
     vec3 position;
     vec3 direction;
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
 
+    float sourceRadius = 0.5f;      // 光源半径（柔化阴影）
+    float sourceSoftness = 0.2f;    // 光源柔和度
+    vec3 skyColor = vec3(0.4, 0.6, 0.8); // 天光颜色
+    float atmosphereThickness = 0.5f; // 大气厚度
+
     void SetShader(Shader& shader);
 };
 
 // 点光源（如灯泡）
 struct PointLight {
-    string name = "dir_light", id, type;
+    string name = "点光", id = "point_light", type;
     vec3 position;
     vec3 direction;
     vec3 ambient;
@@ -34,7 +39,7 @@ struct PointLight {
 
 // 聚光
 struct SpotLight {
-    string name = "spot_light", id, type;
+    string name = "聚光", id = "spot_light", type;
 
     vec3 position;
     vec3 direction;
@@ -49,6 +54,19 @@ struct SpotLight {
     float cutOff;
     float outerCutOff;
 
+    void SetShader(Shader& shader);
+};
+
+struct SkyLight {
+    string name = "天空光", id = "sky_light", type;
+    vec3 color;
+    float intensity;
+    float horizonBlend;
+
+    float groundReflection = 0.3f;  // 地面反射强度
+    float cloudOpacity = 0.4f;      // 云层不透明度
+    vec3 cloudColor = vec3(0.9, 0.9, 0.95); // 云层颜色
+    
     void SetShader(Shader& shader);
 };
 

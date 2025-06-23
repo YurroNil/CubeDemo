@@ -226,9 +226,22 @@ Mesh& Mesh::operator<<(const Mesh& other) {
 }
 
 void Mesh::ReleaseGLResources() {
-    if(m_VAO) glDeleteVertexArrays(1, &m_VAO);
-    if(m_VBO) glDeleteBuffers(1, &m_VBO);
-    if(m_EBO) glDeleteBuffers(1, &m_EBO);
+     if (m_VAO) {
+        glDeleteVertexArrays(1, &m_VAO);
+        m_VAO = 0;
+    }
+    if (m_VBO) {
+        glDeleteBuffers(1, &m_VBO);
+        m_VBO = 0;
+    }
+    if (m_EBO) {
+        glDeleteBuffers(1, &m_EBO);
+        m_EBO = 0;
+    }
+}
+
+Mesh::~Mesh() {
+    ReleaseGLResources();
 }
 
 // 乱七八糟的Getters

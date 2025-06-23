@@ -1,9 +1,10 @@
 // src/prefabs/shadow_map.h
 #include "pch.h"
 #include "prefabs/shadow_map.h"
-#include "managers/lightMng.h"
 #include "resources/model.h"
 #include "utils/defines.h"
+
+#include "managers/lightMng.h"
 #include "managers/sceneMng.h"
 
 // 外部变量声明
@@ -82,7 +83,10 @@ void ShadowMap::RenderShadow(Camera* camera) {
     const mat4 light_space_mat = {}; // = GetLightSpaceMat();
     m_ShadowShader->SetMat4("lightSpaceMatrix", light_space_mat);
 
+
     // 简化绘制模型（仅位置属性）
+    if(MODEL_POINTERS.empty()) return;
+    
     for (auto* model : MODEL_POINTERS) {
         if (model->IsReady() && camera->isSphereVisible(model->bounds.Center, model->bounds.Rad)) {
             m_ShadowShader->SetMat4("model", model->GetModelMatrix());

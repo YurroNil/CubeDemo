@@ -56,13 +56,7 @@ void MIL::LoadSingleModel(const string& model_path, const Utils::ModelConfig& co
         ML model_loader(model_path, model);
 
         // 应用参数到模型数据上
-        model->SetID(config.id);
-        model->SetName(config.name);
-        model->SetType(config.type);
-        model->SetPosition(config.position);
-        model->SetRotation(config.rotation);
-        model->SetScale(config.scale);
-        model->SetShaderPaths(config.vsh_path, config.fsh_path);
+        model->InitModelAttri(config);
 
         // 创建模型着色器
         model->CreateShader();

@@ -3,45 +3,31 @@
         "DirLight": {
             "id": "sun_light",
             "type": "prefab.dir_light",
-            "name": "阳光",
+            "name": "日光",
             
-            "position": [0, 100, 0],
-            "direction": [0.0, -1.0, -0.2],
-            "ambient": [0.6, 0.6, 0.6],
-            "diffuse": [0.9, 0.9, 0.8],
-            "specular": [0.7, 0.7, 0.7],
+            "direction": [-0.5, -1.0, -0.7],
+            "ambient": [0.7, 0.7, 0.7],
+            "diffuse": [0.5, 0.5, 0.5],
+            "specular": [0.2, 0.2, 0.2],
+            "skyColor": [0.9, 0.7, 1.0],
 
-            "constant": 0,
-            "linear": 0,
-            "quadratic": 0
+            "sourceRadius": 10.0,
+            "sourceSoftness": 10.0,
+            "atmosphereThickness": 0.0
         },
 
-        "SpotLight": {
-            "id": "fill_light",
-            "type": "prefab.spot_light",
-            "name": "补光灯",
-
-            "position": [0, 15, 15],
-            "direction": [0, -0.5, -1],
-            "ambient": [0.3, 0.3, 0.3],
-            "diffuse": [0.4, 0.4, 0.4],
-            "specular": [0.3, 0.3, 0.3],
-
-            "constant": 0.2,
-            "linear": 0.01,
-            "quadratic": 0.002,
-            "cutOff": 45.0,
-            "outerCutOff": 60.0
-        },
-        
         "SkyLight": {
-            "id": "天空散射光",
+            "id": "sky_light",
             "type": "prefab.sky_light",
-            "name": "天空光",
-
-            "color": [0.7, 0.8, 0.9],
-            "intensity": 0.5,
-            "horizonBlend": 0.3
+            "name": "天光",
+            
+            "color": [0.5, 0.6, 0.8],
+            "intensity": 0.7,
+            "horizonBlend": 0.3,
+            
+            "groundReflection": 0.25,
+            "cloudOpacity": 0.35,
+            "cloudColor": [0.95, 0.95, 0.97]
         }
     }
 }

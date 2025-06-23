@@ -43,6 +43,7 @@ string SceneGetter::ID() const {
 
 std::vector<string> SceneGetter::ModelNames() const {
     std::vector<string> arr;
+    if(MODEL_POINTERS.empty()) return arr;
 
     for(auto& model : MODEL_POINTERS) {
         arr.push_back(model->GetName());

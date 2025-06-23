@@ -2,7 +2,6 @@
 #pragma once
 #include "managers/fwd.h"
 #include "managers/scene/getter.h"
-#include "managers/lightMng.h"
 
 using VolumBeam = CubeDemo::Prefabs::VolumBeam;
 
@@ -36,12 +35,10 @@ public:
     // 场景管理器实例创建/删除
     static SceneMng* CreateInst();
     static void RemoveInst(SceneMng** ptr);
-
-    string PrintCurrent(SceneID& inst);
     
 private:
     // 统计场景管理器的数量. 不允许存在多个场景管理器
-    inline static unsigned int s_InstCount = 0;
+    inline static unsigned int m_InstCount = 0;
 };
 
 using SceneID = SceneMng::SceneID;
@@ -49,7 +46,4 @@ using SceneID = SceneMng::SceneID;
 
 // 模板实现
 #include "managers/scene/utils.inl"
-
-namespace CubeDemo {
-    using SceneID = Managers::SceneMng::SceneID;
-}
+using SceneID = CubeDemo::Managers::SceneMng::SceneID;

@@ -16,6 +16,21 @@
             }
         },
         {
+            "id": "mia_vacuum",
+            "type": "model.character",
+            "name": "米娅(vacuum)",
+            "path": "mia/Mia_vacuum.gltf",
+            "shaders": {
+                "vertex": "model.glsl",
+                "fragment": "model_night.glsl"
+            },
+            "attributes": {
+                "position": [16.0, 0, 0.2],
+                "rotation": 3.2,
+                "scale": [0.7, 0.7, 0.7]
+            }
+        },
+        {
             "id": "room",
             "type": "model.scene",
             "name": "工厂仓库",

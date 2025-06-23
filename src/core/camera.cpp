@@ -1,7 +1,5 @@
 // src/core/camera.cpp
 #include "pch.h"
-#include "core/camera.h"
-#include "core/window.h"
 
 namespace CubeDemo {
 using namespace glm;
@@ -123,5 +121,8 @@ vec3 Camera::ScreenToWorld(
     
     return vec3(world_Point);
 }
-
+void Camera::TeleportTo(const vec3& position, float height_offset) {
+    Position = position + vec3(0.0f, height_offset, 0.0f);
+    UpdateCameraVec();
+}
 }

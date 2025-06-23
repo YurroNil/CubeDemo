@@ -25,14 +25,12 @@ public:
 
 private:
     // 静态成员
-    inline static int s_WindowWidth = 800;
-    inline static int s_WindowHeight = 600;
-    inline static int s_WindowPosX = 0;
-    inline static int s_WindowPosY = 0;
+    inline static int
+        m_Width = 800, m_Height = 600,
+        m_WinPosX = 0, m_WinPosY = 0;
 
-    inline static GLFWwindow* s_Window = nullptr;
-    inline static bool s_IsFullscreen = false;
-    inline static float s_InitMouseX = 0.0f;
-    inline static float s_InitMouseY = 0.0f;
+    inline static GLFWwindow* m_Window = nullptr;
+    inline static bool m_IsFullscreen = false;
+    inline static float m_InitMouseX = 0.0f, m_InitMouseY = 0.0f;
 };
 }

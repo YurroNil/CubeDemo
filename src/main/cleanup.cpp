@@ -5,6 +5,7 @@
 #include "loaders/resource.h"
 
 #include "managers/modelMng.h"
+#include "managers/lightMng.h"
 
 namespace CubeDemo {
 
@@ -22,6 +23,9 @@ extern ModelMng* MODEL_MNG;
 // 清理函数
 void Cleanup(GLFWwindow* window, Camera* camera) {
 
+    // 场景资源
+    SCENE_MNG->CleanAllScenes();
+
     // 确保资源释放顺序
     RL::Shutdown(); // 先关闭资源加载器
     
@@ -30,31 +34,29 @@ void Cleanup(GLFWwindow* window, Camera* camera) {
         glFinish();
     });
 
-    // 摄像机清理
+    // 摄像机
     Camera::Delete(camera);
 
-    // 先清理模型着色器
-    MODEL_MNG->RmvAllShaders();
-    // 再清理所有模型
+    // 所有模型相关的资源(包含模型所使用的网格, 着色器和纹理等)
     MODEL_MNG->RmvAllModels();
 
-    // 阴影着色器清理
+    // 阴影着色器
     SHADOW_MAP->DeleteShader();
 
-    // 阴影清理
+    // 阴影贴图
     ShadowMap::DeleteShadow(SHADOW_MAP);
 
-    // 管理器清理
+    // 管理器
     delete SCENE_MNG; SCENE_MNG = nullptr;
     delete LIGHT_MNG; LIGHT_MNG = nullptr;
     delete MODEL_MNG; MODEL_MNG = nullptr;
 
-    // ImGui清理
+    // ImGui
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
     
-    // GLFW清理
+    // GLFW
     glfwDestroyWindow(window);
     glfwTerminate();
     

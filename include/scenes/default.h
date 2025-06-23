@@ -16,6 +16,6 @@ public:
     void Render(GLFWwindow* window, Camera* camera, ShadowMap* shadow_map) override;
 
 private:
-    DL* m_DirLight = nullptr;
+    DL* m_DirLight = nullptr; SkL* m_SkyLight = nullptr;
 };
 }   // namespace CubeDemo::Scenes

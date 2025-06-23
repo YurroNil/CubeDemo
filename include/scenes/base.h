@@ -36,12 +36,11 @@ public:
     virtual void Cleanup() = 0;
 
      // 状态查询接口
-    virtual bool IsInited() const { return s_isInited; }
-    virtual bool IsCleanup() const { return s_isCleanup; }
+    virtual bool IsInited() const { return m_isInited; }
+    virtual bool IsCleanup() const { return m_isCleanup; }
  
 protected:
-    bool s_isInited{false};
-    bool s_isCleanup{false};
+    bool m_isInited = false, m_isCleanup = false;
     string name = "unnamed", id  = "none";
 
 };

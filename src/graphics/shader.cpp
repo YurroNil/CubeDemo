@@ -1,7 +1,6 @@
 // src/graphics/shader.cpp
 #include "pch.h"
 #include "graphics/shader.h"
-#include "core/camera.h"
 
 // 别名
 using ifs = std::ifstream;
@@ -46,10 +45,10 @@ Shader::Shader(const string& vertex_path, const string& fragment_path) {
     glCompileShader(frag_shader);
 
     // 创建着色器程序
-    ID = glCreateProgram();
-    glAttachShader(ID, vert_shader);
-    glAttachShader(ID, frag_shader);
-    glLinkProgram(ID);
+    m_ID = glCreateProgram();
+    glAttachShader(m_ID, vert_shader);
+    glAttachShader(m_ID, frag_shader);
+    glLinkProgram(m_ID);
 
     GLint success;
     char infoLog[512];
@@ -69,9 +68,9 @@ Shader::Shader(const string& vertex_path, const string& fragment_path) {
     }
 
     // 程序链接检查
-    glGetProgramiv(ID, GL_LINK_STATUS, &success);
+    glGetProgramiv(m_ID, GL_LINK_STATUS, &success);
     if (!success) {
-        glGetProgramInfoLog(ID, 512, NULL, infoLog);
+        glGetProgramInfoLog(m_ID, 512, NULL, infoLog);
         std::cerr << "着色器程序链接失败: " << infoLog << std::endl;
     }
 
@@ -81,11 +80,11 @@ Shader::Shader(const string& vertex_path, const string& fragment_path) {
 }
 
 Shader::~Shader() {
-    glDeleteProgram(ID);
+    glDeleteProgram(m_ID);
 }
 
 void Shader::Use() const {
-    glUseProgram(ID);
+    glUseProgram(m_ID);
 }
 
 void Shader::ApplyCamera(const Camera* camera, float aspect) const {
@@ -105,21 +104,21 @@ void Shader::SetViewPos(const vec3& pos) { SetVec3("viewPos", pos); }
 void Shader::SetLightSpaceMat(const mat4& matrix) { SetMat4("lightSpaceMatrix", matrix); }
 
 void Shader::SetMat4(const string& name, const mat4& mat) const {
-    glUniformMatrix4fv( glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0] );
+    glUniformMatrix4fv( glGetUniformLocation(m_ID, name.c_str()), 1, GL_FALSE, &mat[0][0] );
 }
 void Shader::SetVec2(const string& name, const vec2& value) {
-    glUniform2fv( glGetUniformLocation(ID, name.c_str()), 1, &value[0] );
+    glUniform2fv( glGetUniformLocation(m_ID, name.c_str()), 1, &value[0] );
 }
 void Shader::SetVec3(const string& name, const vec3& value) {
-    glUniform3fv( glGetUniformLocation(ID, name.c_str()), 1, &value[0] );
+    glUniform3fv( glGetUniformLocation(m_ID, name.c_str()), 1, &value[0] );
 }
 void Shader::SetFloat(const string& name, float value) {
-    glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+    glUniform1f(glGetUniformLocation(m_ID, name.c_str()), value);
 }
 void Shader::SetInt(const string& name, int value) const {
-    glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+    glUniform1i(glGetUniformLocation(m_ID, name.c_str()), value);
 }
 void Shader::SetBool(const string& name, bool value) {
-    glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
+    glUniform1i(glGetUniformLocation(m_ID, name.c_str()), (int)value);
 }
 }   // namespace CubeDemo

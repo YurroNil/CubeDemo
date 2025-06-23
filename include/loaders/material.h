@@ -24,9 +24,7 @@ private:
 
     // 异步加载入口
     TexPtrArray LoadTex(aiMaterial* mat, aiTextureType type, const string& type_name, bool is_async);
-
 };
-
 }
 // 模板实现
 #include "loaders/material.inl"

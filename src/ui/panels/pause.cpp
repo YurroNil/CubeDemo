@@ -4,7 +4,6 @@
 #include "managers/uiMng.h"
 #include "ui/panels/pause.h"
 // 核心模块
-#include "core/window.h"
 #include "core/inputs.h"
 
 namespace CubeDemo::UI {

@@ -25,6 +25,6 @@ public:
     void SetLightSpaceMat(const mat4& matrix);
 
 private:
-    unsigned int ID; 
+    unsigned int m_ID; 
 };
 }

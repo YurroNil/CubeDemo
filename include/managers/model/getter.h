@@ -23,6 +23,8 @@ public:
     const string GetFshPath() const;
 
     // Setters
+    const void InitModelAttri(const Utils::ModelConfig& config);
+
     std::atomic<bool>& SetMeshMarker();
     std::atomic<bool>& SetLoadingMarker();
     const void SetID(const string& id);

@@ -1,8 +1,6 @@
 // include/main/rendering.h
 #pragma once
 #include "managers/sceneMng.h"
-#include "core/window.h"
-#include "core/camera.h"
 #include "prefabs/shadow_map.h"
 #include "managers/fwd.h"
 

@@ -12,6 +12,17 @@ Texture::Texture()
       m_RetryCount(0) {}
 
 Texture::~Texture() {
+    // 确保在主线程释放OpenGL资源
+    if (ID == 0) return;
+    
+    // 使用任务队列确保在主线程执行
+    TaskQueue::PushTaskSync([this] {
+        GLuint id = ID.load();
+        if (id != 0) {
+            glDeleteTextures(1, &id);
+        }
+    });
+    ID = 0;
 }
 
 void Texture::Bind(unsigned int slot = 0) const {

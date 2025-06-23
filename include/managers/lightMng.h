@@ -6,7 +6,7 @@
 namespace CubeDemo::Managers {
 class LightMng {
 
-    inline static unsigned int s_InstCount = 0;
+    inline static unsigned int m_InstCount = 0;
 
 public:
     LightMng();

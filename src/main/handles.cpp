@@ -1,16 +1,17 @@
 // src/main/handles.cpp
 #include "pch.h"
 #include "main/handles.h"
-#include "core/camera.h"
 
 namespace CubeDemo {
 
 // 输入管理
 void handle_input(GLFWwindow* window) {
     Inputs::isEscPressed(window);
-    if (!Inputs::isGamePaused) {
-        Inputs::ProcKeyboard(window, Time::DeltaTime());
-    }
+    
+    if (Inputs::isGamePaused) return;
+
+    Inputs::ProcKeyboard(window, Time::DeltaTime());
+
 }
 // 开始帧
 void begin_frame(Camera* camera) {

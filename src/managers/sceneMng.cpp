@@ -1,6 +1,14 @@
 // src/managers/scene.cpp
 #include "pch.h"
 #include "managers/sceneMng.h"
+#include "managers/modelMng.h"
+#include "ui/panels/edit.h"
+#include "loaders/texture.h"
+
+// 外部变量声明
+namespace CubeDemo {
+    extern ModelMng* MODEL_MNG;
+}
 
 namespace CubeDemo::Managers {
 
@@ -16,37 +24,38 @@ void SceneMng::Init() {
         auto& inst = it->second.instance;
         // 调用初始化函数
         inst.Init();
-        inst.s_isInited = true; inst.s_isCleanup = false;
+        inst.m_isInited = true; inst.m_isCleanup = false;
     }
 }
 // 清理所有场景
 void SceneMng::CleanAllScenes() {
+    // 删除场景资源 (如光源预制体)
     Default.Cleanup();
     Night.Cleanup();
-    // 扩展时添加新场景清理
-}
 
-string SceneMng::PrintCurrent(SceneID& inst) {
-    switch (inst) {
-    case SceneID::DEFAULT:
-        return Default.name;
-    case SceneID::NIGHT:
-        return Night.name;
-    default: return "null";
-    }
-    return "?";
+    // 删除所有模型与着色器
+    MODEL_MNG->RmvAllModels();
+    
+    // 清除纹理缓存
+    TL::ClearCache();
+
+    // 重置UI状态
+    UI::EditPanel::s_AvailableModels.clear();
 }
 
 // 切换场景
 void SceneMng::SwitchTo(SceneID target) {
-    // 每次切换场景时，清理所有资源
+    // 清理所有场景
     CleanAllScenes();
-
-    std::cout << "要切换的目标场景: " << PrintCurrent(target) << "\n" << std::endl;
+    
+    // 更新当前场景
     Current = target;
-
-    // 然后再重新初始化
+    
+    // 初始化新场景
     Init();
+    
+    // 更新UI模型列表
+    UI::EditPanel::s_AvailableModels = GetCurrentScene.ModelNames();
 }
 
 // 渲染
@@ -75,17 +84,17 @@ SceneMng::~SceneMng() {}
 
 // 创建场景管理器
 SceneMng* SceneMng::CreateInst() {
-    if(s_InstCount > 0) {
-        std::cerr << "[SceneMng] 场景创建失败，因为当前场景管理器数量为: " << s_InstCount << std::endl;
+    if(m_InstCount > 0) {
+        std::cerr << "[SceneMng] 场景创建失败，因为当前场景管理器数量为: " << m_InstCount << std::endl;
         return nullptr;
     }
-    s_InstCount++;
+    m_InstCount++;
     return new SceneMng();
 }
 // 删除场景管理器
 void SceneMng::RemoveInst(SceneMng** ptr) {
-    if(s_InstCount = 0) return;
-    s_InstCount--;
+    if(m_InstCount = 0) return;
+    m_InstCount--;
     delete *ptr; *ptr = nullptr;
 }
 

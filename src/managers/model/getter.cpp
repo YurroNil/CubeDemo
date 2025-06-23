@@ -3,6 +3,7 @@
 #include "managers/model/getter.h"
 #include "resources/model.h"
 #include "graphics/shader.h"
+#include "utils/defines.h"
 
 using AtomBool = std::atomic<bool>;
 
@@ -13,6 +14,22 @@ ModelGetter::ModelGetter(::CubeDemo::Model* model)
     : m_owner(model) {}
 
 /* ----------- Setters ----------- */
+const void ModelGetter::InitModelAttri(const Utils::ModelConfig& config) {
+    // ID, 名字, 类型名
+    m_owner->m_ID = config.id;
+    m_owner->m_Name = config.name;
+    m_owner->m_Type = config.type;
+    // transform三要素(位置, 旋转, 缩放)
+    m_owner->m_PosCopy = m_owner->m_Position = config.position;
+    m_owner->m_RotCopy = m_owner->m_Rotation = config.rotation;
+    m_owner->m_ScaleCopy = m_owner->m_Scale = config.scale;
+    // vertex/fragment shader路径设置
+    m_owner->m_vshPath = VSH_PATH + config.vsh_path;
+    m_owner->m_fshPath = FSH_PATH + config.fsh_path;
+    // 更新模型矩阵
+    m_owner->UpdateModelMatrix();
+}
+
 const void ModelGetter::SetID(const string& id) {
     m_owner->m_ID = id;
 }
@@ -47,8 +64,8 @@ const void ModelGetter::SetTransform(const vec3& pos, float rotation, const vec3
     m_owner->UpdateModelMatrix();
 }
 const void ModelGetter::SetShaderPaths(const string& vsh_path, const string& fsh_path) {
-    m_owner->m_vshPath = vsh_path;
-    m_owner->m_fshPath = fsh_path;
+    m_owner->m_vshPath = VSH_PATH + vsh_path;
+    m_owner->m_fshPath = FSH_PATH + fsh_path;
 }
 
 /* ----------- Getters ----------- */

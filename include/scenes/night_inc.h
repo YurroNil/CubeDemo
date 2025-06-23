@@ -12,9 +12,6 @@
 #include "resources/model.h"
 // 预制体模块
 #include "prefabs/shadow_map.h"
-// 核心模块
-#include "core/camera.h"
-#include "core/window.h"
 // 工具模块
 #include "utils/defines.h"
 // 加载器模块

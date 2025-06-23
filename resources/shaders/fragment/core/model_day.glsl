@@ -1,162 +1,112 @@
 // resources/shaders/fragment/core/model_day.glsl
-#version 330 core
-out vec4 FragColor;
+#version 450 core
 
 in vec3 FragPos;
 in vec3 Normal;
 in vec2 TexCoords;
-in vec4 FragPosLightSpace;
+out vec4 FragColor;
 
+// 纹理与光照结构
 uniform sampler2D texture_diffuse1;
-uniform sampler2D texture_specular;
-uniform sampler2D texture_normal;
-uniform sampler2D texture_ao;
-
-uniform sampler2D shadowMap;
-uniform vec3 viewPos;
-uniform mat4 model;
+uniform sampler2D noiseTex; // 云层噪声纹理
+uniform sampler2D aoMap;   // 环境光遮蔽贴图
 
 struct DirLight {
     vec3 direction;
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+    float sourceRadius;
+    float sourceSoftness;
+    vec3 skyColor;
+    float atmosphereThickness;
 };
 uniform DirLight dir_light;
 
-struct SpotLight {
-    vec3 position;
-    vec3 direction;
-    float cutOff;
-    float outerCutOff;
-    
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
-    
-    float constant;
-    float linear;
-    float quadratic;
-};
-uniform SpotLight spot_light;
+uniform vec3 viewPos;
+uniform float time; // 时间变量驱动动态效果
 
-struct SkyLight {
-    vec3 color;
-    float intensity;
-    float horizonBlend;
-};
-uniform SkyLight sky_light;
+// 物理光照增强函数
+vec3 calculateAtmosphericScattering(vec3 fragPos, vec3 viewDir) {
+    // 瑞利散射模拟（波长相关）
+    const vec3 rayleighCoeff = vec3(5.8e-6, 1.35e-5, 3.31e-5); // 蓝光散射最强
+    float scatterIntensity = 1.0 - clamp(dot(normalize(-dir_light.direction), viewDir), 0.0, 1.0);
+    vec3 rayleigh = rayleighCoeff * scatterIntensity * dir_light.atmosphereThickness;
 
-// 计算影子 - 白天阴影更柔和
-float CalcShadow(vec4 fragPosLightSpace) {
-    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-    projCoords = projCoords * 0.5 + 0.5;
-    
-    float closestDepth = texture(shadowMap, projCoords.xy).r; 
-    float currentDepth = projCoords.z;
-    float bias = max(0.02 * (1.0 - dot(Normal, -dir_light.direction)), 0.005);
-    
-    float shadow = 0.0;
-    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
-    
-    // 更柔和的阴影采样
-    for(int x = -2; x <= 2; ++x) {
-        for(int y = -2; y <= 2; ++y) {
-            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x,y) * texelSize).r;
-            shadow += currentDepth - bias > pcfDepth ? 0.2 : 0.0;
-        }
-    }
-    return shadow / 25.0; // 25个采样点
-}
-
-// 计算方向光照 - 白天更强
-vec3 CalcDirLight(DirLight light, vec3 normal) {
-    // 环境光
-    vec3 ambient = 2.0 * light.ambient * texture(texture_diffuse1, TexCoords).rgb;
-    
-    // 漫反射
-    vec3 lightDir = normalize(-light.direction);
-    float diff = max(dot(normal, lightDir), 0.0);
-    vec3 diffuse = light.diffuse * diff * texture(texture_diffuse1, TexCoords).rgb;
-    
-    // 镜面反射 - 白天更明显
-    vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 128.0); // 更高光泽度
-    vec3 specular = light.specular * spec * texture(texture_specular, TexCoords).rgb;
-
-    return (ambient + diffuse + specular);
-}
-
-// 计算天光散射
-vec3 CalcSkyLight(vec3 normal) {
-    // 基于法线方向混合天空颜色
-    float horizonFactor = dot(normal, vec3(0, 1, 0)) * 0.5 + 0.5;
-    vec3 skyColor = mix(vec3(0.5, 0.6, 0.8), sky_light.color, horizonFactor);
-    
-    // 强度根据法线与天空方向的夹角变化
-    float skyIntensity = max(dot(normal, vec3(0, 1, 0)), 0.0) * sky_light.intensity;
-    
-    return skyColor * skyIntensity;
-}
-
-// 计算聚光 - 白天较弱
-vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos) {
-    // 距离衰减
-    float distance = length(light.position - fragPos);
-    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
-    
-    // 聚光强度计算
-    vec3 lightDir = normalize(light.position - fragPos);
-    float theta = dot(lightDir, normalize(-light.direction)); 
-    float epsilon = light.cutOff - light.outerCutOff;
-    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
-    
-    // 漫反射
-    float diff = max(dot(normal, lightDir), 0.0);
-    vec3 diffuse = light.diffuse * diff * texture(texture_diffuse1, TexCoords).rgb;
-    
-    // 镜面反射
-    vec3 viewDir = normalize(viewPos - fragPos);
-    vec3 halfwayDir = normalize(lightDir + viewDir);
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
-    vec3 specular = light.specular * spec;
-    
-    return (diffuse + specular) * intensity * attenuation;
+    // 米氏散射（日光边缘柔化）
+    float distToLight = length(fragPos);
+    float mieFactor = smoothstep(
+        dir_light.sourceRadius, 
+        dir_light.sourceRadius + dir_light.sourceSoftness, 
+        distToLight
+    );
+    return (1.0 - mieFactor) * rayleigh * dir_light.skyColor;
 }
 
 void main() {
-    vec3 result = vec3(0);
+    // 基础纹理采样（增加细节层）
+    vec3 baseColor = texture(texture_diffuse1, TexCoords).rgb;
+    vec3 aoValue = texture(aoMap, TexCoords).rrr; // AO贴图采样
+    
+    // 法线与视线计算
     vec3 norm = normalize(Normal);
-    float shadow = CalcShadow(FragPosLightSpace);
+    vec3 lightDir = normalize(-dir_light.direction);
+    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 halfDir = normalize(lightDir + viewDir);
 
-    // 方向光（阳光）
-    vec3 dirResult = CalcDirLight(dir_light, norm) * (1.0 - shadow);
+    // PBR光照计算
+    float NdotL = max(dot(norm, lightDir), 0.0);
+    float NdotV = max(dot(norm, viewDir), 0.01);
+    
+    // 微表面高光（GGX模型）
+    float roughness = 0.3;
+    float NdotH = max(dot(norm, halfDir), 0.0);
+    float alpha = roughness * roughness;
+    float denom = (NdotH * alpha - NdotH) * NdotH + 1.0;
+    float specular = alpha / (3.14159 * denom * denom);
+    
+    // 能量守恒合成
+    vec3 F0 = vec3(0.04); // 基础反射率
+    vec3 F = F0 + (1.0 - F0) * pow(1.0 - NdotV, 5.0);
+    vec3 kD = (vec3(1.0) - F) * (1.0 - specular);
+    
+    vec3 diffuse = dir_light.diffuse * NdotL * baseColor * kD;
+    vec3 spec = dir_light.specular * specular * F;
+    vec3 ambient = dir_light.ambient * baseColor * aoValue; // AO影响环境光
 
-    // 聚光（补光）
-    vec3 spotResult = CalcSpotLight(spot_light, norm, FragPos);
+    vec3 lighting = ambient + diffuse + spec;
+
+    // 多层次天空渲染 ----------------------------------------
+    // 基础渐变层
+    float heightFactor = clamp(FragPos.y / 100.0, 0.0, 1.0);
+    vec3 skyBase = mix(dir_light.skyColor * 0.6, dir_light.skyColor, heightFactor);
     
-    // 天光散射
-    vec3 skyResult = CalcSkyLight(norm);
+    // 云层动态效果
+    vec2 cloudUV = FragPos.xz / 200.0 + time * 0.01;
+    float cloudNoise = texture(noiseTex, cloudUV * 2.0).r;
+    float cloudMask = smoothstep(0.3, 0.8, cloudNoise) * dir_light.cloudOpacity;
     
-    // 环境光基础
-    vec3 ambientBase = 0.1 * texture(texture_diffuse1, TexCoords).rgb;
+    // 地平线光晕（太阳方位相关）
+    vec3 sunDir = -dir_light.direction;
+    float horizonGlow = pow(1.0 - abs(sunDir.y), 8.0) * 2.0;
+    vec3 glowColor = mix(vec3(1.0, 0.7, 0.4), dir_light.skyColor, 0.5);
     
-    // 最终光照组合
-    result = ambientBase + skyResult + dirResult + spotResult;
+    // 体积光束（需在CPU端计算光源空间矩阵）
+    vec3 lightSpacePos = (lightViewMatrix * vec4(FragPos, 1.0)).xyz;
+    float beamAtten = smoothstep(0.8, 0.2, length(lightSpacePos.xy));
+    vec3 godRays = beamAtten * glowColor * horizonGlow * 0.3;
+
+    // 大气散射合成
+    vec3 scattering = calculateAtmosphericScattering(FragPos, viewDir);
+    vec3 finalSky = skyBase * (1.0 - cloudMask) + dir_light.cloudColor * cloudMask + godRays + scattering;
+
+    // 最终合成 ----------------------------------------------
+    float depthFactor = smoothstep(200.0, 500.0, length(FragPos - viewPos));
+    vec3 finalColor = mix(lighting, finalSky, depthFactor);
     
-    // 轻微雾效 - 模拟大气透视
-    float distance = length(viewPos - FragPos);
-    float fogFactor = exp(-distance * 0.01);
-    vec3 fogColor = vec3(0.8, 0.85, 0.9); // 天蓝色雾
-    result = mix(fogColor, result, fogFactor);
+    // 应用ACES色调映射（电影级色彩空间）
+    const float a = 2.51, b = 0.03, c = 2.43, d = 0.59, e = 0.14;
+    finalColor = clamp((finalColor * (a * finalColor + b)) / (finalColor * (c * finalColor + d) + e), 0.0, 1.0);
     
-    // 饱和度增强
-    vec3 saturated = mix(result, result * vec3(1.1, 1.05, 1.0), 0.3);
-    
-    // 片段颜色
-    FragColor = vec4(saturated, 1.0);
-    
-    // 透明度测试
-    if(texture(texture_diffuse1, TexCoords).a < 0.1) discard;
+    FragColor = vec4(pow(finalColor, vec3(1.0/2.2)), 1.0); // Gamma校正
 }

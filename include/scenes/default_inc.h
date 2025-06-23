@@ -8,13 +8,10 @@
 #include "managers/sceneMng.h"
 #include "managers/lightMng.h"
 #include "managers/modelMng.h"
-// 核心模块
-#include "core/window.h"
 // graphics模块
 #include "graphics/renderer.h"
 // 预制体模块
 #include "prefabs/shadow_map.h"
-// 资源模块
 // 工具模块
 #include "utils/defines.h"
 // 加载器模块

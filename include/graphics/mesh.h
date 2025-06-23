@@ -45,20 +45,21 @@ public:
     void Draw(Shader* shader) const;
     void UpdateTextures(const TexPtrArray& newTextures);
 
+    ~Mesh();
+
     // Getters
     const UnsignedArray& GetIndices() const;
     unsigned int GetVAO() const;
     unsigned int GetVBO() const;
     unsigned int GetEBO() const;
     unsigned int GetIndexCount() const;
-
+    void ReleaseGLResources();
 
 private:
     unsigned m_VAO, m_VBO, m_EBO;
     size_t m_indexCount;
     mutable std::mutex m_TextureMutex;
-
-    void ReleaseGLResources();
+    
     UnsignedArray m_Indices;
 };
 

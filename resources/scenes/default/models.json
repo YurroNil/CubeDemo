@@ -1,18 +1,18 @@
 {
     "LoadModels": [
         {
-            "id": "kokomi",
+            "id": "mia",
             "type": "model.character",
-            "name": "心海",
-            "path": "kokomi/kokomi.obj",
+            "name": "米娅",
+            "path": "mia/Mia.gltf",
             "shaders": {
                 "vertex": "model.glsl",
-                "fragment": "model_day.glsl"
+                "fragment": "model_default.glsl"
             },
             "attributes": {
-                "position": [0, 0, 0],
-                "rotation": 90.0,
-                "scale": [0.3, 0.3, 0.3]
+                "position": [13.4, 0, -14.7],
+                "rotation": -45.0,
+                "scale": [0.6, 0.6, 0.6]
             }
         },
         {
@@ -22,7 +22,7 @@
             "path": "tree/tree.obj",
             "shaders": {
                 "vertex": "model.glsl",
-                "fragment": "model_day.glsl"
+                "fragment": "model_default.glsl"
             },
             "attributes": {
                 "position": [0, 0, 0],

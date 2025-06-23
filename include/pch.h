@@ -29,6 +29,7 @@
 #include "nlohmann/json.hpp"
 
 // 项目头文件
+#include "core/window.h"
 #include "threads/diagnostic.h"
 #include "graphics/renderer.h"
 #include "core/camera.h"

@@ -37,9 +37,9 @@ struct TypeMapper<float> {
 
 // string 特化
 template <>
-struct TypeMapper<std::string> {
-    static std::string Map(const json& j) {
-        return j.get<std::string>();
+struct TypeMapper<string> {
+    static string Map(const json& j) {
+        return j.get<string>();
     }
 };
 
@@ -121,14 +121,17 @@ struct LightTraits<SL> {
         std::make_pair("name",        &LightType::name),
         std::make_pair("id",          &LightType::id),
         std::make_pair("type",        &LightType::type),
+
         std::make_pair("position",    &LightType::position),
         std::make_pair("direction",   &LightType::direction),
         std::make_pair("ambient",     &LightType::ambient),
         std::make_pair("diffuse",     &LightType::diffuse),
         std::make_pair("specular",    &LightType::specular),
+
         std::make_pair("constant",    &LightType::constant),
         std::make_pair("linear",      &LightType::linear),
         std::make_pair("quadratic",   &LightType::quadratic),
+
         std::make_pair("cutOff",      &LightType::cutOff),
         std::make_pair("outerCutOff", &LightType::outerCutOff)
     );
@@ -144,11 +147,62 @@ struct LightTraits<DL> {
         std::make_pair("name",      &LightType::name),
         std::make_pair("id",        &LightType::id),
         std::make_pair("type",      &LightType::type),
+
         std::make_pair("position",  &LightType::position),
         std::make_pair("direction", &LightType::direction),
         std::make_pair("ambient",   &LightType::ambient),
         std::make_pair("diffuse",   &LightType::diffuse),
-        std::make_pair("specular",  &LightType::specular)
+        std::make_pair("specular",  &LightType::specular),
+
+        std::make_pair("sourceRadius",  &LightType::sourceRadius),
+        std::make_pair("sourceSoftness", &LightType::sourceSoftness),
+        std::make_pair("sourceSoftness",&LightType::sourceSoftness),
+        std::make_pair("skyColor",   &LightType::skyColor),
+        std::make_pair("atmosphereThickness",  &LightType::atmosphereThickness)
+    );
+};
+
+// Point Light特化
+template <>
+struct LightTraits<PL> {
+    using LightType = PL;
+
+    // JSON键与成员指针的映射
+    static constexpr auto member_map = std::make_tuple(
+        std::make_pair("name",      &LightType::name),
+        std::make_pair("id",        &LightType::id),
+        std::make_pair("type",      &LightType::type),
+
+        std::make_pair("position",  &LightType::position),
+        std::make_pair("direction", &LightType::direction),
+        std::make_pair("ambient",   &LightType::ambient),
+        std::make_pair("diffuse",   &LightType::diffuse),
+        std::make_pair("specular",  &LightType::specular),
+
+        std::make_pair("constant",    &LightType::constant),
+        std::make_pair("linear",      &LightType::linear),
+        std::make_pair("quadratic",   &LightType::quadratic)
+    );
+};
+
+// Sky Light特化
+template <>
+struct LightTraits<SkL> {
+    using LightType = SkL;
+
+    // JSON键与成员指针的映射
+    static constexpr auto member_map = std::make_tuple(
+        std::make_pair("name",      &LightType::name),
+        std::make_pair("id",        &LightType::id),
+        std::make_pair("type",      &LightType::type),
+        
+        std::make_pair("color",  &LightType::color),
+        std::make_pair("intensity", &LightType::intensity),
+        std::make_pair("horizonBlend", &LightType::horizonBlend),
+
+        std::make_pair("groundReflection", &LightType::groundReflection),
+        std::make_pair("cloudOpacity", &LightType::cloudOpacity),
+        std::make_pair("cloudColor",   &LightType::cloudColor)
     );
 };
 

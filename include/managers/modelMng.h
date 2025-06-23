@@ -12,7 +12,7 @@ public:
     void AllUseShader(
         Camera* camera, float aspect_ratio,
         DL* dir_light, SL* spot_light,
-        PL* point_light
+        PL* point_light, SkL* sky_light
     );
     void RmvAllModels();
     void RmvAllShaders();

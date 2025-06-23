@@ -3,7 +3,7 @@
 #include "main/loop.h"
 #include "core/inputs.h"
 #include "threads/task_queue.h"
-#include "managers/lightMng.h"
+#include "managers/uiMng.h"
 
 // 外部变量声明
 namespace CubeDemo {
@@ -17,8 +17,8 @@ namespace CubeDemo {
 
 void MainLoop(GLFWwindow* window, Camera* camera) {
 
-    // 场景管理器初始化
-    SCENE_MNG->Init();
+    /* 渲染循环初始化 */
+    UIMng::RenderInit();
 
     // 开始主循环
     while (!Window::ShouldClose()) {
@@ -45,9 +45,6 @@ void MainLoop(GLFWwindow* window, Camera* camera) {
         /* 结束帧 */
         end_frame_handling(window);
     }
-
-    // 清理场景资源
-    SCENE_MNG->CleanAllScenes();
 }
 
 }   // Namespace CubeDemo

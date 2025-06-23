@@ -21,6 +21,8 @@ public:
     // 同步 加载纹理
     static TexturePtr LoadSync(const string& path, const string& type);
     static void CreateTexAsync(const string& path, const string& type, TexLoadCallback cb);
+    static void ClearCache();
+
 
     //------------------------ 统计信息 ------------------------//
     inline static std::atomic<int32_t> s_TextureAliveCount{0};  // 存活纹理计数
@@ -46,7 +48,7 @@ private:
     static string GetStatePrint(TexturePtr tex);
 
     // 记录已打印的复用路径
-    static std::unordered_set<string> s_PrintedPaths;
-    static std::mutex s_PrintMutex;
+    static std::unordered_set<string> m_PrintedPaths;
+    static std::mutex m_PrintMutex;
 };
 }   // namespace CubeDemo

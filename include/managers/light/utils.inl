@@ -29,6 +29,12 @@ void SetLightsDataImpl(const json& config, T* light) {
         }
         light->Configure(effects);
     }
+    else if constexpr (std::is_same_v<T, PL>) {
+        JsonMapper::MapLightData(config["LightArgs"]["PointLight"], *light);
+    }
+    else if constexpr (std::is_same_v<T, SkL>) {
+        JsonMapper::MapLightData(config["LightArgs"]["SkyLight"], *light);
+    }
 }
 
 // 配置读取工具函数
@@ -49,6 +55,9 @@ void LightMng::SetLightsData(const string& config_path, T* first, Args*... args)
 }
 extern template void LightMng::SetLightsData<DL>(const string&, DL*);
 extern template void LightMng::SetLightsData<SL>(const string&, SL*);
+extern template void LightMng::SetLightsData<DL, PL>(const string&, DL*, PL*);
+extern template void LightMng::SetLightsData<DL, SkL>(const string&, DL*, SkL*);
+extern template void LightMng::SetLightsData<DL, PL, SkL>(const string&, DL*, PL*, SkL*);
 extern template void LightMng::SetLightsData<DL, SL>(const string&, DL*, SL*);
 extern template void LightMng::SetLightsData<SL, DL>(const string&, SL*, DL*);
 extern template void LightMng::SetLightsData<VolumBeam>(const string&, VolumBeam*);

@@ -3,5 +3,5 @@
 
 // 向前声明
 namespace CubeDemo::UI {
-    class PausePanel; class ControlPanel; class DebugPanel;
+    class PanelBase; class PausePanel; class ControlPanel; class DebugPanel; class EditPanel; class PresetlibPanel;
 }

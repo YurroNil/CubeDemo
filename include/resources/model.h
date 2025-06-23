@@ -2,11 +2,14 @@
 #pragma once
 #include "graphics/bound_sphere.h"
 #include "managers/model/getter.h"
+#include "ui/fwd.h"
 
 namespace CubeDemo {
 
 class Model : public Managers::ModelGetter {
     friend class Managers::ModelGetter;
+    friend class UI::EditPanel;
+
 public:
     // 创建包维球实例
     BoundingSphere bounds;
@@ -15,7 +18,9 @@ public:
     Model(const string& path);  // 初始化
     void NormalDraw(const vec3& camera_pos);
     void DrawCall(Camera* camera);
-    void DrawSimple() const; 
+    void DrawSimple() const;
+
+    ~Model();
 
 private:
     // 模型的基本属性 (不可见)
@@ -33,15 +38,14 @@ private:
 
     mat4 m_ModelMatrix{mat4(1.0f)};
 
-    // 位置，旋转，尺寸
-    vec3 m_Position{vec3(0.0f)};     // 位置
-    float m_Rotation{0.0f};          // 旋转(弧度)
-    vec3 m_Scale{vec3(1.0f)};        // 尺寸
+    // 位置，旋转(弧度)，尺寸        // 数据备份, 用于撤销/重置
+    vec3 m_Position = vec3(0.0f),   m_PosCopy = vec3(0.0f);
+    float m_Rotation = 0.0f,        m_RotCopy = 0.0f;
+    vec3 m_Scale = vec3(1.0f),      m_ScaleCopy = vec3(1.0f);
 
 
 // ------------- 加载状态 -------------
-    std::atomic<bool> m_isLoading = false;
-    std::atomic<bool> m_MeshesReady = false;
+    std::atomic<bool> m_isLoading = false, m_MeshesReady = false;
 
 
 // ------------- 私有方法 -------------

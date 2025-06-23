@@ -7,8 +7,6 @@
 // graphics模块
 #include "graphics/shader.h"
 #include "graphics/mesh.h"
-// 核心模块
-#include "core/window.h"
 // 第三方库
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>

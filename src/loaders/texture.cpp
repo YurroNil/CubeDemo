@@ -13,8 +13,8 @@ namespace CubeDemo {
 // 静态成员初始化
 TexPtrHashMap TL::s_TexturePool;
 std::mutex TL::s_TextureMutex;
-std::unordered_set<string> TL::s_PrintedPaths;
-std::mutex TL::s_PrintMutex; 
+std::unordered_set<string> TL::m_PrintedPaths;
+std::mutex TL::m_PrintMutex; 
 
 
 TexturePtr TL::TryGetCached(const string& path) {
@@ -75,8 +75,8 @@ void TL::CreateTexAsync(const string& path, const string& type, TexLoadCallback 
         auto existing = s_TexturePool[path].lock();
         if (existing && existing->State == TLS::Ready) {
             {
-                std::lock_guard lock(s_PrintMutex);
-                if (s_PrintedPaths.insert(path).second) {
+                std::lock_guard lock(m_PrintMutex);
+                if (m_PrintedPaths.insert(path).second) {
                     std::cout << "[优化] 异步复用: " << path << std::endl;
                 }
             }
@@ -123,8 +123,8 @@ TexturePtr TL::LoadSync(const string& path, const string& type) {
 
         // 如果tex不是nullptr那么将执行复用操作
         {
-            std::lock_guard lock(s_PrintMutex);
-            if (s_PrintedPaths.insert(path).second) {
+            std::lock_guard lock(m_PrintMutex);
+            if (m_PrintedPaths.insert(path).second) {
                 std::cout << "[TL:loadSync] 正在检查路径: " << path <<", 纹理状态: " << GetStatePrint(tex) << std::endl;
             }
         }
@@ -135,8 +135,8 @@ TexturePtr TL::LoadSync(const string& path, const string& type) {
         if (tex->State != TLS::Ready) break;
 
         {
-            std::lock_guard lock(s_PrintMutex);
-            if (s_PrintedPaths.insert(path).second) { // 如果首次插入成功
+            std::lock_guard lock(m_PrintMutex);
+            if (m_PrintedPaths.insert(path).second) { // 如果首次插入成功
                 std::cout << "[优化] 同步复用: " << path << std::endl;
             }
         }
@@ -238,5 +238,16 @@ string TL::GetStatePrint(TexturePtr tex) {
     if (tex->State == LoadState::Failed) return "LoadState: Failed";
     return "LoadState: ??";
 }
-
+void TL::ClearCache() {
+    std::lock_guard lock(s_TextureMutex);
+    
+    // 清除所有弱引用
+    s_TexturePool.clear();
+    
+    // 重置打印记录
+    m_PrintedPaths.clear();
+    
+    // 重置加载计数器
+    s_ActiveLoads = 0;
+}
 }   // namespace CubeDemo

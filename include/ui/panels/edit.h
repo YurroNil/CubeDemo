@@ -1,31 +1,23 @@
 // include/ui/panels/edit.h
 #pragma once
-#include "core/inputs.h"
-#include "utils/string_conv.h"
-#include "managers/sceneMng.h"
-
 namespace CubeDemo::UI {
 
 class EditPanel {
-public:
-    static void Render();
-    
-private:
-    static void SceneMngment();
-    static void ModelMonitoring();
-    static void ModelEditing();
+// private
+    inline static SceneID m_LastSceneID = SceneID::EMPTY;
+    inline static ImVec4
+        m_OriginalBgColor, m_OriginalChildBg,
+        m_OriginalPopupBg, m_OriginalFrameBg, m_OriginalFrameBgHovered, m_OriginalFrameBgActive;
+
     static void ModelEditPanel();
-    static void ModelMonitorPanel();
+    static void ModelMonitorPanel(Camera* camera);
     static void ScenePanel();
-    // 模型数据结构
-    struct ModelInfo {
-        string id, name, type;
-        vec3 position;
-        float rotation;
-        vec3 scale;
-    };
+    static void ModelControlPanel(Camera* camera);
     
-    static std::vector<ModelInfo> s_ModelInfos;
-    static std::vector<string> s_AvailableModels;
+public:
+    static void Init();
+    static void Render(Camera* camera);
+    inline static std::vector<string> s_AvailableModels;
+
 };
 } // namespace CubeDemo::UI

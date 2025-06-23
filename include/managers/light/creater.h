@@ -7,9 +7,9 @@ namespace CubeDemo::Managers {
 class LightCreater {
 public:
     LightCreater();
-    DL* DirLight();
-    PL* PointLight();
-    SL* SpotLight();
+
+    DL* DirLight(); PL* PointLight();
+    SL* SpotLight(); SkL* SkyLight();
 };
 }
 

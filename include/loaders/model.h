@@ -13,8 +13,8 @@ private:
     const string Rawpath;
     
     // 记录已打印的复用路径
-    static std::unordered_set<string> s_PrintedPaths;
-    static std::mutex s_PrintMutex;
+    static std::unordered_set<string> m_PrintedPaths;
+    static std::mutex m_PrintMutex;
 
     void ProcNode(aiNode* node, const aiScene* scene);
     Mesh ProcMesh(aiMesh* mesh, const aiScene* scene);

@@ -20,7 +20,8 @@ void DebugPanel::Render(Camera* camera) {
     if (ImGui::Begin("调试面板", nullptr, window_flags)) {
         // FPS显示
         ImGui::Text("FPS: %d", Time::FPS());
-        
+        // GPU信息显示
+        ImGui::Text("GPU: %s", glGetString(GL_RENDERER));
         // 摄像机坐标
         const auto& pos = camera->Position;
         ImGui::Text("位置 X: %.1f, Y: %.1f, Z: %.1f)", pos.x, pos.y, pos.z);
