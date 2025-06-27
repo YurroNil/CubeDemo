@@ -21,7 +21,7 @@ void Model::DrawCall(Camera* camera) {
         return;
     }
     // 视椎体裁剪判断
-    // if (IsReady() && camera->isSphereVisible(bounds.Center, bounds.Rad)) { ... }
+    // if (IsReady() && camera->isSphereVsble(bounds.Center, bounds.Rad)) { ... }
     NormalDraw(camera->Position);
 }
 

@@ -2,7 +2,8 @@
 #include "pch.h"
 #include "ui/panels/debug.h"
 #include "core/monitor.h"
-#include "core/time.h"
+
+using MONITOR = CubeDemo::System::MONITOR;
 
 namespace CubeDemo::UI {
 // 渲染调试面板
@@ -19,15 +20,20 @@ void DebugPanel::Render(Camera* camera) {
     
     if (ImGui::Begin("调试面板", nullptr, window_flags)) {
         // FPS显示
-        ImGui::Text("FPS: %d", Time::FPS());
+        ImGui::Text("FPS: %d", TIME::FPS());
         // GPU信息显示
         ImGui::Text("GPU: %s", glGetString(GL_RENDERER));
+
+        // CPU信息显示
+        System::CPUInfo cpuInfo = MONITOR::GetCPUInfo();
+        ImGui::Text("CPU: %d Cores, %d Threads  %.2f GHz", cpuInfo.physicalCores, cpuInfo.logicalCores, cpuInfo.clockSpeed);
+
         // 摄像机坐标
         const auto& pos = camera->Position;
         ImGui::Text("位置 X: %.1f, Y: %.1f, Z: %.1f)", pos.x, pos.y, pos.z);
         
         // 内存使用
-        float memory_usage = Monitor::GetMemoryUsageMB();
+        float memory_usage = MONITOR::GetMemoryUsageMB();
         if(memory_usage >= 0) {
             ImGui::Text("内存用量: %.1f MB", memory_usage);
         }

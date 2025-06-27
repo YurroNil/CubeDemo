@@ -13,6 +13,7 @@ void render_scene(
     Camera* camera,
     ShadowMap* shadow_map)
 {
+
     // 阴影渲染阶段(暂不使用)
     // shadow_map->RenderShadow(camera);
 

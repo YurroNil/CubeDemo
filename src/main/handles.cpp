@@ -5,19 +5,15 @@
 namespace CubeDemo {
 
 // 输入管理
-void handle_input(GLFWwindow* window) {
-    Inputs::isEscPressed(window);
-    
-    if (Inputs::isGamePaused) return;
-
-    Inputs::ProcKeyboard(window, Time::DeltaTime());
+void handle_input(GLFWwindow* window, Camera* camera) {
+    INPUTS::ProcPanelKeys(window);
+    INPUTS::ProcCameraKeys(window, camera, TIME::GetDeltaTime());
 
 }
 // 开始帧
 void begin_frame(Camera* camera) {
     Renderer::BeginFrame();
-    Time::Update();
-    UIMng::RenderLoop(Window::GetWindow(), camera);
+    TIME::Update();
 }
 
 // 结束帧
@@ -28,8 +24,8 @@ void end_frame_handling(GLFWwindow* window) {
 
 // 输入窗口设置
 void handle_window_settings(GLFWwindow* window) {
-    Window::UpdateWinSize(window);       // 更新窗口尺寸
-    Window::FullscreenTrigger(window);   // 全屏
+    WINDOW::UpdateWinSize(window);       // 更新窗口尺寸
+    WINDOW::FullscreenTrigger(window);   // 全屏
 }
 
 }   // namespace CubeDemo

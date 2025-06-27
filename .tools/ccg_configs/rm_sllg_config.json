@@ -1,0 +1,28 @@
+{
+    "library_name": "resources_module",
+    
+    "paths": {
+        "source_code": [
+            "../src/resources",
+            "../src/threads",
+            "../src/loaders",
+            "../src/graphics"
+        ],
+        "include": [
+            "../include",
+            "../.3rdParty/include",
+            "%PDT_I%",
+            "%PDT_I%/imgui",
+            "%PDT_I%/assimp",
+            "%PDT_I%/stb"
+        ]
+    },
+    
+    "arguments": {
+        "cmd_prefix": "g++.exe -c",
+        "lib_suffix": [
+            "-lglfw3", "-lopengl32", "-lassimp", "-std=c++23", "-Winvalid-pch", "-fexec-charset=UTF-8", "-g"
+        ],
+        "output": "../lib"
+    }
+}

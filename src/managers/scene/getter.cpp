@@ -14,7 +14,7 @@ namespace CubeDemo::Managers {
 namespace Internal = SceneInternal;
 
 // 获取当前场景名称
-std::string SceneGetter::Name() const {
+string SceneGetter::Name() const {
     switch (m_owner->Current) {
         case SceneID::NIGHT:
             return m_owner->Night.GetName();

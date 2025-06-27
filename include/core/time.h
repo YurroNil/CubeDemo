@@ -2,14 +2,15 @@
 #pragma once
 namespace CubeDemo {
 
-class Time {
+class TIME {
+    #define i_s inline static
 public:
     static void Update();
     static int FPS();
-    static float DeltaTime();
+    static float GetDeltaTime();
     
 private:
-    inline static float s_LastTime = 0.0f;
-    inline static float s_DeltaTime = 0.0f;
+    i_s float s_LastTime = 0.0f;
+    i_s float s_DeltaTime = 0.0f;
 };
 }

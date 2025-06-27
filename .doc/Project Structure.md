@@ -5,7 +5,7 @@
 │     ├── core/ (核心模块)
 │     │    └── camera, inputs, time, window, monitor
 │     │
-│     ├── graphics/ (图形渲染模块)
+│     ├── graphics/ (图形模块)
 │     │    └── base, bound_sphere, renderer, mesh, shader
 │     │
 │     ├── resources/ (资源模块)
@@ -18,8 +18,10 @@
 │     │    └── base, material, model, model_initer, resource, texture, image, async_tex, fonts
 │     │
 │     ├── ui/ (UI模块)
-│     │    └── panels/
-│     │         └── pause, debug, control
+│     │    ├── panels/ (面板)
+│     │    |    └── control, debug, edit, paralist_area, presetlib, presetlist_area, pause, debug, control
+│     │    └── settings/ (设置面板)
+│     │         └── about_section, audio, control, game, video
 │     │
 │     ├── scenes/ (场景布置模块)
 │     │    └── base, default, night
@@ -65,6 +67,6 @@
 │     │
 └─────└── models/ (模型文件，如obj, fbx文件)
             └── sample/
-                    └── sample.obj, sample.mtl
+                    └── sample.(obj/mtl/fbx/gltf)
                     └── textures/
                             └── 各种各样的纹理文件

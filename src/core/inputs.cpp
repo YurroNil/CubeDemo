@@ -4,154 +4,129 @@
 
 namespace CubeDemo {
 
-void Inputs::Init(Camera* camera) { m_Camera = camera; }
+// 面板切换按键映射表初始化
+std::unordered_map<int, std::function<void()>> INPUTS::s_PanelkeyMap = {
+    {GLFW_KEY_T, []() { s_isEditMode = !s_isEditMode; }},
+    {GLFW_KEY_C, []() { s_isPresetVsble = !s_isPresetVsble; }},
+    {GLFW_KEY_F3, []() { s_isDebugVsble = !s_isDebugVsble; }}
+};
 
-// 静态回调方法
-void Inputs::MouseCallback(double xpos, double ypos) {
+// 相机操控按键映射表初始化
+std::unordered_map<int, std::function<void(Camera* camera, float velocity)>> INPUTS::s_CamerakeyMap = {
+    {GLFW_KEY_W, [](Camera* camera, float velocity) { camera->Position += camera->direction.front * velocity; }},
+    {GLFW_KEY_A, [](Camera* camera, float velocity) { camera->Position -= camera->direction.right * velocity; }},
+    {GLFW_KEY_S, [](Camera* camera, float velocity) { camera->Position -= camera->direction.front * velocity; }},
+    {GLFW_KEY_D, [](Camera* camera, float velocity) { camera->Position += camera->direction.right * velocity; }},
+    {GLFW_KEY_SPACE, [](Camera* camera, float velocity) { camera->Position.y += velocity; }},
+    {GLFW_KEY_LEFT_SHIFT, [](Camera* camera, float velocity) { camera->Position.y -= velocity; }}
+};
 
-    if (s_isEditMode || isGamePaused || ImGui::GetIO().WantCaptureMouse) return;
+// 按键状态跟踪
+std::unordered_map<int, bool> INPUTS::s_KeyState;
 
-    // 调试输出验证
-    if (m_FirstMouse) {
-        m_LastX = xpos;
-        m_LastY = ypos;
-        m_FirstMouse = false;
+bool INPUTS::isOpeningPanel() {
+    return s_isEditMode || s_isGamePaused || s_isPresetVsble;
+}
+
+void INPUTS::UpdateCursorMode(GLFWwindow* window) {
+
+    bool showCursor = isOpeningPanel() || m_AltPressed;
+
+    glfwSetInputMode(window, GLFW_CURSOR, showCursor ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+    // 下次隐藏光标时需要重置首次移动标志
+    if (showCursor) m_Mouse.firstMove = true;
+}
+
+void INPUTS::SetPaused(GLFWwindow* window, bool paused) {
+    s_isGamePaused = paused;
+    UpdateCursorMode(window);
+}
+
+void INPUTS::ProcPanelKeys(GLFWwindow* window) {
+    // 处理面板切换按键
+    for (auto& pair : s_PanelkeyMap) {
+        int key = pair.first;
+        int state = glfwGetKey(window, key);
+        
+        // 边缘检测：按键刚按下时触发
+        if (state != GLFW_PRESS) {
+            s_KeyState[key] = false;
+            continue;
+        }
+
+        // 若之前已按下则
+        if (s_KeyState[key]) continue;
+
+        pair.second(); // 执行按键操作
+        if (key != GLFW_KEY_F3) UpdateCursorMode(window);
+        s_KeyState[key] = true;
     }
 
-    float xoffset = xpos - m_LastX; float yoffset = m_LastY - ypos; // 注意Y轴方向
-    m_LastX = xpos; m_LastY = ypos;
-
-    if (m_Camera) m_Camera->ProcMouseMovement(xoffset, yoffset, true);
-
-}
-
-bool Inputs::isCameraEnabled() {
-    // 编辑模式、游戏暂停状态下，禁用鼠标控制摄像机移动
-
-    if (s_isEditMode || isGamePaused || ImGui::GetIO().WantCaptureMouse || m_AltPressed || s_isPresetVisible) {
-        m_FirstMouse = true;
-        return true;
-    } else return false;
-}
-
-void Inputs::ScrollCallback(double yoffset) {
-
-    if (isCameraEnabled) return;
-
-    m_Camera->ProcMouseScroll(static_cast<float>(yoffset));
-}
-
-// 游戏暂停
-void Inputs::PauseTheGame(GLFWwindow* window) {
-    if (!glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) return;
-
-/* --------若点击了ESC键则：----------*/
-    // 变化状态
-    isGamePaused = !isGamePaused;
-    // 切换鼠标状态
-    glfwSetInputMode(window, GLFW_CURSOR, isGamePaused ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
-
-    // 恢复游戏时更新鼠标位置
-    double current_x, current_y;
-    glfwGetCursorPos(window, &current_x, &current_y);
-    m_LastX = current_x;
-    m_LastY = current_y;
-    m_FirstMouse = true; // 强制下次移动时重置初始位置
-
-}
-
-// 输入处理
-void Inputs::ProcKeyboard(GLFWwindow* window, float delta_time) {
-    
-    // T键切换编辑模式
-    if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) ToggleEditMode(window);
-    // C键切换预设库
-    if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) TogglePresetlib(window);
-
-    // 编辑模式下禁用相机控制
-    if (s_isEditMode || isGamePaused || s_isPresetVisible) return;
-    
-    // WASD 移动
-    float velocity = 2* m_Camera->attribute.movementSpeed * delta_time;
-
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        m_Camera->Position += m_Camera->direction.front * velocity;
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        m_Camera->Position -= m_Camera->direction.front * velocity;
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        m_Camera->Position -= m_Camera->direction.right * velocity;
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        m_Camera->Position += m_Camera->direction.right * velocity;
-    // 空格上升
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-        m_Camera->Position.y += velocity;
-    // Shift下降
-    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-        m_Camera->Position.y -= velocity;
-
-    // Alt键呼出鼠标
-    bool alt_pressed = glfwGetKey(window, GLFW_KEY_LEFT_ALT) || glfwGetKey(window, GLFW_KEY_RIGHT_ALT);
-    if (alt_pressed != m_AltPressed) {
-        glfwSetInputMode(window, GLFW_CURSOR, alt_pressed ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
-        m_FirstMouse = true; // 重置鼠标初始位置
-        m_AltPressed = alt_pressed;
+    // 单独处理ESC键
+    static bool escPressed = false;
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS) {
+        escPressed = false;
+        return;
     }
 
-    // F3切换调试信息
-    static bool f3_last_state = false;
-    bool f3_current_state = glfwGetKey(window, GLFW_KEY_F3);
-    if (f3_current_state && !f3_last_state) s_isDebugVisible = !s_isDebugVisible;
-    f3_last_state = f3_current_state;
-}
-
-// 回到游戏(解除暂停状态)
-void Inputs::ResumeTheGame(GLFWwindow* window) {
-    isGamePaused = false;
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-}
-
-// 程序主循环中，ESC按键高频检测
-void Inputs::isEscPressed(GLFWwindow* window) {
-    static float last_esc_press_time = 0.0f;
-    const float current_time = glfwGetTime();
-    
-    if ((current_time - last_esc_press_time) < Inputs::s_EscCoolDown) return;
-
-    last_esc_press_time = current_time;
-    if (!Inputs::isGamePaused) Inputs::PauseTheGame(window);
-    else if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) Inputs::ResumeTheGame(window);
-}
-
-// T键切换编辑面板
-void Inputs::ToggleEditMode(GLFWwindow* window) {
-    float currentTime = glfwGetTime();
-    if (currentTime - m_LastToggleTime < m_ToggleCD) return;
-    
-    m_LastToggleTime = currentTime;
-    s_isEditMode = !s_isEditMode;
-    
-    // 编辑模式下显示鼠标，禁用摄像机
-    if (s_isEditMode) {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        m_FirstMouse = true; // 重置鼠标初始位置
-    } else if (!isGamePaused) {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    if (!escPressed) {
+        SetPaused(window, !s_isGamePaused);
+        escPressed = true;
     }
 }
-// C键切换编辑面板
-void Inputs::TogglePresetlib(GLFWwindow* window) {
-    float currentTime = glfwGetTime();
-    if (currentTime - m_LastToggleTime < m_ToggleCD) return;
+
+void INPUTS::ProcCameraKeys(GLFWwindow* window, Camera* camera, float deltaTime) {
+    if (isOpeningPanel()) return; // 面板打开时不处理相机控制
     
-    m_LastToggleTime = currentTime;
-    s_isPresetVisible = !s_isPresetVisible;
+    float velocity = 2 * camera->attribute.movementSpeed * deltaTime;
     
-    // 预设库模式下显示鼠标，禁用摄像机
-    if (s_isPresetVisible) {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        m_FirstMouse = true; // 重置鼠标初始位置
-    } else if (!isGamePaused) {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    // 处理所有按下的相机控制键
+    for (auto& pair : s_CamerakeyMap) {
+        if (glfwGetKey(window, pair.first) == GLFW_PRESS) {
+            pair.second(camera, velocity);
+        }
+    }
+
+    // Alt键切换鼠标显示
+    bool altNow = (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS);
+    
+    if (altNow != m_AltPressed) {
+        m_AltPressed = altNow;
+        UpdateCursorMode(window);
     }
 }
+
+// 回调函数
+void INPUTS::MouseCallback(double xpos, double ypos) {
+    // 获取当前相机
+    Camera* camera = Camera::GetCamera();
+    // 如果正在打开面板或者Alt键被按下，则返回
+    if (isOpeningPanel() || m_AltPressed) return;
+    
+    // 如果是第一次移动鼠标，则记录当前位置
+    if (m_Mouse.firstMove) {
+        m_Mouse.lastX = xpos;
+        m_Mouse.lastY = ypos;
+        m_Mouse.firstMove = false;
+    }
+
+    // 计算鼠标移动的偏移量
+    float xoffset = static_cast<float>(xpos - m_Mouse.lastX);
+    float yoffset = static_cast<float>(m_Mouse.lastY - ypos); // Y轴反向
+    // 更新鼠标当前位置
+    m_Mouse.lastX = xpos;
+    m_Mouse.lastY = ypos;
+
+    // 如果相机存在，则处理鼠标移动
+    if (camera != nullptr) {
+        camera->ProcMouseMovement(xoffset, yoffset, true);
+    }
 }
+
+void INPUTS::ScrollCallback(double yoffset) {
+    Camera* camera = Camera::GetCamera();
+    if (camera == nullptr || isOpeningPanel()) return;
+
+    camera->ProcMouseScroll(static_cast<float>(yoffset));
+}
+} // namespace CubeDemo

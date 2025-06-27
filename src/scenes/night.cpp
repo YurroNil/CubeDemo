@@ -74,12 +74,12 @@ void NightScene::Cleanup() {
 void NightScene::Render(GLFWwindow* window, Camera* camera, ShadowMap* shadow_map) {
 
     // 视口设置
-    glViewport(0, 0, Window::GetWidth(), Window::GetHeight());
+    glViewport(0, 0, WINDOW::GetWidth(), WINDOW::GetHeight());
     // 主着色器配置
 
     shadow_map->BindForReading(GL_TEXTURE1);
 
-    MODEL_MNG->AllUseShader(camera, Window::GetAspectRatio(), m_MoonLight, m_SpotLight, nullptr, nullptr);
+    MODEL_MNG->AllUseShader(camera, WINDOW::GetAspectRatio(), m_MoonLight, m_SpotLight, nullptr, nullptr);
 
 
     // 模型绘制循环

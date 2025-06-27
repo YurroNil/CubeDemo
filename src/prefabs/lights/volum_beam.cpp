@@ -37,7 +37,7 @@ void VolumBeam::SetFx(Camera* camera, SL* spot_light) {
         "projection", 
         perspective(
             radians(camera->attribute.zoom),
-            Window::GetAspectRatio(),
+            WINDOW::GetAspectRatio(),
             camera->frustumPlane.near_plane,
             camera->frustumPlane.far_plane
         )

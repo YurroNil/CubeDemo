@@ -8,7 +8,7 @@
 #include "managers/sceneMng.h"
 #include "managers/lightMng.h"
 #include "managers/modelMng.h"
-// graphics模块
+// 图形模块
 #include "graphics/renderer.h"
 // 预制体模块
 #include "prefabs/shadow_map.h"

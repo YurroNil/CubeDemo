@@ -1,11 +1,10 @@
 // src/core/window.cpp
 #include "pch.h"
-#include "core/inputs.h"
 #include "threads/task_queue.h"
 
 namespace CubeDemo {
 
-void Window::Init(int width, int height, const char* title) {
+void WINDOW::Init(int width, int height, const char* title) {
 
     // 在初始化时捕获主线程ID
     TaskQueue::s_MainThreadId = std::this_thread::get_id();
@@ -26,11 +25,12 @@ void Window::Init(int width, int height, const char* title) {
     }
     
     int win_width, win_height; glfwGetFramebufferSize(m_Window, &win_width, &win_height);
+    m_Width = win_width; m_Height = win_height;
     m_InitMouseX = win_width / 2.0f; m_InitMouseY = win_height / 2.0f;
 
     // 设置GLFW回调
-    glfwSetCursorPosCallback(m_Window, [](GLFWwindow* w, double x, double y) { Inputs::MouseCallback(x, y); });
-    glfwSetScrollCallback(m_Window, [](GLFWwindow* w, double x, double y) { Inputs::ScrollCallback(y); });
+    glfwSetCursorPosCallback(m_Window, [](GLFWwindow* w, double x, double y) { INPUTS::MouseCallback(x, y); });
+    glfwSetScrollCallback(m_Window, [](GLFWwindow* w, double x, double y) { INPUTS::ScrollCallback(y); });
     glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // 添加窗口大小回调来更新窗口
@@ -51,7 +51,6 @@ void Window::Init(int width, int height, const char* title) {
 
     透视投影中，深度值（Z值）在投影矩阵变换后是非线性分布的（通常使用倒数关系 1/z 存储）。
     精度分布不均：近处物体的深度值精度高，远处物体的深度值精度极低（深度值集中在近平面附近）。
-
 
     2. 深度值量化误差
 
@@ -76,14 +75,21 @@ void Window::Init(int width, int height, const char* title) {
 
 */
 
+    // 检查分辨率是否支持
+    m_ResolutionError = !(win_width >= 1280 && win_height >= 720);
+    
+    if (m_ResolutionError) {
+        std::cerr << "[WARNING] 当前分辨率 " << win_width << "x" << win_height << " 低于最低要求 (1280x720)" << std::endl;
+    }
+
     // 输出OpenGL版本
     std::cout << "OpenGL版本: " << glGetString(GL_VERSION) << std::endl;
     std::cout << "GPU: " << glGetString(GL_RENDERER) << std::endl;
 }
 
-bool Window::ShouldClose() { return glfwWindowShouldClose(m_Window); }
+bool WINDOW::ShouldClose() { return glfwWindowShouldClose(m_Window); }
 
-void Window::ToggleFullscreen(GLFWwindow* window) {
+void WINDOW::ToggleFullscreen(GLFWwindow* window) {
     if(!window) return; // 防止空指针
     if (!m_IsFullscreen) {
         // 保存窗口位置和尺寸
@@ -99,7 +105,7 @@ void Window::ToggleFullscreen(GLFWwindow* window) {
     m_IsFullscreen = !m_IsFullscreen;
 }
 
-void Window::FullscreenTrigger(GLFWwindow* window) {
+void WINDOW::FullscreenTrigger(GLFWwindow* window) {
     static bool f11_last_state = false;
     bool f11_current_state = glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS;
     if (f11_current_state && !f11_last_state) { ToggleFullscreen(window); }
@@ -107,17 +113,23 @@ void Window::FullscreenTrigger(GLFWwindow* window) {
 }
 
 // Setters
-void Window::UpdateWinSize(GLFWwindow* window) { glfwGetWindowSize(window, &m_Width, &m_Height); }
+void WINDOW::UpdateWinSize(GLFWwindow* window) {
+    glfwGetWindowSize(window, &m_Width, &m_Height);
+    // 更新分辨率错误状态
+    int fb_width, fb_height;
+    glfwGetFramebufferSize(window, &fb_width, &fb_height);
+    m_ResolutionError = !(fb_width >= 1280 && fb_height >= 720);
+}
 
-void Window::UpdateWindowPos(GLFWwindow* window) { glfwGetWindowPos(window, &m_WinPosX, &m_WinPosY); }
+void WINDOW::UpdateWindowPos(GLFWwindow* window) { glfwGetWindowPos(window, &m_WinPosX, &m_WinPosY); }
 
 // Getters
-float Window::GetAspectRatio() { return (m_Height == 0) ? 1.0f : static_cast<float>(m_Width) / m_Height; }
+float WINDOW::GetAspectRatio() { return (m_Height == 0) ? 1.0f : static_cast<float>(m_Width) / m_Height; }
 
-GLFWwindow* Window::GetWindow() { return m_Window; }
-float Window::GetInitMouseX() { return m_InitMouseX; }
-float Window::GetInitMouseY() { return m_InitMouseY; }
-const int Window::GetWidth() { return m_Width; };
-const int Window::GetHeight() { return m_Height; };
+GLFWwindow* WINDOW::GetWindow() { return m_Window; }
+float WINDOW::GetInitMouseX() { return m_InitMouseX; }
+float WINDOW::GetInitMouseY() { return m_InitMouseY; }
+const int WINDOW::GetWidth() { return m_Width; };
+const int WINDOW::GetHeight() { return m_Height; };
 
 }   // namespace CubeDemo

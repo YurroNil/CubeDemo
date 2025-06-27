@@ -1,7 +1,7 @@
 // src/ui/panels/paralist_area.cpp
 #include "pch.h"
-#include "ui/panels/paralist_area.h"
-#include "ui/panels/presetlist_area.h"
+#include "ui/presetlib/paralist_area.h"
+#include "ui/presetlib/presetlist_area.h"
 
 namespace CubeDemo::UI {
 
@@ -277,7 +277,7 @@ void ParalistArea::ActionButtons() {
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.36f, 0.69f, 1.00f, 0.90f));// 悬停状态
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.16f, 0.49f, 0.88f, 1.00f)); // 按下状态
     ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));            // 文字颜色
-    if (ImGui::Button("放置", ImVec2(140, 40))) {
+    if (ImGui::Button("放置", ImVec2(140, 50))) {
         // 放置逻辑占位（如创建场景物体）
     }
     ImGui::PopStyleColor(4); // 恢复4个样式属性
@@ -288,7 +288,7 @@ void ParalistArea::ActionButtons() {
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.35f, 0.35f, 0.35f, 0.80f));      // 默认状态
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.45f, 0.45f, 0.45f, 0.90f));// 悬停状态
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.25f, 0.25f, 0.25f, 1.00f)); // 按下状态
-    if (ImGui::Button("应用设置", ImVec2(200, 40))) {
+    if (ImGui::Button("应用设置", ImVec2(200, 50))) {
         PresetlistArea::UpdateSelector(); // 应用参数到选择器
     }
     ImGui::PopStyleColor(3); // 恢复3个样式属性

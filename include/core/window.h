@@ -3,8 +3,9 @@
 
 namespace CubeDemo {
 
-class Window {
+class WINDOW {
 public:
+
     // 静态方法
     static void Init(int width, int height, const char* title);
 
@@ -23,6 +24,11 @@ public:
     static const int GetWidth();
     static const int GetHeight();
 
+        // 添加分辨率检查方法
+    static bool IsResolutionSupported() {
+        return m_Width >= 1280 && m_Height >= 720;
+    }
+
 private:
     // 静态成员
     inline static int
@@ -30,7 +36,7 @@ private:
         m_WinPosX = 0, m_WinPosY = 0;
 
     inline static GLFWwindow* m_Window = nullptr;
-    inline static bool m_IsFullscreen = false;
-    inline static float m_InitMouseX = 0.0f, m_InitMouseY = 0.0f;
+    inline static bool m_IsFullscreen{false}, m_ResolutionError{false};
+    inline static float m_InitMouseX{0.0f}, m_InitMouseY{0.0f};
 };
 }

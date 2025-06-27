@@ -88,7 +88,7 @@ void ShadowMap::RenderShadow(Camera* camera) {
     if(MODEL_POINTERS.empty()) return;
     
     for (auto* model : MODEL_POINTERS) {
-        if (model->IsReady() && camera->isSphereVisible(model->bounds.Center, model->bounds.Rad)) {
+        if (model->IsReady() && camera->isSphereVsble(model->bounds.Center, model->bounds.Rad)) {
             m_ShadowShader->SetMat4("model", model->GetModelMatrix());
             model->DrawSimple();
         }

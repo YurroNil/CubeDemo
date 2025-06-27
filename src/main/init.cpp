@@ -2,7 +2,6 @@
 #include "pch.h"
 #include "main/init.h"
 #include "loaders/model_initer.h"
-#include "core/inputs.h"
 // 管理器模块
 #include "managers/lightMng.h"
 #include "managers/modelMng.h"
@@ -38,7 +37,7 @@ GLFWwindow* Init() {
 
 
 /* ---------- 基本模块初始化 ------------ */
-    Window::Init(1280, 720, "Cube Demo");
+    WINDOW::Init(1920, 1080, "Cube Demo");
     Renderer::Init();
     UIMng::Init();
 
@@ -65,11 +64,10 @@ GLFWwindow* Init() {
 
     if (!camera) {
         glfwTerminate();
-        glfwDestroyWindow(Window::GetWindow());
+        glfwDestroyWindow(WINDOW::GetWindow());
         throw std::runtime_error("[Error] 窗口创建失败");
     }
     Camera::SaveCamera(camera);
-    Inputs::Init(camera);
 
 /* ---------- 模型初始化 ------------ */
 
@@ -80,6 +78,6 @@ GLFWwindow* Init() {
 
 /* ---------- 结束 ------------ */
     std::cout << "[INITER] 初始化阶段结束" << std::endl;
-    return Window::GetWindow();
+    return WINDOW::GetWindow();
 }
 }   // namespace CubeDemo

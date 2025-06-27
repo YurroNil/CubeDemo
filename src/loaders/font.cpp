@@ -10,51 +10,64 @@ namespace CubeDemo {
 
 // 加载自定义字体
 void FL::LoadFonts() {
-    
-    const char* font_type = "simhei.ttf";
-    
-    const int LEN = strlen(font_type) + strlen(FONT_PATH) + 1;
-    char FONT_FILE_PATH[LEN];
-    strcpy(FONT_FILE_PATH, FONT_PATH);
-    strcat(FONT_FILE_PATH, font_type);
+    ImGuiIO& io = ImGui::GetIO();
+    ImFontGlyphRangesBuilder builder;
 
-    // 检查字体文件存在性
-    if (!fs::exists((const char*)FONT_FILE_PATH)) {
-        std::cerr << "字体文件不存在: " << FONT_FILE_PATH << std::endl;
+    // 1. 加载英文字体 (Consola)
+    const char* en_font_path = "C:/Windows/Fonts/consola.ttf";
+    if (!fs::exists(en_font_path)) {
+        std::cerr << "英文字体文件不存在: " << en_font_path << std::endl;
         return;
     }
 
-    try {
-        // 加载字体配置
-        auto font_config = Utils::JsonConfig::LoadFontConfig(FONT_PATH + string("custom_chars.json"));
-        
-        ImGuiIO& io = ImGui::GetIO();
-        ImFontGlyphRangesBuilder builder;
+    // 英文字符范围：基础拉丁字符
+    builder.AddRanges(io.Fonts->GetGlyphRangesDefault()); 
+    ImVector<ImWchar> en_ranges;
+    builder.BuildRanges(&en_ranges);
 
-        // 模式选择
-        if (font_config.custom_mode) {
-            CustomChars(builder, font_config.custom_chars);
-        } else {
-            UnicodeRanges(builder, font_config.unicode_ranges);
-        }
+    ImFont* en_font = io.Fonts->AddFontFromFileTTF(
+        en_font_path,
+        30.0f,
+        nullptr,
+        en_ranges.Data // 仅加载英文所需字符
+    );
 
-        // 生成紧凑字符范围
-        ImVector<ImWchar> ranges;
-        builder.BuildRanges(&ranges);
-
-        // 加载字体
-        ImFont* font = io.Fonts->AddFontFromFileTTF(
-            FONT_FILE_PATH,
-            30.0f,
-            nullptr,
-            ranges.Data
-        );
-        
-        io.Fonts->Build();
-        std::cout << "成功加载字体: " << FONT_FILE_PATH << std::endl;
-    } catch (const std::exception& e) {
-        std::cerr << "字体加载失败: " << e.what() << std::endl;
+    // 2. 加载中文字体
+    const char* cn_font_path = "C:/Windows/Fonts/Deng.ttf";
+    if (!fs::exists(cn_font_path)) {
+        std::cerr << "中文字体文件不存在: " << cn_font_path << std::endl;
+        return;
     }
+
+    // 重置Builder并添加中文字符范围
+    builder.Clear();
+    auto font_config = Utils::JsonConfig::LoadFontConfig(FONT_PATH + string("custom_chars.json"));
+    
+    // 模式选择：优先使用Unicode范围
+    if (font_config.custom_mode) {
+        CustomChars(builder, font_config.custom_chars);
+    } else {
+        UnicodeRanges(builder, font_config.unicode_ranges);
+    }
+
+    ImVector<ImWchar> cn_ranges;
+    builder.BuildRanges(&cn_ranges);
+
+    // 关键：启用MergeMode合并到基础字体
+    ImFontConfig cn_config;
+    cn_config.MergeMode = true; // 设置为合并模式
+    cn_config.GlyphOffset.y = 2.0f; // 微调中文垂直偏移
+
+    io.Fonts->AddFontFromFileTTF(
+        cn_font_path,
+        30.0f,
+        &cn_config,
+        cn_ranges.Data // 仅加载中文所需字符范围
+    );
+
+    // 3. 构建字体集
+    io.Fonts->Build();
+    std::cout << "字体合并完成: 英文(Consola) + 中文(等线)" << std::endl;
 }
 
 void FL::CustomChars(IFGRB& builder, const std::vector<string>& char_lines) {

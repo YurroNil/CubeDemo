@@ -43,12 +43,12 @@ void DefaultScene::Init() {
 
 void DefaultScene::Render(GLFWwindow* window, Camera* camera, ShadowMap* shadow_map) {
     // 设置视口
-    glViewport(0, 0, Window::GetWidth(), Window::GetHeight());
+    glViewport(0, 0, WINDOW::GetWidth(), WINDOW::GetHeight());
 
     shadow_map->BindForReading(GL_TEXTURE1);
 
     // 使用着色器
-    MODEL_MNG->AllUseShader(camera, Window::GetAspectRatio(), m_DirLight, nullptr, nullptr, m_SkyLight);
+    MODEL_MNG->AllUseShader(camera, WINDOW::GetAspectRatio(), m_DirLight, nullptr, nullptr, m_SkyLight);
 
     // 模型绘制循环
     if(MODEL_POINTERS.empty()) return;

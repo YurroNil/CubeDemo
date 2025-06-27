@@ -28,11 +28,17 @@
 #include "kits/imgui.h"
 #include "nlohmann/json.hpp"
 
-// 项目头文件
-#include "core/window.h"
-#include "threads/diagnostic.h"
-#include "graphics/renderer.h"
+/* ---------项目头文件--------- */
+// 核心模块
 #include "core/camera.h"
+#include "core/window.h"
+#include "core/inputs.h"
+#include "core/time.h"
+// 线程模块
+#include "threads/diagnostic.h"
+// 图形模块
+#include "graphics/renderer.h"
 #include "graphics/mesh.h"
+// 工具模块
 #include "utils/json_config.h"
 #include "utils/string_conv.h"

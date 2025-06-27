@@ -9,6 +9,7 @@ Camera::Camera(vec3 pos, vec3 up, float yaw, float pitch)
     direction.front = vec3(0.0f, 0.0f, -1.0f);
     direction.worldUp = up; rotation = {yaw, pitch};
     attribute = {4.0f, 0.1f, 45.0f};
+    m_lastX = m_lastY = 0.0f;
     UpdateCameraVec();
 }
 
@@ -58,19 +59,21 @@ void Camera::UpdateCameraVec() {
 }
 
 void Camera::SaveCamera(Camera* c) { m_SaveCameraPtr = c; }
-
-Camera* Camera::GetCamera() { return m_SaveCameraPtr; }
-
 void Camera::Delete(Camera* c) { delete c; m_SaveCameraPtr = nullptr; }
 
  // 视锥体相关方法
 Camera::Frustum Camera::GetFrustum(float aspectRatio) const {
 
+    // 创建一个视锥体
     Frustum frustum;
+    // 计算视锥体远平面的半高
     const float half_v_side = frustumPlane.far_plane * tanf(radians(attribute.zoom) * 0.5f);
+    // 计算视锥体远平面的半宽
     const float half_h_side = half_v_side * aspectRatio;
+    // 计算视锥体前向的远平面
     const vec3 front_mult_far = frustumPlane.far_plane * direction.front;
 
+    // 计算视锥体的六个平面
     frustum.planes[0] = { normalize(cross(direction.up, front_mult_far + direction.right * half_h_side)), Position }; // 左平面
     frustum.planes[1] = { normalize(cross(front_mult_far - direction.right * half_h_side, direction.up)), Position }; // 右平面
     frustum.planes[2] = { normalize(cross(direction.right, front_mult_far - direction.up * half_v_side)), Position };  // 下平面
@@ -81,8 +84,8 @@ Camera::Frustum Camera::GetFrustum(float aspectRatio) const {
     return frustum;
 }
 // 检查视椎体是否可见
-bool Camera::isSphereVisible(const vec3& center, float radius) const {
-    const Frustum frustum = GetFrustum(Window::GetAspectRatio());
+bool Camera::isSphereVsble(const vec3& center, float radius) const {
+    const Frustum frustum = GetFrustum(WINDOW::GetAspectRatio());
     
     for (int i = 0; i < 6; i++) {
         const float distance = dot(frustum.planes[i].normal, center) - dot(frustum.planes[i].normal, frustum.planes[i].distance);

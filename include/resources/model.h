@@ -8,7 +8,7 @@ namespace CubeDemo {
 
 class Model : public Managers::ModelGetter {
     friend class Managers::ModelGetter;
-    friend class UI::EditPanel;
+    friend class UI::ModelCtrl;
 
 public:
     // 创建包维球实例

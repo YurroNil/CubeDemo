@@ -5,7 +5,7 @@ namespace CubeDemo::Managers {
 
 // 向前声明
     // 模型管理器
-    class ModelMng; class ModelGetter; class ModelCleanner; class ModelCreater;
+    class ModelMng; class ModelGetter; class ModelCleanner;
     // UI管理器
     class uiMng;
     // 光源管理器

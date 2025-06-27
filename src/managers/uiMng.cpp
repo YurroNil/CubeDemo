@@ -2,15 +2,12 @@
 #include "pch.h"
 // 管理器模块
 #include "managers/uiMng.h"
-#include "managers/sceneMng.h"
 // UI模块
+#include "ui/panels/edit.h"
 #include "ui/panels/pause.h"
 #include "ui/panels/control.h"
 #include "ui/panels/debug.h"
-#include "ui/panels/edit.h"
 #include "ui/panels/presetlib.h"
-// 核心模块
-#include "core/inputs.h"
 // 加载器模块
 #include "loaders/font.h"
 
@@ -39,16 +36,16 @@ void UIMng::RenderInit() {
 
 // 渲染循环，用于在每一帧中更新和渲染UI
 void UIMng::RenderLoop(GLFWwindow* window, Camera* camera) {
-    UI::PausePanel::Render(window);    // 处理暂停菜单逻辑
+    if (INPUTS::s_isGamePaused) UI::PausePanel::Render(window);
 
-    if (Inputs::s_isDebugVisible) {
+    if (INPUTS::s_isDebugVsble) {
         UI::ControlPanel::Render(camera); // 控制面板
         UI::DebugPanel::Render(camera);   // 调试面板
     }
     // 编辑面板
-    if (Inputs::s_isEditMode) UI::EditPanel::Render(camera);
+    if (INPUTS::s_isEditMode) UI::EditPanel::Render(camera);
     // 预设库面板
-    if (Inputs::s_isPresetVisible) UI::PresetlibPanel::Render(camera);
+    if (INPUTS::s_isPresetVsble) UI::PresetlibPanel::Render(camera);
 }
 
 // 初始化ImGui库
@@ -58,9 +55,10 @@ void UIMng::InitImGui() {
     ImGuiIO& io = ImGui::GetIO(); (void)io;
 
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    
-    ImGui_ImplGlfw_InitForOpenGL(Window::GetWindow(), true); // 初始化ImGui的GLFW后端
-    ImGui_ImplOpenGL3_Init("#version 330"); // 初始化ImGui的OpenGL3后端，指定着色器版本
+    // 初始化ImGui的GLFW后端
+    ImGui_ImplGlfw_InitForOpenGL(WINDOW::GetWindow(), true);
+    // 初始化ImGui的OpenGL3后端，指定着色器版本
+    ImGui_ImplOpenGL3_Init("#version 450");
     
 }
 
@@ -70,7 +68,7 @@ void UIMng::ConfigureImGuiStyle() {
     ImGuiStyle& style = ImGui::GetStyle();
     ImVec4* colors = style.Colors;
 
-    // 使用您提供的颜色方案
+
     const ImVec4 bg1 = ImVec4(0.196f, 0.196f, 0.196f, 1.0f);        // #323232
     const ImVec4 bg2 = ImVec4(0.118f, 0.118f, 0.118f, 1.0f);        // #1e1e1e
     const ImVec4 bg3 = ImVec4(0.176f, 0.176f, 0.176f, 1.0f);        // #2d2d2d
@@ -149,8 +147,55 @@ void UIMng::ConfigureImGuiStyle() {
 
 // 获取窗口中心位置
 ImVec2 UIMng::GetWindowCenter(GLFWwindow* window) {
-    Window::UpdateWinSize(window); // 更新窗口尺寸
+    WINDOW::UpdateWinSize(window); // 更新窗口尺寸
 
-    return ImVec2(Window::GetWidth()/2.0f, Window::GetHeight()/2.0f); // 返回窗口中心位置
+    return ImVec2(WINDOW::GetWidth()/2.0f, WINDOW::GetHeight()/2.0f); // 返回窗口中心位置
+}
+// 分辨率错误渲染
+void UIMng::RenderResolutionError() {
+    // 获取窗口尺寸
+    int width = WINDOW::GetWidth();
+    int height = WINDOW::GetHeight();
+    
+    // 设置全屏黑色背景
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    // 设置文本渲染 (这里使用ImGui作为示例)
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
+    ImGui::SetNextWindowSize(ImVec2(width, height));
+    ImGui::Begin("Resolution Error", nullptr, 
+        ImGuiWindowFlags_NoTitleBar | 
+        ImGuiWindowFlags_NoResize | 
+        ImGuiWindowFlags_NoMove |
+        ImGuiWindowFlags_NoBackground
+    );
+    
+    // 居中显示错误信息
+    ImVec2 textSize = ImGui::CalcTextSize("该游戏不兼容此分辨率");
+    ImVec2 centerPos((width - textSize.x) * 0.5f, (height - textSize.y) * 0.5f);
+    
+    // 设置红色文本
+    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.2f, 0.2f, 1.0f));
+    ImGui::SetCursorPos(centerPos);
+    ImGui::Text("该游戏不兼容此分辨率");
+    
+    // 显示推荐分辨率
+    ImVec2 subTextSize = ImGui::CalcTextSize("请使用1280x720或更高分辨率");
+    ImVec2 subCenterPos((width - subTextSize.x) * 0.5f, centerPos.y + 30);
+    
+    ImGui::SetCursorPos(subCenterPos);
+    ImGui::Text("请使用1280x720或更高分辨率");
+    ImGui::PopStyleColor();
+    
+    // 显示当前分辨率
+    string resText = "当前分辨率: " + std::to_string(width) + "x" + std::to_string(height);
+    ImVec2 resTextSize = ImGui::CalcTextSize(resText.c_str());
+    ImVec2 resPos((width - resTextSize.x) * 0.5f, subCenterPos.y + 30);
+    
+    ImGui::SetCursorPos(resPos);
+    ImGui::Text("%s", resText.c_str());
+    
+    ImGui::End();
 }
 }

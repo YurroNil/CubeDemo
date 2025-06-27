@@ -10,7 +10,7 @@ void ControlPanel::Render(Camera* camera) {
     ImGui::SliderFloat("移动速度", &camera->attribute.movementSpeed, 1.0f, 30.0f); // 添加一个滑动条，用于调整相机移动速度
     
     if (ImGui::Button("全屏")) { // 添加一个按钮，用于切换全屏模式
-        Window::ToggleFullscreen(Window::GetWindow());
+        WINDOW::ToggleFullscreen(WINDOW::GetWindow());
     }
     ImGui::End(); // 结束ImGui窗口
 }

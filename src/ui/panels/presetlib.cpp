@@ -1,20 +1,20 @@
 // src/ui/panels/presetlib.cpp
 #include "pch.h"
 #include "ui/panels/presetlib.h"
-#include "ui/panels/presetlist_area.h"
-#include "ui/panels/paralist_area.h"
+#include "ui/presetlib/presetlist_area.h"
+#include "ui/presetlib/paralist_area.h"
 
 namespace CubeDemo::UI {
 
 // 预设库面板初始化（单例模式）
 void PresetlibPanel::Init() {
-    s_initialized = true; // 标记面板已初始化
+    m_inited = true; // 标记面板已初始化
 }
  
 // 预设库主渲染函数（核心UI逻辑）
 void PresetlibPanel::Render(Camera* camera) {
     // 窗口初始化设置（仅首次显示时生效）
-    ImGui::SetNextWindowSize(ImVec2(1280, 1050), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(1580, 1020), ImGuiCond_FirstUseEver);
     
     // 样式预设：窗口内边距15px，控件间距15x12，输入框内边距12x8
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(15, 15));
@@ -22,7 +22,11 @@ void PresetlibPanel::Render(Camera* camera) {
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(12, 8));
     
     // 开始窗口（带菜单栏和固定大小）
-    if (!ImGui::Begin("预设库", nullptr, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoResize)) {
+    if (!ImGui::Begin("预设库", nullptr, 
+        ImGuiWindowFlags_MenuBar |
+        ImGuiWindowFlags_NoResize |
+        ImGuiWindowFlags_NoSavedSettings
+    )) {
         ImGui::End();
         ImGui::PopStyleVar(3); // 恢复之前保存的样式
         return;

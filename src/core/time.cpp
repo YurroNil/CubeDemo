@@ -1,6 +1,5 @@
 // src/core/time.cpp
 #include "pch.h"
-#include "core/time.h"
 
 namespace CubeDemo {
 
@@ -11,7 +10,7 @@ namespace {
     const float UPDATE_INTERVAL = 2.0f; // 2秒更新间隔
 }
 
-void Time::Update() {
+void TIME::Update() {
     static float last_frame = 0.0f;
     float current_frame = glfwGetTime();
     float delta_time = current_frame - last_frame;
@@ -30,8 +29,8 @@ void Time::Update() {
     }
 }
 
-int Time::FPS() { return s_CachedFPS; }
+int TIME::FPS() { return s_CachedFPS; }
 
-float Time::DeltaTime() { return s_DeltaTime; }
+float TIME::GetDeltaTime() { return s_DeltaTime; }
 
 }

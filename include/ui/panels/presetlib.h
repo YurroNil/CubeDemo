@@ -4,19 +4,14 @@
 namespace CubeDemo::UI {
 
 class PresetlibPanel {
-
+    #define s_v static void
     
-    inline static bool s_initialized = false;
-
-    // 内部绘制方法
-    static void DrawMenuBar();
-    
-    // 功能方法
-    static void UpdateSelector();
+    inline static bool m_inited = false;
+    s_v DrawMenuBar();
+    s_v UpdateSelector();
 
 public:
-    static void Init();
-    static void Render(Camera* camera);
+    s_v Init();
+    s_v Render(Camera* camera);
 };
-
 } // namespace CubeDemo::UI

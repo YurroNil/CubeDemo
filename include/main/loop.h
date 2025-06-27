@@ -10,7 +10,7 @@ namespace CubeDemo {
     // 输入处理
     void begin_frame(Camera* camera);
     void end_frame_handling(GLFWwindow* window);
-    void handle_input(GLFWwindow* window);
+    void handle_input(GLFWwindow* window, Camera* camera);
     void handle_window_settings(GLFWwindow* window);
 
     // 模型状态更新

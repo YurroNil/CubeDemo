@@ -1,8 +1,8 @@
 // src/managers/scene.cpp
 #include "pch.h"
-#include "managers/sceneMng.h"
-#include "managers/modelMng.h"
 #include "ui/panels/edit.h"
+#include "ui/edit/model_ctrl.h"
+#include "managers/modelMng.h"
 #include "loaders/texture.h"
 
 // 外部变量声明
@@ -40,7 +40,7 @@ void SceneMng::CleanAllScenes() {
     TL::ClearCache();
 
     // 重置UI状态
-    UI::EditPanel::s_AvailableModels.clear();
+    UI::ModelCtrl::s_AvailableModels.clear();
 }
 
 // 切换场景
@@ -55,7 +55,7 @@ void SceneMng::SwitchTo(SceneID target) {
     Init();
     
     // 更新UI模型列表
-    UI::EditPanel::s_AvailableModels = GetCurrentScene.ModelNames();
+    UI::ModelCtrl::s_AvailableModels = GetCurrentScene.ModelNames();
 }
 
 // 渲染
