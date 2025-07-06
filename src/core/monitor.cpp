@@ -76,7 +76,7 @@ CPUInfo MONITOR::GetCPUInfo() {
     }
     free(buffer);
     
-    // 获取时钟速度 - 修复字符串问题
+    // 获取时钟速度
     HKEY hKey;
     DWORD speedMHz = 0;
     DWORD size = sizeof(speedMHz);
@@ -174,7 +174,7 @@ void Runfn() {
     
     // 打印系统信息
     std::cout << "===== System Information =====\n";
-    std::cout << "CPU Vendor: " << cpuInfo.vendor << "\nCPU: " << cpuInfo.brand << "\n";
+    std::cout << "CPU Vendor: " << cpuInfo.vendor << "\nCPU: " << cpuInfo.brand << std::endl;
 
     std::cout
         << "核心数: " << cpuInfo.physicalCores << "核"

@@ -3,9 +3,7 @@
 #include <condition_variable>
 
 // 乱七八糟的别名
-using csclock = std::chrono::steady_clock;
 using Task = std::function<void()>;
-using millisec = std::chrono::milliseconds;
 using TID = std::thread::id;
 
 namespace CubeDemo {

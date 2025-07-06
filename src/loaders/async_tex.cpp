@@ -6,6 +6,8 @@ using ATL = CubeDemo::Loaders::AsyncTexture;
 using TLS = CubeDemo::Texture::LoadState;
 namespace CubeDemo {
 
+extern unsigned int DEBUG_INFO_LV;
+
 void ATL::OnTexLoaded(const std::shared_ptr<Context>& ctx, const string& path, TexturePtr tex) {
 
     std::lock_guard<std::mutex> lock(ctx->mutex);
@@ -23,11 +25,11 @@ void ATL::HandleTexState(TexturePtr tex, const string& path) {
     if (!tex) return;
     switch(tex->State.load()) {
         case TLS::Ready:
-            std::cout << "[Success] 加载完成: " << path << "\n"; break;
+            std::cout << "[Success] 加载完成: " << path << std::endl; break;
         case TLS::Placeholder:
-            std::cout << "[Warning] 使用占位纹理: " << path << "\n"; break;
+            std::cout << "[Warning] 使用占位纹理: " << path << std::endl; break;
         case TLS::Failed:
-            std::cerr << "[Error] 最终加载失败: " << path << "\n"; break;
+            std::cerr << "[Error] 最终加载失败: " << path << std::endl; break;
     }
 }
 

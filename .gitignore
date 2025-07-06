@@ -23,6 +23,7 @@ build/*
 
 # Text files
 *.txt
+!CMakeLists.txt
 
 #Bin and Resources files
 /bin/*

@@ -19,14 +19,16 @@ void DebugPanel::Render(Camera* camera) {
     ImGui::SetNextWindowBgAlpha(0.35f); // 半透明背景
     
     if (ImGui::Begin("调试面板", nullptr, window_flags)) {
+
+        System::CPUInfo cpuInfo = MONITOR::GetCPUInfo();
+
         // FPS显示
         ImGui::Text("FPS: %d", TIME::FPS());
         // GPU信息显示
         ImGui::Text("GPU: %s", glGetString(GL_RENDERER));
 
         // CPU信息显示
-        System::CPUInfo cpuInfo = MONITOR::GetCPUInfo();
-        ImGui::Text("CPU: %d Cores, %d Threads  %.2f GHz", cpuInfo.physicalCores, cpuInfo.logicalCores, cpuInfo.clockSpeed);
+        ImGui::Text("CPU: %s, %.2f GHz", cpuInfo.brand.c_str(), cpuInfo.clockSpeed);
 
         // 摄像机坐标
         const auto& pos = camera->Position;

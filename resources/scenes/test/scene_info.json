@@ -1,0 +1,12 @@
+{
+    "id": "test",
+    "name": "测试",
+    "description": "测试场景",
+    "author": "沫兮花落_忧婼子",
+    "icon": "icon.png",
+    "scene_config": {
+        "model": "./prefabs/model.json",
+        "light": "./prefabs/light.json",
+        "camera": "./prefabs/camera.json"
+    }
+}

@@ -2,10 +2,10 @@
 #pragma once
 
 namespace CubeDemo::UI {
-class ContentArea;
+class SettingPanel;
 
 class GameSettings {
-    friend class ContentArea;
+    friend class SettingPanel;
     static void Render();
 };
 } // namespace CubeDemo::UI

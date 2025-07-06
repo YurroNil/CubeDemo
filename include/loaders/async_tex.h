@@ -7,7 +7,6 @@ namespace CubeDemo {
 
 using TexPtrArray = std::vector<TexturePtr>;
 // 乱七八糟的别名
-using millisec = std::chrono::milliseconds;
 using ImagePtr = std::shared_ptr<Loaders::Image>;
 using TexLoadCallback = std::function<void(TexturePtr)>; // 纹理加载回调
 using TL = Loaders::Texture;

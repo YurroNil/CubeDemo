@@ -1,39 +1,40 @@
-// include/managers/light.inl
+// include/managers/light/utils.inl
 #pragma once
-// 别名
+
+#include "managers/light/json_mapper.inl"
+#include "prefabs/lights/volum_beam.h"
+
 using VolumBeam = CubeDemo::Prefabs::VolumBeam;
+using BeamEffects = CubeDemo::Prefabs::BeamEffects;
 namespace JsonMapper = CubeDemo::Prefabs::Lights::JsonMapper;
 
 namespace CubeDemo::Managers {
 
-// 核心模板实现（处理单个光源）
+// 核心模板实现 - 处理单个光源配置
 template<typename T>
-void SetLightsDataImpl(const json& config, T* light) {
+void SetLightDataImpl(const json& light_config, T* light) {
     if constexpr (std::is_same_v<T, DL>) {
-        JsonMapper::MapLightData(config["LightArgs"]["DirLight"], *light);
+        JsonMapper::MapLightData(light_config, *light);
     } 
     else if constexpr (std::is_same_v<T, SL>) {
-        JsonMapper::MapLightData(config["LightArgs"]["SpotLight"], *light);
+        JsonMapper::MapLightData(light_config, *light);
     }
     else if constexpr (std::is_same_v<T, VolumBeam>) {
         BeamEffects effects;
-        const auto& key = config["LightArgs"]["BeamEffects"];
-
-        JsonMapper::MapLightData(key, effects);
-        // 嵌套配置flicker
-        if (key.contains("flicker")) {
-            JsonMapper::MapLightData(
-                key["flicker"],
-                effects.flicker
-            );
+        JsonMapper::MapLightData(light_config, effects);
+        
+        // 特殊处理flicker配置
+        if (light_config.contains("flicker")) {
+            JsonMapper::MapLightData(light_config["flicker"], effects.flicker);
         }
+        
         light->Configure(effects);
     }
     else if constexpr (std::is_same_v<T, PL>) {
-        JsonMapper::MapLightData(config["LightArgs"]["PointLight"], *light);
+        JsonMapper::MapLightData(light_config, *light);
     }
     else if constexpr (std::is_same_v<T, SkL>) {
-        JsonMapper::MapLightData(config["LightArgs"]["SkyLight"], *light);
+        JsonMapper::MapLightData(light_config, *light);
     }
 }
 
@@ -42,24 +43,4 @@ inline json ReadConfig(const string& config_path) {
     return Utils::JsonConfig::GetFileData(config_path);
 }
 
-// 模板展开函数（处理多个光源）
-template<typename T, typename... Args>
-void LightMng::SetLightsData(const string& config_path, T* first, Args*... args) {
-    json config = ReadConfig(config_path);
-    SetLightsDataImpl(config, first);
-    
-    // 递归展开参数包
-    if constexpr (sizeof...(Args) > 0) {
-        SetLightsData(config_path, args...);
-    }
-}
-extern template void LightMng::SetLightsData<DL>(const string&, DL*);
-extern template void LightMng::SetLightsData<SL>(const string&, SL*);
-extern template void LightMng::SetLightsData<DL, PL>(const string&, DL*, PL*);
-extern template void LightMng::SetLightsData<DL, SkL>(const string&, DL*, SkL*);
-extern template void LightMng::SetLightsData<DL, PL, SkL>(const string&, DL*, PL*, SkL*);
-extern template void LightMng::SetLightsData<DL, SL>(const string&, DL*, SL*);
-extern template void LightMng::SetLightsData<SL, DL>(const string&, SL*, DL*);
-extern template void LightMng::SetLightsData<VolumBeam>(const string&, VolumBeam*);
-
-}   // namespace CubeDemo::Managers
+} // namespace CubeDemo::Managers

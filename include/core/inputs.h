@@ -24,11 +24,9 @@ class INPUTS {
     static std::unordered_map<int, std::function<void(Camera* camera, float velocity)>> s_CamerakeyMap;
     static std::unordered_map<int, bool> s_KeyState;
 
-    // 常量
     static constexpr float TOGGLE_CD = 0.3f;
     static constexpr float ESC_CD = 0.1f;
 
-    // 私有方法
     static void UpdateCursorMode(GLFWwindow* window);
     static bool isOpeningPanel();
     

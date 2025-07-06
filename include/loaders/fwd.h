@@ -5,12 +5,8 @@
 // 仅为向前声明使用
 
 namespace CubeDemo::Loaders {
-    class Texture;
-    class AsyncTexture;
-    class Resource;
-    class Model;
-    class ModelIniter;
-    class Material;
-    class Image;
-    class Font;
+    class Texture;   class AsyncTexture;   class Resource;
+    class Model;     class ModelIniter;    class Material;
+    class Image;     class Font;           class ProcessTracker;
+
 }   // namespace CubeDemo::Loaders

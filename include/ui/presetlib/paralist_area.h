@@ -15,6 +15,5 @@ class ParalistArea {
     s_v AdvancedSettings();
 public:
     s_v Render();
-
 };
 }   // namespace CubeDemo::UI

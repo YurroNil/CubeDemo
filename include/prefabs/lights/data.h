@@ -6,87 +6,75 @@ namespace CubeDemo::Prefabs {
 
 // 方向光（如太阳）
 struct DirLight {
-    string name = "方向光", id = "dir_light", type;
-    vec3 position;
-    vec3 direction;
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
+    string
+        name = "方向光", id = "dir_light",
+        type, iconPath, description;
 
-    float sourceRadius = 0.5f;      // 光源半径（柔化阴影）
-    float sourceSoftness = 0.2f;    // 光源柔和度
-    vec3 skyColor = vec3(0.4, 0.6, 0.8); // 天光颜色
-    float atmosphereThickness = 0.5f; // 大气厚度
+    vec3
+        position, direction, ambient, color,
+        diffuse, specular, skyColor = vec3(0.4, 0.6, 0.8);
+
+    float
+        intensity = 1.0f, sourceRadius = 0.5f, sourceSoftness = 0.2f, atmosphereThickness = 0.5f;
 
     void SetShader(Shader& shader);
 };
 
 // 点光源（如灯泡）
 struct PointLight {
-    string name = "点光", id = "point_light", type;
-    vec3 position;
-    vec3 direction;
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
+    string
+        name = "点光", id = "point_light",
+        type, iconPath, description;
 
-    float constant;  // 衰减系数
-    float linear;
-    float quadratic;
+    vec3 position, direction, ambient, diffuse, specular, color;
+
+    float intensity = 1.0f, constant, linear, quadratic;
 
     void SetShader(Shader& shader);
 };
 
 // 聚光
 struct SpotLight {
-    string name = "聚光", id = "spot_light", type;
 
-    vec3 position;
-    vec3 direction;
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
+    string
+        name = "聚光", id = "spot_light",
+        type, iconPath, description;
 
-    float constant;
-    float linear;
-    float quadratic;
+    vec3
+        position, direction, ambient,
+        diffuse, specular, color;
     
-    float cutOff;
-    float outerCutOff;
+    float intensity = 1.0f, constant, linear, quadratic, cutOff, outerCutOff;
 
     void SetShader(Shader& shader);
 };
 
 struct SkyLight {
-    string name = "天空光", id = "sky_light", type;
-    vec3 color;
-    float intensity;
-    float horizonBlend;
-
-    float groundReflection = 0.3f;  // 地面反射强度
-    float cloudOpacity = 0.4f;      // 云层不透明度
-    vec3 cloudColor = vec3(0.9, 0.9, 0.95); // 云层颜色
+    string
+        name = "天空光", id = "sky_light",
+        type, iconPath, description;
     
+    vec3 position, direction, color, cloudColor = vec3(0.9, 0.9, 0.95);
+
+    float intensity, horizonBlend, groundReflection = 0.3f, cloudOpacity = 0.4f;
+
     void SetShader(Shader& shader);
 };
 
 // 光束效果
 struct BeamEffects {
-    float radius = 5.0f;
-    float height = 30.0f;
-    string noiseTexture;
-    float intensity = 1.5f;
-    float scatterPower = 2.0f;
+    string id, type, name, noiseTexture, description;
+
+    float
+        radius = 5.0f, height = 30.0f, intensity = 1.5f,
+        scatterPower = 2.0f, alphaMultiplier = 0.6f,
+        density = 0.7f, scatterAnisotropy = 0.8f;
+    
     vec2 attenuationFactors = vec2(0.1f, 0.05f);
-    float alphaMultiplier = 0.6f;
-     float density = 0.7f;             // 介质密度
-    float scatterAnisotropy = 0.8f;    // 散射各向异性
 
     struct FlickerParams {
         bool enable = false;
-        float min = 0.8f;
-        float max = 1.2f;
-        float speed = 1.0f;
+        float min = 0.8f, max = 1.2f, speed = 1.0f;
     };
     
     FlickerParams flicker;

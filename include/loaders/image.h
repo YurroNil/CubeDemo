@@ -3,7 +3,6 @@
 #include "loaders/texture.h"
 #include "loaders/resource.h"
 
-using millisec = std::chrono::milliseconds;
 using IL = CubeDemo::Loaders::Image;
 
 namespace CubeDemo {

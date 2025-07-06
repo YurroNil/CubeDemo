@@ -33,6 +33,8 @@
         "../src/ui/settings",
         "../src/ui/presetlib",
         "../src/ui/edit",
+        "../src/ui/screens",
+        "../src/ui/main_menu",
         
         "../src/main",
         "../src/scenes",
@@ -40,7 +42,8 @@
         "../src/managers",
         "../src/managers/light",
         "../src/managers/model",
-        "../src/managers/scene"
+        "../src/managers/scene",
+        "../src/managers/ui"
     ]
 },
 "arguments": {

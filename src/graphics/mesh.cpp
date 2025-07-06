@@ -1,20 +1,33 @@
 #include "pch.h"
-#include "graphics/mesh.h"
-#include "graphics/shader.h"
 #include "resources/texture.h"
+#include "resources/place_holder.h"
 
 namespace CubeDemo {
 
 // 外部变量声明
 extern bool DEBUG_ASYNC_MODE;
 
+// OpenGL错误检查函数(注意，这是个普通函数，不是成员函数)
+void OpenGL_rrror_check(GLenum err, bool notice) {
+    notice = true; string error;
+
+    switch (err) {
+        case GL_INVALID_ENUM: error = "GL_INVALID_ENUM"; break;
+        case GL_INVALID_VALUE: error = "GL_INVALID_VALUE"; break;
+        case GL_INVALID_OPERATION: error = "GL_INVALID_OPERATION"; break;
+        case GL_INVALID_FRAMEBUFFER_OPERATION: error = "GL_INVALID_FRAMEBUFFER_OPERATION"; break;
+        case GL_OUT_OF_MEMORY: error = "GL_OUT_OF_MEMORY"; break;
+        default: error = "未知错误";
+    }
+
+    std::cerr << "[OpenGL错误] 在Mesh构造函数中: " << error << " (0x" << std::hex << err << ")" << std::dec << std::endl;
+}
+
 // 普通版本的构造函数
 Mesh::Mesh(
-    const VertexArray& vertices,
-    const UnsignedArray& indices,
+    const VertexArray& vertices, const UnsignedArray& indices,
     const TexPtrArray& textures
-)
-    : m_textures(textures),
+)   : m_textures(textures),
       m_indexCount(indices.size()),
       m_Indices(indices)
 {
@@ -59,17 +72,12 @@ Mesh::Mesh(
     // 添加OpenGL错误检查
     GLenum err; static bool notice = false;
 
-    while(notice == false && ((err = glGetError()) != GL_NO_ERROR))
-    {
-        notice = true;
-        std::cerr << "[OpenGL错误] 在Mesh构造函数中: 0x" << std::hex << err << std::dec << std::endl;
-    }
+    while (notice == false && (err = glGetError()) != GL_NO_ERROR) OpenGL_rrror_check(err, notice);
 }
 
 // 提供一个默认的构造函数
 Mesh::Mesh() 
-    : m_textures{},    // 设置为空容器
-      m_Indices{},     // 设置为空容器
+    : m_textures{}, m_Indices{},
       m_indexCount(0), m_VAO(0), m_VBO(0), m_EBO(0) // 设置为空数据
 {}
 
@@ -102,17 +110,16 @@ void Mesh::Draw(Shader* shader) const {
      // 遍历所有纹理
     for (size_t i = 0; i < m_textures.size(); ++i) {
 
-        if(!m_textures[i] || !m_textures[i]->m_Valid.load()) {
-            std::cerr << "[警告] 跳过无效纹理: 索引" << i << std::endl;
-            continue;
-        }
-
         glActiveTexture(GL_TEXTURE0 + i); // 激活对应纹理单元
 
         const auto& tex = m_textures[i];
         string type = tex->Type;
         string uniform_name;
 
+        if(!m_textures[i] || !m_textures[i]->m_Valid.load()) {
+            std::cerr << "[警告] 跳过无效纹理: 索引" << i << std::endl;
+            continue;
+        }
 
         /* 动态生成uniform名称
             注意：名称后缀有数字, 因此在glsl代码设置uniform时, 一定要加上数字后缀
@@ -250,5 +257,4 @@ unsigned int Mesh::GetVAO() const { return m_VAO; }
 unsigned int Mesh::GetVBO() const { return m_VBO; }
 unsigned int Mesh::GetEBO() const { return m_EBO; }
 unsigned int Mesh::GetIndexCount() const { return m_indexCount; }
-
 }

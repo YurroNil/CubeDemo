@@ -1,21 +1,17 @@
 // src/loaders/texture.cpp
 #include "pch.h"
 #include "resources/place_holder.h"
-#include "threads/diagnostic.h"
-#include "loaders/texture.h"
 #include "resources/texture.h"
+#include "loaders/texture.h"
+#include "loaders/progress_tracker.h"
 
 // 别名
 using TLS = CubeDemo::Texture::LoadState;
 
 namespace CubeDemo {
 
-// 静态成员初始化
-TexPtrHashMap TL::s_TexturePool;
-std::mutex TL::s_TextureMutex;
-std::unordered_set<string> TL::m_PrintedPaths;
-std::mutex TL::m_PrintMutex; 
-
+// 外部变量声明
+extern unsigned int DEBUG_INFO_LV;
 
 TexturePtr TL::TryGetCached(const string& path) {
     std::lock_guard lock(s_TextureMutex);
@@ -31,6 +27,16 @@ TexturePtr TL::TryGetCached(const string& path) {
 // 异步加载纹理
 void TL::LoadAsync(const string& path, const string& type, TexLoadCallback cb) {
 
+    // 添加纹理资源到跟踪系统
+    ProgressTracker::Get().AddResource(
+        ProgressTracker::TEXTURE_IO, 
+        path
+    );
+    ProgressTracker::Get().AddResource(
+        ProgressTracker::TEXTURE_GPU, 
+        path
+    );
+
     // 优先返回缓存
     if (auto cached = TryGetCached(path)) {
         TaskQueue::AddTasks([cached, cb] { cb(cached); }, true);
@@ -38,7 +44,7 @@ void TL::LoadAsync(const string& path, const string& type, TexLoadCallback cb) {
     }
 
     auto& diag = Diagnostic::Get();
-    std::cout << "[TEXTURE] 提交异步加载 路径:" << path << " 提交线程:" << std::this_thread::get_id() << "\n";
+    if(DEBUG_INFO_LV > 1) std::cout << "[TEXTURE] 提交异步加载 路径:" << path << " 提交线程:" << std::this_thread::get_id() << std::endl;
 
     s_ActiveLoads.fetch_add(1);
 
@@ -56,16 +62,37 @@ void TL::LoadAsync(const string& path, const string& type, TexLoadCallback cb) {
             placeholder->State.store(TLS::Failed);
             cb(placeholder);
 
-            std::cerr << "[TEXTURE] IO加载失败 路径:" << path << "\n";
+            if(DEBUG_INFO_LV > 0) std::cerr << "[TEXTURE] IO加载失败 路径:" << path << std::endl;
         }
     });
 }
 
 // 异步创建纹理
 void TL::CreateTexAsync(const string& path, const string& type, TexLoadCallback cb) {
+    
+    // 确保只添加一次
+    static std::mutex add_mutex;
+    {
+        std::lock_guard lock(add_mutex);
+        ProgressTracker::Get().AddResource(
+            ProgressTracker::TEXTURE_IO, 
+            path
+        );
+        ProgressTracker::Get().AddResource(
+            ProgressTracker::TEXTURE_GPU, 
+            path
+        );
+    }
+    
     auto image_data = IL::Load(path); // 返回shared_ptr
 
-    std::cout << "[TEXTURE] 开始IO加载 路径:" << path << " 处理线程:" << std::this_thread::get_id() << "\n";
+    if(DEBUG_INFO_LV > 1) std::cout << "[TEXTURE] 开始IO加载 路径:" << path << " 处理线程:" << std::this_thread::get_id() << std::endl;
+
+    // 更新IO进度
+    ProgressTracker::Get().UpdateProgress(
+        ProgressTracker::TEXTURE_IO, 
+        path, 1.0f
+    );
 
     // 将GL操作提交到主线程队列（非阻塞）
     TaskQueue::AddTasks([image_data, path, type, cb]() {
@@ -76,13 +103,17 @@ void TL::CreateTexAsync(const string& path, const string& type, TexLoadCallback 
         if (existing && existing->State == TLS::Ready) {
             {
                 std::lock_guard lock(m_PrintMutex);
-                if (m_PrintedPaths.insert(path).second) {
-                    std::cout << "[优化] 异步复用: " << path << std::endl;
-                }
+            
+                if (m_PrintedPaths.insert(path).second && DEBUG_INFO_LV > 1) std::cout << "[TEXTURE] 异步复用: " << path << std::endl;
             }
-            cb(existing);
-            return;
+            cb(existing); return;
         }
+
+        // 更新GPU进度
+        ProgressTracker::Get().UpdateProgress(
+            ProgressTracker::TEXTURE_GPU, 
+            path, 0.5f
+        );
 
         // 创建纹理
         auto tex = CreateFromData(image_data, path, type);
@@ -93,13 +124,19 @@ void TL::CreateTexAsync(const string& path, const string& type, TexLoadCallback 
             existing->State.store(TLS::Ready);
             cb(existing);
         } else {
-            s_TexturePool[path] = tex;
-            cb(tex);
+            s_TexturePool[path] = tex; cb(tex);
         }
 
-        std::cout << "[TEXTURE] 完成加载回调 路径:" << path << " 状态:" << static_cast<int>(tex->State.load()) << "\n";
+        if(DEBUG_INFO_LV > 0) std::cout << "[TEXTURE] 完成加载回调 路径:" << path << " 状态:" << static_cast<int>(tex->State.load()) << std::endl;
         
         cb(tex);
+
+        // 完成GPU进度
+        ProgressTracker::Get().FinishResource(
+            ProgressTracker::TEXTURE_GPU, 
+            path
+        );
+
     }, true);
 }
 
@@ -121,12 +158,10 @@ TexturePtr TL::LoadSync(const string& path, const string& type) {
         // 失败则退出
         if (tex == nullptr) return nullptr;
 
-        // 如果tex不是nullptr那么将执行复用操作
+        // 如果tex不是nullptr那么将 尝试 执行复用操作
         {
             std::lock_guard lock(m_PrintMutex);
-            if (m_PrintedPaths.insert(path).second) {
-                std::cout << "[TL:loadSync] 正在检查路径: " << path <<", 纹理状态: " << GetStatePrint(tex) << std::endl;
-            }
+            if (m_PrintedPaths.insert(path).second && DEBUG_INFO_LV > 1) std::cout << "[TEXTURE]  正在检查路径: " << path << std::endl;
         }
 
         // 等待异步加载完成（包括占位符转换）
@@ -134,11 +169,11 @@ TexturePtr TL::LoadSync(const string& path, const string& type) {
 
         if (tex->State != TLS::Ready) break;
 
+        // 如果首次插入成功执行复用
         {
             std::lock_guard lock(m_PrintMutex);
-            if (m_PrintedPaths.insert(path).second) { // 如果首次插入成功
-                std::cout << "[优化] 同步复用: " << path << std::endl;
-            }
+
+            if (m_PrintedPaths.insert(path).second && DEBUG_INFO_LV > 1) std::cout << "[TEXTURE] 同步复用: " << path << std::endl;
         }
         return tex;
     }
@@ -160,34 +195,44 @@ TexturePtr TL::LoadSync(const string& path, const string& type) {
 
         // 更新状态
         std::lock_guard lock(s_TextureMutex);
-        s_TexturePool[path] = tex;
-        tex->State.store(TLS::Ready);
-         // 添加状态验证
-        if (tex->State != TLS::Ready) {
-            throw std::runtime_error("纹理最终状态异常: " + path);
-        }
+        s_TexturePool[path] = tex; tex->State.store(TLS::Ready);
+        // 添加状态验证
+        if (tex->State != TLS::Ready) throw std::runtime_error("纹理最终状态异常: " + path);
         return tex;
-    } 
+    }
     catch(const std::exception& e) {
         // 失败处理
-        std::cerr << "[SyncLoad] 加载失败 " << path << ": " << e.what() << "\n";
+        if(DEBUG_INFO_LV > 0) std::cerr << "[TEXTURE]  加载失败 " << path << ": " << e.what() << std::endl;
         // 创建占位符
         auto placeholder = PlaceHolder::Create(path, type);
         placeholder->State.store(TLS::Failed);
-        return nullptr;
+
+        std::lock_guard lock(s_TextureMutex);
+
+        // 加入缓存池
+        s_TexturePool[path] = placeholder;
+        
+        return placeholder;
     }
 }
 
 TexturePtr TL::CreateFromData(ImagePtr data, const string& path, const string& type) {
     auto& diag = Diagnostic::Get();
     // 确保在主线程创建
-    if(!TaskQueue::IsMainThread()) throw std::runtime_error("OpenGL资源必须在主线程创建!");
+    if(!TaskQueue::IsMainThread()) throw std::runtime_error("[TEXTURE] OpenGL资源必须在主线程创建!");
     // 参数验证
-    if(!data || !data->data) throw std::runtime_error("无效的纹理数据: " + path);
+    if(!data || !data->data) if(DEBUG_INFO_LV > 0) throw std::runtime_error("[TEXTURE] 无效的纹理数据: " + path);
 
 try {
+    // 更新进度：开始GPU上传
+    ProgressTracker::Get().UpdateProgress(
+        ProgressTracker::TEXTURE_GPU, 
+        path, 
+        0.3f
+    );
+
     // 记录创建过程
-    std::cout << "[TEXTURE] 开始创建GL纹理 路径:" << path << " 尺寸:" << data->width << "x" << data->height << "\n";
+    if(DEBUG_INFO_LV > 1) std::cout << "[TEXTURE] 开始创建GL纹理 路径:" << path << " 尺寸:" << data->width << "x" << data->height << std::endl;
 
     auto tex = TexturePtr(new Texture());
     tex->Path = path;
@@ -203,7 +248,7 @@ try {
         case 1: format = GL_RED;  break;
         case 3: format = GL_RGB;  break;
         case 4: format = GL_RGBA; break;
-        default: throw std::runtime_error("不支持的通道数: " + std::to_string(data->channels));
+        default: throw std::runtime_error("[TEXTURE] 不支持的通道数: " + std::to_string(data->channels));
     }
 
     glTexImage2D(GL_TEXTURE_2D, 0, format, data->width, data->height, 0, format, GL_UNSIGNED_BYTE, data->data.get());
@@ -213,7 +258,20 @@ try {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
+    // 更新进度：GPU上传完成50%
+    ProgressTracker::Get().UpdateProgress(
+        ProgressTracker::TEXTURE_GPU, 
+        path,
+        0.7f
+    );
+
     glGenerateMipmap(GL_TEXTURE_2D);
+
+    // 更新进度：GPU上传完成
+    ProgressTracker::Get().FinishResource(
+        ProgressTracker::TEXTURE_GPU, 
+        path
+    );
 
     std::lock_guard lock(s_TextureMutex);
     s_TexturePool[path] = tex;
@@ -221,11 +279,16 @@ try {
 
     return tex;
 
-} catch(...) {
-    std::cerr << "[TEXTURE] 创建失败 路径:" << path << "\n";
+} catch(const std::exception& e) {
+    // 标记为完成（即使失败）
+    ProgressTracker::Get().FinishResource(
+        ProgressTracker::TEXTURE_GPU, 
+        path
+    );
+
+    if(DEBUG_INFO_LV > 0) std::cerr << "[TEXTURE] 创建失败: " << path << " 原因: " << e.what() << " 通道数: " << (data ? std::to_string(data->channels) : "N/A") << std::endl;
     throw;
-}
-}
+}}
 
 string TL::GetStatePrint(TexturePtr tex) {
     string name;

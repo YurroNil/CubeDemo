@@ -15,8 +15,8 @@ private:
     // 记录已打印的复用路径
     static std::unordered_set<string> m_PrintedPaths;
     static std::mutex m_PrintMutex;
-
-    void ProcNode(aiNode* node, const aiScene* scene);
+    int CountNodes(aiNode* node);
+    void ProcNode(aiNode* node, const aiScene* scene, int& processedNodes, int totalNodes);
     Mesh ProcMesh(aiMesh* mesh, const aiScene* scene);
 
 public:

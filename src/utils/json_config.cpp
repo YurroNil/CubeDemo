@@ -67,6 +67,8 @@ void JsonConfig::AnalyzeModelAttri(const auto& model, std::vector<ModelConfig>& 
     model_config.type = model.value("type", "");
     model_config.name = model.value("name", "");
     model_config.path = model.value("path", "");
+    model_config.icon_path = model.value("icon_path", "");
+    model_config.description = model.value("description", "");
     
     // 解析着色器路径
     if (model.find("shaders") != model.end()) {
@@ -88,9 +90,13 @@ void JsonConfig::AnalyzeModelAttri(const auto& model, std::vector<ModelConfig>& 
             pos[1].template get<float>(),
             pos[2].template get<float>()
         );
-
-        // 旋转（绕Y轴）
-        model_config.rotation = attr.value("rotation", 0.0f);
+        // 旋转
+        auto rot = attr["rotation"];
+        model_config.rotation = vec3(
+            rot[0].template get<float>(),
+            rot[1].template get<float>(),
+            rot[2].template get<float>()
+        );
 
         // 缩放
         auto scale_ = attr["scale"];
@@ -108,10 +114,15 @@ std::vector<ModelConfig> JsonConfig::LoadModelConfig(const string& config_path) 
     json config = GetFileData(config_path);
     std::vector<ModelConfig> model_configs;
     
-    if (config.find("LoadModels") != config.end()) {
-        for (const auto& model : config["LoadModels"]) {
+    // 情况1：根节点是数组（新格式）
+    if (config.is_array()) {
+        for (const auto& model : config) {
             AnalyzeModelAttri(model, model_configs);
         }
+    }
+    // 无效格式处理
+    else {
+        std::cerr << "错误：模型配置文件格式无效！" << std::endl;
     }
     return model_configs;
 }

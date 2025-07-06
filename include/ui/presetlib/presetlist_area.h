@@ -11,10 +11,8 @@ class PresetlistArea {
     s_v DrawPresetCard(const char *name, int id, float width, float height);
 
 public:
-
     inline static int s_SelectedPreset = -1;
     s_v Render();
     s_v UpdateSelector();
-
 };
 }   // namespace CubeDemo::UI

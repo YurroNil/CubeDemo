@@ -2,9 +2,9 @@
 #pragma once
 
 namespace CubeDemo::UI {
-class ContentArea;
+class SettingPanel;
 class AudioSettings {
-    friend class ContentArea;
+    friend class SettingPanel;
     static void Render();
 };
 } // namespace CubeDemo::UI

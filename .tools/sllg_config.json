@@ -1,11 +1,18 @@
 {
-    "library_name": "scenes_module",
+    "library_name": "without_ui_module",
     
     "paths": {
         "source_code": [
-            "../src/managers",
+            "../src/core",
+            "../src/loaders",
+            "../src/resources",
+            "../src/graphics",
+            "../src/threads",
+            "../src/utils",
+            "../src/prefabs",
+            "../src/main",
             "../src/scenes",
-            "../src/prefabs"
+            "../src/managers"
         ],
         "include": [
             "../include",

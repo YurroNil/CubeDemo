@@ -1,50 +1,120 @@
 // src/loaders/model_initer.cpp
 #include "pch.h"
-#include "loaders/model_initer.h"
-#include "threads/task_queue.h"
-#include "graphics/shader.h"
-#include "utils/defines.h"
-#include "managers/sceneMng.h"
+#include "loaders/MIL_inc.h"
+#include "scenes/dynamic_scene.h"
 
 namespace CubeDemo {
+extern bool DEBUG_ASYNC_MODE;
 
 // 别名
-using MIL = Loaders::ModelIniter;
 using UMC = Utils::JsonConfig;
 
 // 外部变量声明
-extern bool DEBUG_ASYNC_MODE;
+extern bool DEBUG_ASYNC_MODE; extern unsigned int DEBUG_INFO_LV;
 extern std::vector<::CubeDemo::Model*> MODEL_POINTERS;
 extern SceneMng* SCENE_MNG;
 
 void MIL::InitModels() {
-    std::cout << "\n[INITER] 模型初始化开始" << std::endl;
+    // 检查场景管理器是否初始化
+    if (!SCENE_MNG || !SCENE_MNG->GetCurrentScene()) {
+        throw std::runtime_error("场景管理器未初始化");
+    }
     
-    try {
-        // 根据场景情况进行初始化路径
-        string curr_scene_name = SCENE_MNG->GetCurrentScene.ID();
-
-        // "resources/scenes/" + 当前场景名 + "/model.json"
-        string scene_config_path = SCENE_CONF_PATH + curr_scene_name + string("/models.json");
-
-        // 加载模型列表
-        const auto model_list = UMC::LoadModelConfig(scene_config_path);
-
+    // 获取当前场景
+    auto* scene = dynamic_cast<Scenes::DynamicScene*>(SCENE_MNG->GetCurrentScene());
+    if (!scene) {
+        throw std::runtime_error("当前场景不是动态场景类型");
+    }
+    
+    // 重置进度跟踪器
+    ProgressTracker::Get().Reset();
+    
+    // 加载场景中的模型
+    const auto& info = scene->GetSceneInfo();
+    for (const auto& prefab : info.prefabs) {
+        if (prefab.type != "model") continue;
+        
+        string fullPath = info.resourcePath + "/" + prefab.path;
+        auto modelConfigs = Utils::JsonConfig::LoadModelConfig(fullPath);
+        std::cout << "[INITER] LoadModelConfig.fullPath路径为: " << fullPath << std::endl;
+        
+        // 预注册所有模型资源
+        for (const auto& config : modelConfigs) {
+            const string full_path = MODEL_PATH + config.path;
+            
+            ProgressTracker::Get().AddResource(
+                ProgressTracker::MODEL_FILE, 
+                full_path
+            );
+            
+            ProgressTracker::Get().AddResource(
+                ProgressTracker::MODEL_GEOMETRY, 
+                full_path
+            );
+        }
         // 加载每个模型
-        for (const auto& config : model_list) {
-            // "resources/models/" + "模型名/模型名.obj" (或者其它模型格式，如fbx)
-            const string full_path = string(MODEL_PATH) + config.path;
+        for (const auto& config : modelConfigs) {
+            const string full_path = MODEL_PATH + config.path;
             LoadSingleModel(full_path, config);
         }
+    }
 
-        std::cout << "[INITER] 成功加载 " << MODEL_POINTERS.size() << " 个模型" << std::endl;
-    } catch (const std::exception& e) {
-        std::cerr << "[FATAL] 模型初始化失败: " << e.what() << std::endl;
-        exit(EXIT_FAILURE);
+    // 加载场景中的光源
+    for (const auto& prefab : info.prefabs) {
+        if (prefab.type != "light") continue;
+        
+        string fullPath = info.resourcePath + "/" + prefab.path;
+        std::cout << "[INITER] LoadLightConfigs.fullPath路径为: " << fullPath << std::endl;
+
+        // 使用光源管理器加载配置
+        auto lightResult = LightMng::LoadLightConfigs(fullPath);
+        
+        // 将加载的光源添加到场景
+        for (auto* light : lightResult.dirLights) {
+            scene->AddDirLight(light);
+        }
+        for (auto* light : lightResult.pointLights) {
+            scene->AddPointLight(light);
+        }
+        for (auto* light : lightResult.spotLights) {
+            scene->AddSpotLight(light);
+        }
+        for (auto* light : lightResult.skyLights) {
+            scene->AddSkyLight(light);
+        }
+        for (auto* beam : lightResult.volumBeams) {
+            scene->AddVolumBeam(beam);
+        }
+    }
+    s_isInitPhase = false;
+}
+
+void MIL::SwitchScene(const string& sceneID) {
+    // 卸载当前场景所有模型
+    RemoveAllModels();
+    
+    // 切换到新场景
+    SCENE_MNG->SwitchTo(sceneID);
+    
+    // 加载新场景模型
+    InitModels();
+}
+
+void MIL::RemoveAllModels() {
+    // 清理全局模型列表
+    for (auto* model : MODEL_POINTERS) {
+        delete model;
+    }
+    MODEL_POINTERS.clear();
+    
+    // 清理场景中的模型引用
+    if (auto* scene = dynamic_cast<Scenes::DynamicScene*>(SCENE_MNG->GetCurrentScene())) {
+        scene->Cleanup();
     }
 }
 
 void MIL::LoadSingleModel(const string& model_path, const Utils::ModelConfig& config) {
+    
     try {
         // 创建模型实例
         ::CubeDemo::Model* model = new ::CubeDemo::Model(model_path);
@@ -68,40 +138,39 @@ void MIL::LoadSingleModel(const string& model_path, const Utils::ModelConfig& co
         MODEL_POINTERS.push_back(model);
         ValidateModelData(model);
         
-        std::cout << "[INITER] 已加载模型: " << model_path << std::endl;
+        if(DEBUG_INFO_LV > 0) std::cout << "\n[INITER] 成功加载模型: " << model_path << std::endl;
     } catch (const std::exception& e) {
-        std::cerr << "[ERROR] 模型加载失败: " << model_path << " - " << e.what() << std::endl;
+        std::cerr << "[INITER_ERROR] 模型加载失败: " << model_path << " - " << e.what() << std::endl;
         
         throw; // 向上传递异常以终止初始化
     }
 }
 
 // 加载模型数据的核心逻辑
-void MIL::LoadModelData(
-    std::atomic<bool>& model_loaded,
-    ML* model_loader,
-    bool async_mode)
-{
-    if (async_mode) {
-        model_loader->LoadAsync([&]{ model_loaded.store(true); });
-    } else {
-        model_loader->LoadSync([&]{ model_loaded.store(true); });
-    }
+void MIL::LoadModelData(std::atomic<bool>& model_loaded, ML* model_loader, bool async_mode) {
+    if (async_mode) model_loader->LoadAsync([&]{ model_loaded.store(true); });
+    else model_loader->LoadSync([&]{ model_loaded.store(true); });
 }
 
 // 监控加载状态的等待循环
 void MIL::WaitForModelLoad(std::atomic<bool>& model_loaded) {
     auto start_time = csclock::now();
+    auto& tracker = Loaders::ProgressTracker::Get();
     
     while (!model_loaded.load()) {
         int processed = 0;
         TaskQueue::ProcTasks(processed);
         
-        CheckForTimeout(start_time);  // 检查超时
-        
+        CheckForTimeout(start_time);
+
+        // 检查窗口关闭
+        if (glfwWindowShouldClose(WINDOW::GetWindow())) {
+            glfwTerminate();
+            exit(EXIT_SUCCESS);
+        }
         // 无任务时让出CPU
         if (processed == 0) {
-            std::this_thread::yield();
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
     }
 }
@@ -110,16 +179,15 @@ void MIL::WaitForModelLoad(std::atomic<bool>& model_loaded) {
 void MIL::CheckForTimeout(const std::chrono::time_point<csclock>& start_time) {
     constexpr auto timeout = std::chrono::seconds(3);
     if (csclock::now() > start_time + timeout) {
-        throw std::runtime_error("模型加载超时");
+        throw std::runtime_error("[INITER_ERROR] 模型加载超时");
     }
 }
 
 // 模型数据验证
 void MIL::ValidateModelData(::CubeDemo::Model* model) {
     if (model->bounds.Rad < 0.01f) {
-        std::cerr << "[WARNING] 模型包围球异常，可能未正确加载顶点数据" << std::endl;
+        std::cerr << "[INITER_ERROR] 模型包围球异常，可能未正确加载顶点数据" << std::endl;
         // 这里可以添加更多验证逻辑，比如检查顶点数量等
     }
 }
-
 } // namespace CubeDemo

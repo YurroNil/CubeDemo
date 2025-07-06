@@ -9,6 +9,12 @@ namespace {
     int s_FrameCounter = 0;
     const float UPDATE_INTERVAL = 2.0f; // 2秒更新间隔
 }
+double TIME::GetTime() {
+    static auto start_time = std::chrono::high_resolution_clock::now();
+    auto now = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = now - start_time;
+    return elapsed.count();
+}
 
 void TIME::Update() {
     static float last_frame = 0.0f;

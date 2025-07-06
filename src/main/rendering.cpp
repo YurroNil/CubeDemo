@@ -18,7 +18,9 @@ void render_scene(
     // shadow_map->RenderShadow(camera);
 
     // 主渲染阶段
-    SCENE_MNG->Rendering(SCENE_MNG->Current, window, camera, shadow_map);
+    if (auto* scene = SCENE_MNG->GetCurrentScene()) {
+        scene->Render(window, camera, shadow_map);
+    }
 }
 
 // 模型变换(如旋转)

@@ -6,7 +6,6 @@
 namespace CubeDemo {
 
 // 乱七八糟的别名
-using millisec = std::chrono::milliseconds;
 using ImagePtr = std::shared_ptr<Loaders::Image>;
 using TexLoadCallback = std::function<void(TexturePtr)>; // 纹理加载回调
 using TL = Loaders::Texture;
@@ -28,14 +27,15 @@ public:
     inline static std::atomic<int32_t> s_TextureAliveCount{0};  // 存活纹理计数
     inline static std::atomic<uint32_t> s_ActiveLoads{0};       // 进行中的
     //------------------------ 静态资源 ------------------------//
-    static TexPtrHashMap s_TexturePool;   // 纹理资源池
-    static std::mutex s_TextureMutex;     // 资源池互斥锁
+    // 纹理资源池
+    inline static TexPtrHashMap s_TexturePool = {};
+    // 资源池互斥锁
+    inline static std::mutex s_TextureMutex = {};
     static TexturePtr CreateFromData(ImagePtr data, const string& path, const string& type);
 
 private:
     //------------------------ 私有实现 ------------------------//
     
-    // 核心私有方法
     static TexturePtr TryGetCached(const string& path);
 
     // 重试系统相关
@@ -48,7 +48,7 @@ private:
     static string GetStatePrint(TexturePtr tex);
 
     // 记录已打印的复用路径
-    static std::unordered_set<string> m_PrintedPaths;
-    static std::mutex m_PrintMutex;
+    inline static std::unordered_set<string> m_PrintedPaths = {};
+    inline static std::mutex m_PrintMutex = {};
 };
 }   // namespace CubeDemo

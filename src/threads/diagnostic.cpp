@@ -1,6 +1,5 @@
 // src/threads/diagnostic.cpp
 #include "pch.h"
-#include "threads/diagnostic.h"
 
 namespace CubeDemo {
 // 单例访问
@@ -18,5 +17,4 @@ auto Diagnostic::GetThreadStates() const {
     std::lock_guard lock(mutex_);
     return threadStates_;
 }
-
 }

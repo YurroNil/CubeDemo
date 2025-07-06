@@ -5,4 +5,4 @@
 #include "ui/settings/video.h"
 #include "ui/settings/control.h"
 #include "ui/settings/game.h"
-#include "ui/settings/content_area.h"
+#include "ui/settings/panel.h"

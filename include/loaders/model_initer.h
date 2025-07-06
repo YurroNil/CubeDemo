@@ -1,17 +1,21 @@
 // include/loaders/model_initer.h
 #pragma once
-#include "loaders/model.h"
-#include "resources/model.h"
-
-using ML = CubeDemo::Loaders::Model;
 
 namespace CubeDemo {
+class Model;
+}
 
-class Loaders::ModelIniter {
+namespace CubeDemo::Loaders {
+class Model;
+using ML = ::CubeDemo::Loaders::Model;
 
-    using csclock = std::chrono::steady_clock;
+class ModelIniter {
 public:
+    inline static bool s_isInitPhase = true;
+
+    static void RemoveAllModels();
     static void InitModels();
+    static void SwitchScene(const string& sceneID);
     
 private:
     // 子功能模块
@@ -26,4 +30,6 @@ private:
     static void ValidateModelData(::CubeDemo::Model* model);
     static void LoadSingleModel(const string& model_path, const Utils::ModelConfig& config);
 };
-}
+}   // namespace CubeDemo
+
+using MIL = CubeDemo::Loaders::ModelIniter;

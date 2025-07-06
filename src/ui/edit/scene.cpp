@@ -1,7 +1,8 @@
 // src/ui/edit/scene.cpp
 #include "pch.h"
 #include "ui/edit/scene.h"
-#include "managers/sceneMng.h"
+#include "utils/font_defines.h"
+#include "loaders/model_initer.h"
 
 // 外部变量声明
 namespace CubeDemo {
@@ -9,11 +10,38 @@ namespace CubeDemo {
 }
 
 namespace CubeDemo::UI {
+
+
+void ScenePanel::SaveCurrentScene() {
+    auto* scene = SCENE_MNG->GetCurrentScene();
+    if (!scene) return;
+    
+    // TODO: 实现场景保存逻辑
+    // 收集当前场景的所有修改
+    // 更新场景配置
+    // 保存到对应的scene_info.json文件
+    
+    // 示例：获取场景ID
+    string sceneID = scene->GetID();
+    std::cout << "保存场景: " << sceneID << std::endl;
+}
+
+void ScenePanel::ClearCurrentScene() {
+    auto* scene = SCENE_MNG->GetCurrentScene();
+    if (!scene) return;
+    
+    // 清除场景资源
+    scene->Cleanup();
+    
+    // 可以添加确认对话框
+    ImGui::OpenPopup("确认清除场景");
+}
+
 void ScenePanel::Render() {
-    ImGui::Begin("场景管理", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar);
+    ImGui::BeginChild("场景管理", ImVec2(0, 0), true);
     
     // 场景预览区域
-    RenderScenePreview();
+    ScenePreview();
     
     // 场景操作按钮
     ImGui::Spacing();
@@ -23,14 +51,14 @@ void ScenePanel::Render() {
     const float buttonWidth = (ImGui::GetContentRegionAvail().x - ImGui::GetStyle().ItemSpacing.x) / 2.0f;
     
     // 保存场景按钮
-    if (ImGui::Button("ICON_FA_SAVE" " 保存场景", ImVec2(buttonWidth, 50))) {
-        // 保存场景逻辑
+    if (ImGui::Button(ICON_FA_SAVE " 保存场景", ImVec2(buttonWidth, 50))) {
+        SaveCurrentScene();
     }
     
     // 清除场景按钮
     ImGui::SameLine();
-    if (ImGui::Button("ICON_FA_TRASH" " 清除场景", ImVec2(buttonWidth, 50))) {
-        SCENE_MNG->CleanAllScenes();
+    if (ImGui::Button(ICON_FA_TRASH " 清除场景", ImVec2(buttonWidth, 50))) {
+        ClearCurrentScene();
     }
     
     // 场景切换
@@ -39,31 +67,47 @@ void ScenePanel::Render() {
     ImGui::Spacing();
     
     ImGui::Text("切换场景:");
-    const char* sceneNames[] = { "白天(默认)", "夜晚"};
-    const int sceneCount = sizeof(sceneNames) / sizeof(sceneNames[0]);
     
-    for (int i = 0; i < sceneCount; i++) {
-        if (i > 0) ImGui::SameLine();
+    // 获取所有可用场景
+    const auto& allScenes = SCENE_MNG->GetAllScenes();
+    auto* currentScene = SCENE_MNG->GetCurrentScene();
+    string currentSceneID = currentScene ? currentScene->GetID() : "";
+    
+    // 为每个场景创建切换按钮
+    for (const auto& [sceneID, scene] : allScenes) {
+        bool isCurrent = (sceneID == currentSceneID);
         
-        bool isCurrent = (SCENE_MNG->Current == static_cast<SceneID>(i));
         if (isCurrent) {
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.26f, 0.59f, 0.98f, 0.8f));
             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
         }
         
-        if (ImGui::Button(sceneNames[i], ImVec2(0, 50))) {
-            SCENE_MNG->SwitchTo(static_cast<SceneID>(i));
+        // 使用场景名称作为按钮标签
+        if (ImGui::Button(scene->GetName().c_str(), ImVec2(0, 50))) {
+            MIL::SwitchScene(sceneID);
         }
         
         if (isCurrent) {
             ImGui::PopStyleColor(2);
         }
+        
+        // 添加工具提示显示场景ID
+        if (ImGui::IsItemHovered()) {
+            ImGui::BeginTooltip();
+            ImGui::Text("ID: %s", sceneID.c_str());
+            ImGui::EndTooltip();
+        }
+        
+        // 在同一行显示，但每行最多显示2个按钮
+        if (&scene != &allScenes.begin()->second) {
+            ImGui::SameLine();
+        }
     }
     
-    ImGui::End();
+    ImGui::EndChild();
 }
 
-void ScenePanel::RenderScenePreview() {
+void ScenePanel::ScenePreview() {
     // 场景预览标题
     ImGui::Text("场景预览:");
     ImGui::Spacing();
@@ -91,7 +135,7 @@ void ScenePanel::RenderScenePreview() {
     }
     
     // 场景名称居中显示
-    const char* sceneName = SCENE_MNG->GetCurrentScene.Name().c_str();
+    const char* sceneName = SCENE_MNG->GetCurrentScene()->GetName().c_str();
     ImVec2 textSize = ImGui::CalcTextSize(sceneName);
     ImVec2 textPos = ImVec2((p_min.x + p_max.x - textSize.x) * 0.5f, (p_min.y + p_max.y - textSize.y) * 0.5f);
     draw_list->AddText(textPos, IM_COL32(200, 200, 200, 255), sceneName);

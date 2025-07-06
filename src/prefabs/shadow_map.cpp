@@ -4,8 +4,8 @@
 #include "resources/model.h"
 #include "utils/defines.h"
 
-#include "managers/lightMng.h"
-#include "managers/sceneMng.h"
+#include "managers/light/mng.h"
+#include "managers/scene/mng.h"
 
 // 外部变量声明
 namespace CubeDemo {
@@ -90,7 +90,7 @@ void ShadowMap::RenderShadow(Camera* camera) {
     for (auto* model : MODEL_POINTERS) {
         if (model->IsReady() && camera->isSphereVsble(model->bounds.Center, model->bounds.Rad)) {
             m_ShadowShader->SetMat4("model", model->GetModelMatrix());
-            model->DrawSimple();
+            // model->DrawSimple();
         }
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

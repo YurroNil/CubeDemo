@@ -2,7 +2,6 @@
 #include "pch.h"
 #include "managers/model/cleanner.h"
 #include "resources/model.h"
-#include "graphics/shader.h"
 
 namespace CubeDemo::Managers {
 // 删除指定模型

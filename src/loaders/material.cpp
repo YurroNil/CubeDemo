@@ -25,7 +25,7 @@ void MaL::ProcMaterial(aiMesh*& mesh, const aiScene*& scene, TexPtrArray& textur
 
     // 同步加载模式的材质索引检查
     if (is_aync && mesh->mMaterialIndex < 0 || mesh->mMaterialIndex >= scene->mNumMaterials) {
-        std::cerr << "无效的材质索引: " << mesh->mMaterialIndex << "\n";
+        std::cerr << "无效的材质索引: " << mesh->mMaterialIndex << std::endl;
         return;
     }
 

@@ -1,6 +1,5 @@
 // include/prefabs/shadow_map.h
 #pragma once
-#include "graphics/shader.h"
 
 namespace CubeDemo::Prefabs {
 class ShadowMap {

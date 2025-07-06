@@ -27,7 +27,8 @@ public:
     // 普通版本的构造函数
     Mesh(const VertexArray& vertices, const UnsignedArray& indices, const TexPtrArray& textures);
         
-    // 添加移动构造函数的许可
+    // 声明移动构造函数.
+    // 注意：noexcept声明该函数​​不抛出异常​​，这是关键设计！若未标记 noexcept，标准库（如std::vector扩容）可能回退到低效的拷贝操作.
     Mesh(Mesh&& other) noexcept;
 
     // 赋值运算符重载为移动操作
@@ -36,7 +37,7 @@ public:
     // 禁用拷贝构造函数
     Mesh(const Mesh&) = delete;
 
-    // 禁用拷贝赋值运算符（避免默认浅拷贝）
+    // 禁用拷贝赋值运算符（避免默认浅拷贝，即仅复制对象指针地址）
     Mesh& operator=(const Mesh&) = delete;
 
     // 构造函数的深拷贝实现(左移运算符重载)
@@ -62,5 +63,4 @@ private:
     
     UnsignedArray m_Indices;
 };
-
-}
+}   // namespace CubeDemo

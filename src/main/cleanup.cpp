@@ -3,31 +3,29 @@
 #include "main/cleanup.h"
 #include "resources/model.h"
 #include "loaders/resource.h"
-
-#include "managers/modelMng.h"
-#include "managers/lightMng.h"
+#include "loaders/model_initer.h"
+#include "managers/model/mng.h"
+#include "managers/light/mng.h"
 
 namespace CubeDemo {
 
 // 别名与外部变量声明
-using RL = Loaders::Resource;
-using MMC = Managers::ModelCleanner;
+using RL = Loaders::Resource; using MMC = Managers::ModelCleanner;
 extern std::vector<Model*> MODEL_POINTERS;
 extern ShadowMap* SHADOW_MAP;
 
 // 管理器
-extern SceneMng* SCENE_MNG;
-extern LightMng* LIGHT_MNG;
+extern SceneMng* SCENE_MNG; extern LightMng* LIGHT_MNG;
 extern ModelMng* MODEL_MNG;
 
 // 清理函数
 void Cleanup(GLFWwindow* window, Camera* camera) {
 
     // 场景资源
-    SCENE_MNG->CleanAllScenes();
+    MIL::RemoveAllModels();
 
-    // 确保资源释放顺序
-    RL::Shutdown(); // 先关闭资源加载器
+    // 确保资源释放顺序. 先关闭资源加载器
+    RL::Shutdown();
     
     // 等待3秒确保资源释放
     TaskQueue::PushTaskSync([]{ 
@@ -60,6 +58,6 @@ void Cleanup(GLFWwindow* window, Camera* camera) {
     glfwDestroyWindow(window);
     glfwTerminate();
     
-    std::cout << "程序正常退出" << std::endl;
+    std::cout << "[CLEANNER] 程序正常退出" << std::endl;
 }
 }   // namespace CubeDemo

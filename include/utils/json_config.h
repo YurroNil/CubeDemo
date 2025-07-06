@@ -1,7 +1,6 @@
 // include/utils/json_config.h
 #pragma once
-
-using json = nlohmann::json;
+#include "utils/defines.h"
 
 namespace CubeDemo::Utils {
 using StringArray = std::vector<string>;
@@ -13,11 +12,15 @@ struct FontConfig {
 };
 
 struct ModelConfig {
-    string id, name, type, path;
-    vec3 position = vec3(0.0f);
-    float rotation = 0.0f; // 绕Y轴旋转角度（度）
-    vec3 scale = vec3(1.0f);
-    string vsh_path, fsh_path;
+
+    string id = "unknown", name = "未命名模型", type = "model.unknown", path = "null";
+
+    vec3 position = vec3(0.0f), scale = vec3(1.0f), rotation = vec3(0.0f);
+
+    string
+        vsh_path = VSH_PATH + string("model.glsl"),
+        fsh_path = FSH_PATH + string("model_default.glsl"),
+        icon_path = ICON_PATH + string("unknown.png"), description = "无描述.";
 };
 
 class JsonConfig {
@@ -34,7 +37,9 @@ public:
     static std::vector<ModelConfig> LoadModelConfig(const string& config_path);
 
     // 解析模型配置中，属性列表中的数据
-    static void AnalyzeModelAttri(const auto& model, std::vector<ModelConfig>& model_config_array);
+    static void AnalyzeModelAttri(
+        const auto& model,
+        std::vector<ModelConfig>& model_config_array
+    );
 };
-}
-
+}   // namespace CubeDemo::Utils

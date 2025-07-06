@@ -8,7 +8,6 @@ namespace CubeDemo {
 void handle_input(GLFWwindow* window, Camera* camera) {
     INPUTS::ProcPanelKeys(window);
     INPUTS::ProcCameraKeys(window, camera, TIME::GetDeltaTime());
-
 }
 // 开始帧
 void begin_frame(Camera* camera) {
@@ -27,5 +26,4 @@ void handle_window_settings(GLFWwindow* window) {
     WINDOW::UpdateWinSize(window);       // 更新窗口尺寸
     WINDOW::FullscreenTrigger(window);   // 全屏
 }
-
 }   // namespace CubeDemo

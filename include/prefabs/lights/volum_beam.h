@@ -4,11 +4,11 @@
 
 namespace CubeDemo::Prefabs {
 
-using BeamEffects = CubeDemo::Prefabs::BeamEffects;
-
 class VolumBeam {
 private:
-    // 私有方法
+    GLuint coneVAO = 0;
+    GLuint coneVBO = 0;
+
     void SetFx(Camera* camera, SL* spot_light);
     void SetTextureArgs(const string& path);
     mat4 CalcTransform(SL* spot_light);
@@ -16,13 +16,13 @@ private:
 public:
     // 着色器与光束模型的指针存储
     Shader* VolumShader = nullptr;
-    Mesh* LightVolume = nullptr;
 
     // 光束效果配置
     BeamEffects Effects;
     TexturePtr NoiseTexture = nullptr;
 
     VolumBeam();
+    ~VolumBeam();
     void Render(Camera* camera, SL* spot_light);
 
     // 配置光束效果
@@ -33,4 +33,6 @@ public:
     void CreateVolumShader();
     void CreateLightCone(float radius, float height);
 };
-}
+}   // namespace CubeDemo::Prefabs
+
+using VolumBeam = CubeDemo::Prefabs::VolumBeam;

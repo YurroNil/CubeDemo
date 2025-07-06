@@ -8,7 +8,8 @@ namespace CubeDemo {
 
 class Model : public Managers::ModelGetter {
     friend class Managers::ModelGetter;
-    friend class UI::ModelCtrl;
+
+    friend class UI::ModelTablePanel;
 
 public:
     // 创建包维球实例
@@ -16,10 +17,9 @@ public:
     Shader* ModelShader = nullptr;   // 模型着色器(可公共修改)
 
     Model(const string& path);  // 初始化
-    void NormalDraw(const vec3& camera_pos);
-    void DrawCall(Camera* camera);
-    void DrawSimple() const;
-
+    void NormalDraw(bool is_mainloop_draw);
+    void DrawCall(Camera* camera, bool is_mainloop_draw = true);
+    void Delete();
     ~Model();
 
 private:
@@ -27,20 +27,21 @@ private:
 
 // ------------- 模型的基本属性 -------------
 
-    // ID, 模型名, 类型, 路径, 着色器路径
-    string m_ID, m_Name, m_Type, m_Path, m_vshPath, m_fshPath;
+    // ID, 模型名, 类型, 路径等
+    string
+        m_ID, m_Name, m_Type, m_Path, m_IconPath,
+        m_vshPath, m_fshPath, m_Description;
 
 // ------------- 模型资源 -------------
 
-    MeshArray m_Meshes;      // 网格数据
+    MeshArray m_Meshes;  // 网格数据
 
     // 模型矩阵(用于控制模型在世界空间的变换，如偏移,旋转,缩放)
-
     mat4 m_ModelMatrix{mat4(1.0f)};
 
     // 位置，旋转(弧度)，尺寸        // 数据备份, 用于撤销/重置
     vec3 m_Position = vec3(0.0f),   m_PosCopy = vec3(0.0f);
-    float m_Rotation = 0.0f,        m_RotCopy = 0.0f;
+    vec3 m_Rotation = vec3(0.0f),   m_RotCopy = vec3(0.0f);
     vec3 m_Scale = vec3(1.0f),      m_ScaleCopy = vec3(1.0f);
 
 

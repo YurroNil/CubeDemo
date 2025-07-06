@@ -10,6 +10,11 @@ using TLS = CubeDemo::Texture::LoadState;
 
 VolumBeam::VolumBeam() {
 }
+VolumBeam::~VolumBeam() {
+    if (coneVAO) glDeleteVertexArrays(1, &coneVAO);
+    if (coneVBO) glDeleteBuffers(1, &coneVBO);
+    if (VolumShader) delete VolumShader;
+}
 
 // 设置动态效果+应用着色器
 void VolumBeam::SetFx(Camera* camera, SL* spot_light) {
@@ -65,7 +70,6 @@ void VolumBeam::Render(Camera* camera, SL* spot_light) {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     glDepthMask(GL_FALSE);
 
-
     // 绑定噪声纹理（如果可用且已加载完成）
     if (NoiseTexture && NoiseTexture->State.load() == TLS::Ready) {
         // 确保在主线程绑定纹理
@@ -84,11 +88,13 @@ void VolumBeam::Render(Camera* camera, SL* spot_light) {
 
     VolumShader->Use();
     
-    // 设置效果
-    SetFx(camera, spot_light);
-
-    // 绘制体积光束
-    LightVolume->Draw(VolumShader);
+    // 根据距离动态调整分段数 (LOD)
+    VolumShader->SetInt("segments", 64);
+    
+    // 绘制体积光束 (使用几何着色器)
+    glBindVertexArray(coneVAO);
+    glDrawArrays(GL_POINTS, 0, 1); // 仅绘制一个点
+    glBindVertexArray(0);
 
     glDepthMask(GL_TRUE);
     glDisable(GL_BLEND);
@@ -128,75 +134,50 @@ mat4 VolumBeam::CalcTransform(SL* spot_light) {
 */
 // 创建光锥几何体
 void VolumBeam::CreateLightCone(float radius, float height) {
-      std::vector<Vertex> vertices;
-    std::vector<unsigned> indices;
+    // 定义顶点结构
+    struct ConeVertex {
+        vec3 tip;
+        vec3 base;
+        float radius;
+    };
     
-    const int segments = 128; // 圆周分段数（值越高锥面越平滑）
-    const float centerY = height; // 圆锥顶点Y坐标（底部在Y=0处）
+    // 单个顶点包含所有必要信息
+    ConeVertex vertex = {
+        vec3(0.0f, height, 0.0f), // 圆锥顶点
+        vec3(0.0f, 0.0f, 0.0f),    // 底面中心
+        radius
+    };
     
-    // 生成底面圆周顶点
-    for(int i = 0; i < segments; ++i) {
-        // 计算圆周角度（0~360度）
-        float angle = glm::radians(360.0f * i / segments);
-        
-        // 计算底面顶点坐标（XZ平面）
-        float x = radius * cos(angle);
-        float z = radius * sin(angle);
-        
-        // 计算法线（垂直于圆锥侧面）
-        vec3 normal = normalize(vec3(x, 0, z));
-        
-        // 计算自发光颜色梯度（核心过渡->边缘）
-        float distToCenter = distance(vec3(x, 0, z), vec3(0)); // 当前点到底面中心距离
-        vec3 emitColor = mix(
-            vec3(0.0f),            // 中心色（白）
-            vec3(1.0f),            // 边缘色（白）
-            distToCenter / radius  // 颜色混合比例（0=中心，1=边缘）
-        );
-        
-        // 添加到顶点数组（底部顶点）
-        vertices.push_back({
-            vec3(x, 0, z),  // 位置
-            normal,          // 法线
-            vec2(0),         // UV坐标（未使用）
-            emitColor        // 自发光颜色
-        });
-    }
+    // 创建VAO和VBO
+    glGenVertexArrays(1, &coneVAO);
+    glGenBuffers(1, &coneVBO);
     
-    // 添加圆锥顶点
-    vec3 topNormal = normalize(vec3(0, height, 0)); // 顶点法线（垂直向上）
-    vertices.push_back({
-        vec3(0, centerY, 0), // 顶点位置（圆锥顶部）
-        topNormal,            // 法线
-        vec2(0),              // UV坐标
-        vec3(1.0f) // 自发光（白色）
-    });
+    glBindVertexArray(coneVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, coneVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(ConeVertex), &vertex, GL_STATIC_DRAW);
     
-    // 生成侧面三角形
-    for(int i = 0; i < segments; ++i) {
-        int next = (i + 1) % segments;
-        
-        // 每个侧面由两个底面点+顶点构成
-        indices.push_back(i);          // 当前底面点
-        indices.push_back(next);       // 下一个底面点
-        indices.push_back(segments);    // 圆锥顶点
-    }
+    // 设置顶点属性指针
+    // 位置0：圆锥顶点
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ConeVertex), (void*)0);
+    glEnableVertexAttribArray(0);
     
-    // 生成底面三角形
-    // for(int i = 2; i < segments; ++i) {
-    //     indices.push_back(0);      // 第一个顶点（固定）
-    //     indices.push_back(i-1);    // 前一个点
-    //     indices.push_back(i);      // 当前点
-    // }
+    // 位置1：底面中心
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ConeVertex), (void*)offsetof(ConeVertex, base));
+    glEnableVertexAttribArray(1);
     
-    // 创建网格对象
-    LightVolume = new Mesh(vertices, indices, {});
+    // 位置2：半径
+    glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(ConeVertex), (void*)offsetof(ConeVertex, radius));
+    glEnableVertexAttribArray(2);
+    
+    glBindVertexArray(0);
 }
-// 创建光锥着色器
+
+// 创建体积光着色器 (添加几何着色器)
 void VolumBeam::CreateVolumShader() {
     VolumShader = new Shader(
         VSH_PATH + string("volumetric.glsl"),
-        FSH_PATH + string("volumetric.glsl")
+        FSH_PATH + string("volumetric.glsl"),
+        GSH_PATH + string("volumetric.glsl")
     );
 }
 
@@ -234,4 +215,4 @@ void VolumBeam::LoadNoiseTexture(const string& path) {
     // 加载噪声纹理
     SetTextureArgs(path);
 }
-}
+}   // namespace CubeDemo::Prefabs

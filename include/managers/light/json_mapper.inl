@@ -1,209 +1,132 @@
 // include/managers/light/json_mapper.inl
 #pragma once
-
-// 别名
-using json = nlohmann::json;
-using BeamEffects = CubeDemo::Prefabs::BeamEffects;
+#include "prefabs/lights/data.h"
 
 namespace CubeDemo::Prefabs::Lights::JsonMapper {
 
-// 基础类型映射模板
-template <typename T>
-struct TypeMapper;
-
-// bool 特化
-template <>
-struct TypeMapper<bool> {
-    static bool Map(const json& j) {
-        return j.get<bool>();
+// 基础映射模板 - 使用类型特化确保安全
+template<typename T>
+void MapLightData(const json& j, T& data) {
+    // 通用属性（除BeamEffects外的所有光源共有）
+    if constexpr (!std::is_same_v<T, BeamEffects>) {
+        if (j.contains("name")) data.name = j["name"].get<string>();
+        if (j.contains("id")) data.id = j["id"].get<string>();
+        if (j.contains("type")) data.type = j["type"].get<string>();
+        if (j.contains("icon_path")) data.iconPath = j["icon_path"].get<string>();
+        if (j.contains("description")) data.description = j["description"].get<string>();
+        
+        // 位置和方向
+        if (j.contains("position")) {
+            auto pos = j["position"];
+            data.position = vec3(pos[0], pos[1], pos[2]);
+        }
+        
+        if (j.contains("direction")) {
+            auto dir = j["direction"];
+            data.direction = vec3(dir[0], dir[1], dir[2]);
+        }
     }
-};
-
-// int 特化
-template <>
-struct TypeMapper<int> {
-    static int Map(const json& j) {
-        return j.get<int>();
-    }
-};
-
-// float 特化
-template <>
-struct TypeMapper<float> {
-    static float Map(const json& j) {
-        return j.get<float>();
-    }
-};
-
-// string 特化
-template <>
-struct TypeMapper<string> {
-    static string Map(const json& j) {
-        return j.get<string>();
-    }
-};
-
-// vec2映射特化
-template <>
-struct TypeMapper<vec2> {
-    static vec2 Map(const json& j) {
-        return {
-            j[0].get<float>(),
-            j[1].get<float>()
-        };
-    }
-};
-// vec3 特化
-template <>
-struct TypeMapper<vec3> {
-    static vec3 Map(const json& j) {
-        return {
-            j[0].get<float>(),
-            j[1].get<float>(),
-            j[2].get<float>()
-        };
-    }
-};
-
-// 灯光特性模板
-template <typename T>
-struct LightTraits;
-
-// BeamEffects特化
-template <>
-struct LightTraits<BeamEffects> {
-    using LightType = BeamEffects;
     
-    static constexpr auto member_map = std::make_tuple(
-        std::make_pair("radius", &LightType::radius),
-        std::make_pair("height", &LightType::height),
-        std::make_pair("noiseTexture", &LightType::noiseTexture),
-        std::make_pair("intensity", &LightType::intensity),
-        std::make_pair("scatterPower", &LightType::scatterPower),
-        std::make_pair("alphaMultiplier", &LightType::alphaMultiplier)
-    );
-};
+    // 类型特定属性
+    if constexpr (std::is_same_v<T, DL>) {
+        if (j.contains("ambient")) {
+            auto arr = j["ambient"];
+            data.ambient = vec3(arr[0], arr[1], arr[2]);
+        }
+        if (j.contains("diffuse")) {
+            auto arr = j["diffuse"];
+            data.diffuse = vec3(arr[0], arr[1], arr[2]);
+        }
+        if (j.contains("specular")) {
+            auto arr = j["specular"];
+            data.specular = vec3(arr[0], arr[1], arr[2]);
+        }
+        if (j.contains("skyColor")) {
+            auto arr = j["skyColor"];
+            data.skyColor = vec3(arr[0], arr[1], arr[2]);
+        }
+        if (j.contains("sourceRadius")) data.sourceRadius = j["sourceRadius"].get<float>();
+        if (j.contains("sourceSoftness")) data.sourceSoftness = j["sourceSoftness"].get<float>();
+        if (j.contains("atmosphereThickness")) data.atmosphereThickness = j["atmosphereThickness"].get<float>();
+    }
+    else if constexpr (std::is_same_v<T, PL>) {
+        if (j.contains("ambient")) {
+            auto arr = j["ambient"];
+            data.ambient = vec3(arr[0], arr[1], arr[2]);
+        }
+        if (j.contains("diffuse")) {
+            auto arr = j["diffuse"];
+            data.diffuse = vec3(arr[0], arr[1], arr[2]);
+        }
+        if (j.contains("specular")) {
+            auto arr = j["specular"];
+            data.specular = vec3(arr[0], arr[1], arr[2]);
+        }
+        if (j.contains("constant")) data.constant = j["constant"].get<float>();
+        if (j.contains("linear")) data.linear = j["linear"].get<float>();
+        if (j.contains("quadratic")) data.quadratic = j["quadratic"].get<float>();
+    }
+    else if constexpr (std::is_same_v<T, SL>) {
+        if (j.contains("ambient")) {
+            auto arr = j["ambient"];
+            data.ambient = vec3(arr[0], arr[1], arr[2]);
+        }
+        if (j.contains("diffuse")) {
+            auto arr = j["diffuse"];
+            data.diffuse = vec3(arr[0], arr[1], arr[2]);
+        }
+        if (j.contains("specular")) {
+            auto arr = j["specular"];
+            data.specular = vec3(arr[0], arr[1], arr[2]);
+        }
+        if (j.contains("constant")) data.constant = j["constant"].get<float>();
+        if (j.contains("linear")) data.linear = j["linear"].get<float>();
+        if (j.contains("quadratic")) data.quadratic = j["quadratic"].get<float>();
+        if (j.contains("cutOff")) data.cutOff = j["cutOff"].get<float>();
+        if (j.contains("outerCutOff")) data.outerCutOff = j["outerCutOff"].get<float>();
+    }
+    else if constexpr (std::is_same_v<T, SkL>) {
+        if (j.contains("color")) {
+            auto arr = j["color"];
+            data.color = vec3(arr[0], arr[1], arr[2]);
+        }
+        if (j.contains("cloudColor")) {
+            auto arr = j["cloudColor"];
+            data.cloudColor = vec3(arr[0], arr[1], arr[2]);
+        }
+        if (j.contains("intensity")) data.intensity = j["intensity"].get<float>();
+        if (j.contains("horizonBlend")) data.horizonBlend = j["horizonBlend"].get<float>();
+        if (j.contains("groundReflection")) data.groundReflection = j["groundReflection"].get<float>();
+        if (j.contains("cloudOpacity")) data.cloudOpacity = j["cloudOpacity"].get<float>();
+    }
+    else if constexpr (std::is_same_v<T, BeamEffects>) {
+        // 只映射 BeamEffects 实际拥有的属性
+        if (j.contains("name")) data.name = j["name"].get<string>();
+        if (j.contains("id")) data.id = j["id"].get<string>();
+        if (j.contains("type")) data.type = j["type"].get<string>();
+        if (j.contains("description")) data.description = j["description"].get<string>();
+        if (j.contains("noiseTexture")) data.noiseTexture = j["noiseTexture"].get<string>();
 
-// 特化flicker映射
-template <>
-struct LightTraits<BeamEffects::FlickerParams> {
-    using LightType = BeamEffects::FlickerParams;
-    
-    static constexpr auto member_map = std::make_tuple(
-        std::make_pair("enable", &LightType::enable),
-        std::make_pair("min", &LightType::min),
-        std::make_pair("max", &LightType::max),
-        std::make_pair("speed", &LightType::speed)
-    );
-};
-
-// 通用映射函数（支持嵌套结构）
-template <typename T>
-void MapLightData(const json& config, T& data) {
-    using Traits = LightTraits<T>;
-    
-    std::apply([&](const auto&... pairs) {
-        ( (config.contains(pairs.first) ? 
-            (data.*(pairs.second) = TypeMapper<
-                std::decay_t<decltype(data.*(pairs.second))>
-            >::Map(config[pairs.first]), void())
-          : void()), ... );
-    }, Traits::member_map);
+        if (j.contains("radius")) data.radius = j["radius"].get<float>();
+        if (j.contains("height")) data.height = j["height"].get<float>();
+        if (j.contains("intensity")) data.intensity = j["intensity"].get<float>();
+        if (j.contains("scatterPower")) data.scatterPower = j["scatterPower"].get<float>();
+        if (j.contains("alphaMultiplier")) data.alphaMultiplier = j["alphaMultiplier"].get<float>();
+        if (j.contains("density")) data.density = j["density"].get<float>();
+        if (j.contains("scatterAnisotropy")) data.scatterAnisotropy = j["scatterAnisotropy"].get<float>();
+        
+        if (j.contains("attenuationFactors")) {
+            auto att = j["attenuationFactors"];
+            if (att.size() >= 2) {
+                data.attenuationFactors.x = att[0].get<float>();
+                data.attenuationFactors.y = att[1].get<float>();
+            }
+        }
+    }
 }
 
-// Spot Light特化
-template <>
-struct LightTraits<SL> {
-    using LightType = SL;
-    
-    // JSON键与成员指针的映射
-    static constexpr auto member_map = std::make_tuple(
-        std::make_pair("name",        &LightType::name),
-        std::make_pair("id",          &LightType::id),
-        std::make_pair("type",        &LightType::type),
+// 声明显式特化（实现在json_mapper.cpp中）
+template<>
+void MapLightData<BeamEffects::FlickerParams>(const json& j, BeamEffects::FlickerParams& flicker);
 
-        std::make_pair("position",    &LightType::position),
-        std::make_pair("direction",   &LightType::direction),
-        std::make_pair("ambient",     &LightType::ambient),
-        std::make_pair("diffuse",     &LightType::diffuse),
-        std::make_pair("specular",    &LightType::specular),
-
-        std::make_pair("constant",    &LightType::constant),
-        std::make_pair("linear",      &LightType::linear),
-        std::make_pair("quadratic",   &LightType::quadratic),
-
-        std::make_pair("cutOff",      &LightType::cutOff),
-        std::make_pair("outerCutOff", &LightType::outerCutOff)
-    );
-};
-
-// Directional Light特化
-template <>
-struct LightTraits<DL> {
-    using LightType = DL;
-
-    // JSON键与成员指针的映射
-    static constexpr auto member_map = std::make_tuple(
-        std::make_pair("name",      &LightType::name),
-        std::make_pair("id",        &LightType::id),
-        std::make_pair("type",      &LightType::type),
-
-        std::make_pair("position",  &LightType::position),
-        std::make_pair("direction", &LightType::direction),
-        std::make_pair("ambient",   &LightType::ambient),
-        std::make_pair("diffuse",   &LightType::diffuse),
-        std::make_pair("specular",  &LightType::specular),
-
-        std::make_pair("sourceRadius",  &LightType::sourceRadius),
-        std::make_pair("sourceSoftness", &LightType::sourceSoftness),
-        std::make_pair("sourceSoftness",&LightType::sourceSoftness),
-        std::make_pair("skyColor",   &LightType::skyColor),
-        std::make_pair("atmosphereThickness",  &LightType::atmosphereThickness)
-    );
-};
-
-// Point Light特化
-template <>
-struct LightTraits<PL> {
-    using LightType = PL;
-
-    // JSON键与成员指针的映射
-    static constexpr auto member_map = std::make_tuple(
-        std::make_pair("name",      &LightType::name),
-        std::make_pair("id",        &LightType::id),
-        std::make_pair("type",      &LightType::type),
-
-        std::make_pair("position",  &LightType::position),
-        std::make_pair("direction", &LightType::direction),
-        std::make_pair("ambient",   &LightType::ambient),
-        std::make_pair("diffuse",   &LightType::diffuse),
-        std::make_pair("specular",  &LightType::specular),
-
-        std::make_pair("constant",    &LightType::constant),
-        std::make_pair("linear",      &LightType::linear),
-        std::make_pair("quadratic",   &LightType::quadratic)
-    );
-};
-
-// Sky Light特化
-template <>
-struct LightTraits<SkL> {
-    using LightType = SkL;
-
-    // JSON键与成员指针的映射
-    static constexpr auto member_map = std::make_tuple(
-        std::make_pair("name",      &LightType::name),
-        std::make_pair("id",        &LightType::id),
-        std::make_pair("type",      &LightType::type),
-        
-        std::make_pair("color",  &LightType::color),
-        std::make_pair("intensity", &LightType::intensity),
-        std::make_pair("horizonBlend", &LightType::horizonBlend),
-
-        std::make_pair("groundReflection", &LightType::groundReflection),
-        std::make_pair("cloudOpacity", &LightType::cloudOpacity),
-        std::make_pair("cloudColor",   &LightType::cloudColor)
-    );
-};
-
-} // namespace
+} // namespace CubeDemo::Prefabs::Lights::JsonMapper

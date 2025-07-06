@@ -1,6 +1,5 @@
 // src/graphics/shader.cpp
 #include "pch.h"
-#include "graphics/shader.h"
 
 // 别名
 using ifs = std::ifstream;
@@ -26,66 +25,124 @@ string Shader::Load(const string& path) {
 }
 
 //创建着色器program
-Shader::Shader(const string& vertex_path, const string& fragment_path) {
+Shader::Shader(
+    const string& vertex_path,
+    const string& fragment_path,
+    const string& geometry_path,
+    const string& compute_path
+) {
 
-    // 加载着色器
-    string vertex_code = Load(vertex_path);
-    string frag_code = Load(fragment_path);
-    
-    // 编译顶点着色器
-    unsigned int vert_shader = glCreateShader(GL_VERTEX_SHADER);
-    const char* vert_shader_code = vertex_code.c_str();
-    glShaderSource(vert_shader, 1, &vert_shader_code, NULL);
-    glCompileShader(vert_shader);
+    if(vertex_path == "" && fragment_path == "" && geometry_path == "" && compute_path == "") {
+        std::cerr << "[ERROR_SHADER] 着色器路径为空" << std::endl;
+        return;
+    }
 
-    // 编译片段着色器
-    unsigned int frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    const char* frag_shader_code = frag_code.c_str();
-    glShaderSource(frag_shader, 1, &frag_shader_code, NULL);
-    glCompileShader(frag_shader);
+    std::vector<unsigned int> shaders;
+    m_ID = glCreateProgram();   // 创建着色器程序
+    GLint success; char infoLog[512];
 
-    // 创建着色器程序
-    m_ID = glCreateProgram();
-    glAttachShader(m_ID, vert_shader);
-    glAttachShader(m_ID, frag_shader);
+    /* ------------加载着色器------------ */
+
+    if(!vertex_path.empty()) shaders.push_back(InitVertexShader(vertex_path));
+    if(!fragment_path.empty()) shaders.push_back(InitFragmentShader(fragment_path));
+    if(!geometry_path.empty()) shaders.push_back(InitGeometryShader(geometry_path));
+    if(!compute_path.empty()) shaders.push_back(InitComputeShader(compute_path));
+
+    // 链接着色器程序
     glLinkProgram(m_ID);
 
-    GLint success;
-    char infoLog[512];
-
-    // 顶点着色器编译检查
-    glGetShaderiv(vert_shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(vert_shader, 512, NULL, infoLog);
-        std::cerr << "顶点着色器编译失败: " << infoLog << std::endl;
+    for(const auto& shader : shaders) {
+        // 删除着色器对象
+        glDeleteShader(shader);
     }
-
-    // 片段着色器编译检查
-    glGetShaderiv(frag_shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(frag_shader, 512, NULL, infoLog);
-        std::cerr << "片段着色器编译失败: " << infoLog << std::endl;
-    }
-
-    // 程序链接检查
-    glGetProgramiv(m_ID, GL_LINK_STATUS, &success);
-    if (!success) {
-        glGetProgramInfoLog(m_ID, 512, NULL, infoLog);
-        std::cerr << "着色器程序链接失败: " << infoLog << std::endl;
-    }
-
-    // 删除着色器对象
-    glDeleteShader(vert_shader);
-    glDeleteShader(frag_shader);
 }
 
-Shader::~Shader() {
-    glDeleteProgram(m_ID);
+unsigned int Shader::CompileShader(GLenum type, const string& source) {
+    unsigned int shader = glCreateShader(type);
+    const char* src = source.c_str();
+    glShaderSource(shader, 1, &src, NULL);
+    glCompileShader(shader);
+    
+    // 错误检查
+    GLint success; char infoLog[512];
+
+    string err_type_str = (type == GL_VERTEX_SHADER ? "VERTEX" : type == GL_GEOMETRY_SHADER ? "GEOMETRY" : type == GL_FRAGMENT_SHADER ? "FRAGMENT" : type == GL_COMPUTE_SHADER ? "COMPUTE" : "UNKNOWN");
+
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(shader, 512, NULL, infoLog);
+        std::cerr << "着色器编译错误 (" << err_type_str << "):\n" << infoLog << std::endl;
+        return 0; // 返回0表示编译失败
+    }
+    
+    return shader;
 }
 
-void Shader::Use() const {
-    glUseProgram(m_ID);
+// 初始化顶点着色器程序
+int Shader::InitVertexShader(const string& path) {
+    if(path.empty()) return -1;
+    
+    string vert_code = Load(path);
+    if(vert_code.empty()) {
+        std::cerr << "[ERROR_SHADER] 顶点着色器内容为空: " << path << std::endl;
+        return -1;
+    }
+    unsigned int vert_shader = CompileShader(GL_VERTEX_SHADER, vert_code);  // 正确指定类型
+    if(vert_shader == 0) return -1;  // 编译失败处理
+    
+    glAttachShader(m_ID, vert_shader);
+    return vert_shader;
 }
+// 初始化片段着色器程序
+int Shader::InitFragmentShader(const string& path) {
+    if(path.empty()) return -1;
+    
+    string frag_code = Load(path);
+    if(frag_code.empty()) {
+        std::cerr << "[ERROR_SHADER] 片段着色器内容为空: " << path << std::endl;
+        return -1;
+    }
+    unsigned int frag_shader = CompileShader(GL_FRAGMENT_SHADER, frag_code);  // 正确指定类型
+    if(frag_shader == 0) return -1;  // 编译失败处理
+    
+    glAttachShader(m_ID, frag_shader);
+    return frag_shader;
+}
+// 初始化几何着色器程序
+int Shader::InitGeometryShader(const string& path) {
+    if(path.empty()) return -1;
+    
+    string geom_code = Load(path);
+    if(geom_code.empty()) {
+        std::cerr << "[ERROR_SHADER] 几何着色器内容为空: " << path << std::endl;
+        return -1;
+    }
+
+    unsigned int geom_shader = CompileShader(GL_GEOMETRY_SHADER, geom_code);  // 正确指定类型
+    if(geom_shader == 0) return -1;  // 编译失败处理
+    
+    glAttachShader(m_ID, geom_shader);
+    return geom_shader;
+}
+// 初始化计算着色器程序
+int Shader::InitComputeShader(const string& path) {
+    if(path.empty()) return -1;
+    
+    string comp_code = Load(path);
+    if(comp_code.empty()) {
+        std::cerr << "[ERROR_SHADER] 计算着色器内容为空: " << path << std::endl;
+        return -1;
+    }
+    unsigned int comp_shader = CompileShader(GL_COMPUTE_SHADER, comp_code);  // 正确指定类型
+    if(comp_shader == 0) return -1;  // 编译失败处理
+    
+    glAttachShader(m_ID, comp_shader);
+    return comp_shader;
+}
+
+Shader::~Shader() { glDeleteProgram(m_ID); }
+
+void Shader::Use() const { glUseProgram(m_ID); }
 
 void Shader::ApplyCamera(const Camera* camera, float aspect) const {
     mat4 projection = glm::perspective(
@@ -111,6 +168,9 @@ void Shader::SetVec2(const string& name, const vec2& value) {
 }
 void Shader::SetVec3(const string& name, const vec3& value) {
     glUniform3fv( glGetUniformLocation(m_ID, name.c_str()), 1, &value[0] );
+}
+void Shader::SetVec4(const string& name, const vec4& value) {
+    glUniform4fv( glGetUniformLocation(m_ID, name.c_str()), 1, &value[0] );
 }
 void Shader::SetFloat(const string& name, float value) {
     glUniform1f(glGetUniformLocation(m_ID, name.c_str()), value);

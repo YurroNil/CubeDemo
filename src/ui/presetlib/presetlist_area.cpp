@@ -132,8 +132,8 @@ void PresetlistArea::DrawPresetCard(const char* name, int id, float width, float
 // 更新选择器逻辑（需与后端数据同步）
 void PresetlistArea::UpdateSelector() {
     // 实现逻辑应包括：
-    // 1. 将当前预设参数应用到场景
-    // 2. 更新m_CurrSelector状态
-    // 3. 触发场景刷新等操作
+    // 将当前预设参数应用到场景
+    // 更新m_CurrSelector状态
+    // 触发场景刷新等操作
 }
 }   // namespace CubeDemo::UI

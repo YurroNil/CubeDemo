@@ -14,7 +14,7 @@ public:
     bool IsReady() const;
     const std::atomic<bool>& isLoading() const;
     const vec3 GetPosition() const;
-    const float GetRotation() const;
+    const vec3 GetRotation() const;
     const vec3 GetScale() const;
     const string GetID() const;
     const string GetName() const;
@@ -31,9 +31,9 @@ public:
     const void SetName(const string& name);
     const void SetType(const string& type);
     const void SetPosition(vec3 pos);
-    const void SetRotation(float rotation);
+    const void SetRotation(vec3 rotation);
     const void SetScale(vec3 scale);
-    const void SetTransform(const vec3& pos, float rotation, const vec3& scale);
+    const void SetTransform(const vec3& pos, vec3 rotation, const vec3& scale);
     const void SetShaderPaths(const string& vsh_path, const string& fsh_path);
     const void CreateShader();
 private:

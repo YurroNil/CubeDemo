@@ -1,12 +1,11 @@
 // src/ui/panels/paralist_area.cpp
 #include "pch.h"
-#include "ui/presetlib/paralist_area.h"
-#include "ui/presetlib/presetlist_area.h"
+#include "ui/presetlib/_areas.h"
 
 namespace CubeDemo::UI {
 
 // 右侧面板区域——预设参数面板
-// 右侧参数编辑面板
+// 右侧参数编辑模式面板
 void ParalistArea::Render() {
     if (PresetlistArea::s_SelectedPreset == -1) {
         // 无选中预设时的提示

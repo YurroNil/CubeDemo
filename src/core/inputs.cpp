@@ -1,12 +1,11 @@
 // src/core/inputs.cpp
 #include "pch.h"
-#include "core/inputs.h"
 
 namespace CubeDemo {
 
 // 面板切换按键映射表初始化
 std::unordered_map<int, std::function<void()>> INPUTS::s_PanelkeyMap = {
-    {GLFW_KEY_T, []() { s_isEditMode = !s_isEditMode; }},
+    {GLFW_KEY_E, []() { s_isEditMode = !s_isEditMode; }},
     {GLFW_KEY_C, []() { s_isPresetVsble = !s_isPresetVsble; }},
     {GLFW_KEY_F3, []() { s_isDebugVsble = !s_isDebugVsble; }}
 };

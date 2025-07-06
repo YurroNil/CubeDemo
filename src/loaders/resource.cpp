@@ -8,6 +8,8 @@ using DTS = CubeDemo::Diagnostic::ThreadState;
 
 namespace CubeDemo {
 
+extern unsigned int DEBUG_INFO_LV;
+
 // 静态成员初始化
 std::atomic<bool> RL::s_Running = false;
 std::vector<std::thread> RL::s_IOThreads;
@@ -17,7 +19,7 @@ TaskQueue RL::s_GPUQueue;
 // 初始化
 void RL::Init(int ioThreads) {
     s_Running = true;
-    std::cout << "正在启动" << ioThreads << "个IO线程...\n";
+    if(DEBUG_INFO_LV > 1) std::cout << "[THREAD] 正在启动" << ioThreads << "个IO线程...\n";
     for(int i=0; i<ioThreads; ++i) {
 
         s_IOThreads.emplace_back([]{
@@ -26,7 +28,7 @@ void RL::Init(int ioThreads) {
             const auto tid = std::this_thread::get_id();
             diag.ReportThreadState(tid, DTS::Created);
 
-            std::cout << "IO线程ID: " << std::this_thread::get_id() << "启动, ";
+            if(DEBUG_INFO_LV > 1) std::cout << "[THREAD] IO线程ID: " << std::this_thread::get_id() << "启动, ";
 
             // 线程启动运行循环
             RunningLoop(diag, tid);
@@ -48,18 +50,18 @@ while(s_Running) {
     // 处理任务
     diag.ReportThreadState(tid, DTS::Running);
     try {
-        std::cout << "IO线程ID: " << std::this_thread::get_id() << "处理任务...";
+        if(DEBUG_INFO_LV > 1) std::cout << "IO线程ID: " << std::this_thread::get_id() << "处理任务...";
         task();
-    } catch(const std::exception& e) { std::cerr<<"[WARNING] 任务处理失败: "<<e.what()<< std::endl; }
+    } catch(const std::exception& e) { if(DEBUG_INFO_LV > 0)  std::cerr<<"[THREAD] 任务处理失败: "<<e.what()<< std::endl; }
     // 线程让步
     std::this_thread::yield();
     // 调试部分
-    std::cout << "[资源加载器:RunningLoop] 运行中, 当前帧号: "<< temp_counter << std::endl;
+    if(DEBUG_INFO_LV > 1) std::cout << "[资源加载器] 运行中, 当前帧号: "<< temp_counter << std::endl;
     temp_counter++;
 }
     // 退出循环后报告
     diag.ReportThreadState(tid, DTS::Terminated);
-    std::cout << "[THREAD] IO线程退出 ID:" << tid << std::endl;
+    if(DEBUG_INFO_LV > 1) std::cout << "[THREAD] IO线程退出 ID:" << tid << std::endl;
 }
 
 void RL::Shutdown() {
