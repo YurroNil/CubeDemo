@@ -11,7 +11,7 @@ using ML = ::CubeDemo::Loaders::Model;
 
 class ModelIniter {
 public:
-    inline static bool s_isInitPhase = true;
+    inline static bool s_isInitPhase = false;
 
     static void RemoveAllModels();
     static void InitModels();

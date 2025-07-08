@@ -11,11 +11,11 @@ public:
     
      // 实现纯虚函数
     // 初始化场景
-    void Init() override {}
+    void Init() override;
     // 渲染场景
-    void Render(GLFWwindow* window, Camera* camera, ShadowMap* shadow_map) override {}
+    void Render(GLFWwindow* window, Camera* camera, ShadowMap* shadow_map) override;
     // 清理场景
-    void Cleanup() override {}
+    void Cleanup() override;
     
     // 获取场景信息
     const SceneInfo& GetSceneInfo() const { return m_info; }
@@ -33,24 +33,23 @@ public:
     const std::vector<Prefabs::ShadowMap*>& GetShadowMaps() const { return m_shadowMaps; }
     
     // 添加模型
-    void AddModel(::CubeDemo::Model* model) { m_models.push_back(model); }
+    void AddModel(::CubeDemo::Model* model);
     // 添加方向光
-    void AddDirLight(Prefabs::DirLight* light) { m_dirLights.push_back(light); }
+    void AddDirLight(Prefabs::DirLight* light);
     // 添加点光源
-    void AddPointLight(Prefabs::PointLight* light) { m_pointLights.push_back(light); }
+    void AddPointLight(Prefabs::PointLight* light);
     // 添加聚光灯
-    void AddSpotLight(Prefabs::SpotLight* light) { m_spotLights.push_back(light); }
+    void AddSpotLight(Prefabs::SpotLight* light);
     // 添加天空光
-    void AddSkyLight(Prefabs::SkyLight* light) { m_skyLights.push_back(light); }
+    void AddSkyLight(Prefabs::SkyLight* light);
     // 添加体积光
-    void AddVolumBeam(Prefabs::VolumBeam* beam) { m_volumBeams.push_back(beam); }
+    void AddVolumBeam(Prefabs::VolumBeam* beam);
     // 添加阴影贴图
-    void AddShadowMap(Prefabs::ShadowMap* shadowMap) { m_shadowMaps.push_back(shadowMap); }
+    void AddShadowMap(Prefabs::ShadowMap* shadowMap);
     
 private:
     // 场景信息
     SceneInfo m_info;
-    std::vector<::CubeDemo::Model*> m_models;
     std::vector<Prefabs::DirLight*> m_dirLights;
     std::vector<Prefabs::PointLight*> m_pointLights;
     std::vector<Prefabs::SpotLight*> m_spotLights;

@@ -23,6 +23,8 @@ public:
 
     VolumBeam();
     ~VolumBeam();
+    
+    void Init();
     void Render(Camera* camera, SL* spot_light);
 
     // 配置光束效果

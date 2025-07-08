@@ -4,6 +4,11 @@
 #include "utils/font_defines.h"
 #include "loaders/font.h"
 #include "loaders/texture.h"
+#include "managers/scene/mng.h"
+
+namespace CubeDemo {
+    extern Managers::SceneMng* SCENE_MNG;
+}
 
 namespace CubeDemo::UI::MainMenu {
 
@@ -57,8 +62,11 @@ void SceneSelection::Render() {
     // 增加表格间距
     ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(CARD_SPACING_X, CARD_SPACING_Y));
     
+    // 使用MainMenuBase中的场景列表
+    auto& sceneList = MainMenuBase::m_sceneList;
+    
     if (ImGui::BeginTable("SceneGrid", 2, ImGuiTableFlags_SizingFixedFit)) {
-        for (int i = 0; i < m_sceneList.size(); i++) {
+        for (int i = 0; i < sceneList.size(); i++) {
             if (i % 2 == 0) {
                 ImGui::TableNextRow();
                 ImGui::TableSetColumnIndex(0);
@@ -68,7 +76,10 @@ void SceneSelection::Render() {
             
             // 增加卡片间距
             ImGui::Dummy(ImVec2(0, CARD_SPACING_Y / 4));
-            SceneCard(m_sceneList[i], i, CARD_WIDTH, CARD_HEIGHT);
+            
+            // 传递正确的SceneItem类型
+            SceneCard(sceneList[i], i, CARD_WIDTH, CARD_HEIGHT);
+            
             ImGui::Dummy(ImVec2(0, CARD_SPACING_Y / 4));
         }
         ImGui::EndTable();
@@ -78,7 +89,7 @@ void SceneSelection::Render() {
     ImGui::EndChild();
 }
 
-void SceneSelection::SceneCard(const SceneInfo& scene, int id, float width, float height) {
+void SceneSelection::SceneCard(const SceneItem& scene, int id, float width, float height) {
     bool isSelected = (m_selectedScene == id);
     ImGui::PushID(id);
     

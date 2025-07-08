@@ -5,6 +5,9 @@
 namespace CubeDemo::Prefabs {
 
 /* ---------设置着色器--------- */
+
+void DL::Init() {}
+
 // 方向光
 void DL::SetShader(Shader& shader) {
     const string temp_id = "dir_light";
@@ -21,6 +24,8 @@ void DL::SetShader(Shader& shader) {
 }
 
 // 聚光
+void SL::Init() {}
+
 void SL::SetShader(Shader& shader) {
     using namespace glm;
 
@@ -40,6 +45,8 @@ void SL::SetShader(Shader& shader) {
     shader.SetFloat(temp_id + ".quadratic", quadratic);
 }
 // 点光
+void PL::Init() {}
+
 void PL::SetShader(Shader& shader) {
     const string temp_id = "point_light";
 
@@ -54,6 +61,8 @@ void PL::SetShader(Shader& shader) {
     shader.SetFloat(temp_id + ".quadratic", quadratic);
 }
 // 天空光
+void SkL::Init() {}
+
 void SkL::SetShader(Shader& shader) {
     const string temp_id = "sky_light";
 

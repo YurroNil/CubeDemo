@@ -31,6 +31,8 @@ void ModelMng::AllUseShader(
         if(point_light != nullptr) point_light->SetShader(*model->ModelShader);
         if(sky_light != nullptr) sky_light->SetShader(*model->ModelShader);
 
+        // 设置模型变换
+        model->ModelShader->SetMat4("model", model->GetModelMatrix());
     }
 }
 

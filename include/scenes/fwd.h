@@ -2,5 +2,5 @@
 #pragma once
 namespace CubeDemo::Scenes {
     // 向前声明
-    class SceneBase; class DefaultScene; class NightScene;
+    class SceneBase; class DynamicScene;
 }

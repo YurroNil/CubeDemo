@@ -1,0 +1,13 @@
+{
+    "id": "forest_night",
+    "name": "森林(夜晚)",
+    "description": "森林的夜晚场景. 森林中废弃的工厂仓库, 门外有两位可爱的女孩被一束神秘的光束吸引着.",
+    "author": "沫兮花落_忧婼子",
+    "icon": "icon.png",
+    "preview_image": "preview.png",
+    "scene_config": {
+        "model": "prefabs/model.json",
+        "light": "prefabs/light.json",
+        "camera": "prefabs/camera.json"
+    }
+}

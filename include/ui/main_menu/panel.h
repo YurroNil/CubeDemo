@@ -15,8 +15,9 @@ public:
     
 private:
     static void LoadScenePreviews();
-    static void TitleSection();
-    static void BottomBar();
+    static void LoadScenelistFrom();
+    static void CreatePlaceholderTexture(SceneItem& sceneItem, const string& sceneId);
 };
 
 } // namespace CubeDemo::UI
+using MainMenuPanel = CubeDemo::UI::MainMenuPanel;

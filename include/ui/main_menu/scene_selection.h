@@ -7,8 +7,7 @@ namespace CubeDemo::UI::MainMenu {
 class SceneSelection : public MainMenuBase {
 // private
 
-    static void SceneCard(const SceneInfo& scene, int id, float width, float height);
-
+    static void SceneCard(const SceneItem& scene, int id, float width, float height);
 public:
     static void Render();
 };

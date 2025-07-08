@@ -20,13 +20,15 @@ void UIMng::Init() {
 
     /* --------面板初始化-------- */
     using namespace UI;
-
     // 主菜单初始化
     MainMenuPanel::Init();
+}
+
+void UIMng::PanelUpdate() {
+    using namespace UI;
 
     // 编辑模式面板初始化
     EditPanel::Init();
-
     // 预设库面板初始化
     PresetlibPanel::Init();
 }

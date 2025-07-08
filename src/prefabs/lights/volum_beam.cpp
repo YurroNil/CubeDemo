@@ -16,8 +16,43 @@ VolumBeam::~VolumBeam() {
     if (VolumShader) delete VolumShader;
 }
 
+void VolumBeam::Init() {
+    try {
+        // 创建体积光着色器
+        CreateVolumShader();
+        
+        // 创建光锥几何体
+        const float radius = (Effects.radius > 0) ? Effects.radius : 1.0f;
+        const float height = (Effects.height > 0) ? Effects.height : 5.0f;
+        CreateLightCone(radius, height);
+        
+        // 验证资源创建
+        if (!VolumShader) {
+            throw std::runtime_error("体积光着色器创建失败");
+        }
+        
+        if (coneVAO == 0) {
+            throw std::runtime_error("光锥几何体创建失败");
+        }
+        
+        std::cout << "体积光初始化成功 (半径: " << radius << ", 高度: " << height << ")" << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "体积光初始化失败: " << e.what() << std::endl;
+        // 清理部分创建的资源
+        if (coneVAO) glDeleteVertexArrays(1, &coneVAO);
+        if (coneVBO) glDeleteBuffers(1, &coneVBO);
+        if (VolumShader) delete VolumShader;
+        coneVAO = coneVBO = 0;
+        VolumShader = nullptr;
+        throw; // 重新抛出异常
+    }
+}
+
 // 设置动态效果+应用着色器
 void VolumBeam::SetFx(Camera* camera, SL* spot_light) {
+
+    if(spot_light == nullptr) return;
+
     // 别名
     const auto& s = VolumShader;
     const auto& fx = Effects;
@@ -66,6 +101,25 @@ void VolumBeam::SetFx(Camera* camera, SL* spot_light) {
 
 // 渲染体积光束
 void VolumBeam::Render(Camera* camera, SL* spot_light) {
+
+    if (spot_light == nullptr) {
+        std::cerr << "体积光渲染失败: 聚光灯为空" << std::endl;
+        return;
+    }
+    
+    if (VolumShader == nullptr) {
+        std::cerr << "体积光渲染失败: 着色器未初始化" << std::endl;
+        return;
+    }
+    
+    if (coneVAO == 0) {
+        std::cerr << "体积光渲染失败: 几何体未初始化" << std::endl;
+        return;
+    }
+
+    // 设置动态效果（变换矩阵、着色器参数等）
+    SetFx(camera, spot_light);
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     glDepthMask(GL_FALSE);
@@ -105,6 +159,9 @@ void VolumBeam::Render(Camera* camera, SL* spot_light) {
             = 先缩放 → 再旋转 → 最后平移
 */
 mat4 VolumBeam::CalcTransform(SL* spot_light) {
+
+    if(spot_light == nullptr) return mat4(0);
+
     vec3 targetDir = normalize(spot_light->direction);
     vec3 defaultDir = vec3(0.0f, -1.0f, 0.0f); // 圆锥默认方向
     
@@ -152,6 +209,17 @@ void VolumBeam::CreateLightCone(float radius, float height) {
     glGenVertexArrays(1, &coneVAO);
     glGenBuffers(1, &coneVBO);
     
+    // 检查OpenGL错误
+    GLenum error = glGetError();
+    if (error != GL_NO_ERROR) {
+        throw std::runtime_error("创建OpenGL缓冲区失败: " + std::to_string(error));
+    }
+    
+    if (coneVAO == 0 || coneVBO == 0) {
+        throw std::runtime_error("光锥几何体创建失败 (VAO/VBO为0)");
+    }
+
+    
     glBindVertexArray(coneVAO);
     glBindBuffer(GL_ARRAY_BUFFER, coneVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(ConeVertex), &vertex, GL_STATIC_DRAW);
@@ -176,8 +244,7 @@ void VolumBeam::CreateLightCone(float radius, float height) {
 void VolumBeam::CreateVolumShader() {
     VolumShader = new Shader(
         VSH_PATH + string("volumetric.glsl"),
-        FSH_PATH + string("volumetric.glsl"),
-        GSH_PATH + string("volumetric.glsl")
+        FSH_PATH + string("volumetric.glsl")
     );
 }
 

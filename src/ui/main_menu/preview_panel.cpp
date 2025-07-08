@@ -1,11 +1,16 @@
-// include/ui/main_menu/menubar.h
+// include/ui/main_menu/menubar.cpp
 #include "pch.h"
 #include "ui/main_menu/preview_panel.h"
 #include "ui/main_menu/panel.h"
 #include "utils/font_defines.h"
 #include "loaders/texture.h"
+#include "managers/scene/mng.h"
 
 using MainMenuPanel = CubeDemo::UI::MainMenuPanel;
+
+namespace CubeDemo {
+    extern Managers::SceneMng* SCENE_MNG;
+}
 
 namespace CubeDemo::UI::MainMenu {
 
@@ -20,7 +25,8 @@ void PreviewPanel::Render() {
     );
     
     if (m_selectedScene >= 0 && m_selectedScene < m_sceneList.size()) {
-        const SceneInfo& scene = m_sceneList[m_selectedScene];
+        // 使用正确的SceneItem类型
+        const auto& scene = m_sceneList[m_selectedScene];
         
         // 预览标题
         ImGui::TextColored(ImVec4(0.26f, 0.59f, 0.98f, 1.00f), ICON_FA_EYE "  场景预览");
@@ -44,7 +50,7 @@ void PreviewPanel::Render() {
         );
         
         // 绘制预览图
-        ImGui::Image(imguiTexID, ImVec2(previewSize, previewSize * 0.8f));
+        ImGui::Image(imguiTexID, ImVec2(previewSize, previewSize));
         ImGui::Spacing();
         
         // 场景信息
@@ -60,13 +66,20 @@ void PreviewPanel::Render() {
         ImGui::Text("%s", scene.name.c_str());
         ImGui::Spacing();
         
+        // 场景作者
+        ImGui::TextColored(ImVec4(0.8f, 0.9f, 1.0f, 1.0f), "作者:");
+        ImGui::SameLine();
+        ImGui::TextWrapped("%s", scene.author.c_str());
+        ImGui::Spacing();
+
         // 场景描述
-        ImGui::TextColored(ImVec4(0.8f, 0.9f, 1.0f, 1.0f), "场景描述:");
+        ImGui::TextColored(ImVec4(0.8f, 0.9f, 1.0f, 1.0f), "描述:");
+        ImGui::SameLine();
         ImGui::TextWrapped("%s", scene.description.c_str());
         ImGui::Spacing();
         
         // 场景路径
-        ImGui::TextColored(ImVec4(0.8f, 0.9f, 1.0f, 1.0f), "场景路径:");
+        ImGui::TextColored(ImVec4(0.8f, 0.9f, 1.0f, 1.0f), "文件路径:");
         ImGui::TextWrapped("%s", scene.path.c_str());
         
         ImGui::EndChild();
@@ -81,7 +94,25 @@ void PreviewPanel::Render() {
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.10f, 0.30f, 0.65f, 1.0f));
         
         if (ImGui::Button("加载场景", ImVec2(200, 60))) {
-            MainMenuPanel::s_isMainMenuPhase = false;
+            // 查找场景ID
+            std::string sceneID;
+            const auto& allScenes = SCENE_MNG->GetAllScenes();
+            
+            // 通过资源路径查找场景ID
+            for (const auto& [id, scenePtr] : allScenes) {
+                if (scenePtr->GetSceneInfo().resourcePath == scene.path) {
+                    sceneID = id;
+                    break;
+                }
+            }
+            
+            if (!sceneID.empty()) {
+                // 切换场景
+                SCENE_MNG->SwitchTo(sceneID);
+                MainMenuPanel::s_isMainMenuPhase = false;
+            } else {
+                std::cerr << "未找到匹配的场景ID: " << scene.path << std::endl;
+            }
         }
         
         if (ImGui::IsItemHovered()) {

@@ -1,0 +1,12 @@
+{
+    "position": [5.0, 2.0, 0.0],
+    "rotation": [0.0, 0.0],
+    "attributes":{
+        "movement_speed": 4.0,
+        "jump_force": 5.0,
+        "mouse_senstivity": 0.1,
+        "fov": 90.0,
+        "near": 0.1,
+        "far": 100.0
+    }
+}

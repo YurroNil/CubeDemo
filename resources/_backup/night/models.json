@@ -1,0 +1,72 @@
+{
+    "LoadModels": [
+        {
+            "id": "kokomi",
+            "type": "model.character",
+            "name": "心海",
+            "path": "kokomi/kokomi.obj",
+            "icon_path": "kokomi/icon.png",
+            "description": "《原神》游戏中的角色.",
+            "shaders": {
+                "vertex": "model.glsl",
+                "fragment": "model_night.glsl"
+            },
+            "attributes": {
+                "position": [-6.4, -1.4, -29.2],
+                "rotation": [0.0, 90.0, 0],
+                "scale": [0.4, 0.4, 0.4]
+            }
+        },
+        {
+            "id": "mia_vacuum",
+            "type": "model.character",
+            "name": "米娅(vacuum)",
+            "path": "mia/Mia_vacuum.gltf",
+            "icon_path": "mia_vacuum/icon.png",
+            "description": "二次元风格的小女孩. 只是着装有点不太一样...",
+            "shaders": {
+                "vertex": "model.glsl",
+                "fragment": "model_night.glsl"
+            },
+            "attributes": {
+                "position": [16, -1.4, -45.5],
+                "rotation": [0, 4.07, 0],
+                "scale": [0.7, 0.7, 0.7]
+            }
+        },
+        {
+            "id": "forest",
+            "type": "model.scene",
+            "name" : "森林",
+            "path": "forest/forest.obj",
+            "icon_path": "forest/icon.png",
+            "description": "简易的森林场景.",
+            "shaders": {
+                "vertex": "model.glsl",
+                "fragment": "model_night.glsl"
+            },
+            "attributes": {
+                "position": [0, -2, 0],
+                "rotation": [0.0, 0.0, 0.0],
+                "scale": [10, 10, 10]
+            }
+        },
+        {
+            "id": "factory_warehouse",
+            "type": "model.scene",
+            "name": "工厂仓库",
+            "path": "factory_warehouse/factory_warehouse.obj",
+            "icon_path": "factory_warehouse/icon.png",
+            "description": "废弃的工厂仓库场景.",
+            "shaders": {
+                "vertex": "model.glsl",
+                "fragment": "model_night.glsl"
+            },
+            "attributes": {
+                "position": [80, 7, -10],
+                "rotation": [0.0, 1.4, 0.0],
+                "scale": [0.1, 0.1, 0.1]
+            }
+        }
+    ]
+}

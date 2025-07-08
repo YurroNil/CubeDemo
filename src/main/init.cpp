@@ -17,7 +17,7 @@ GLFWwindow* Init(int argc, char* argv[]) {
     /* 基本模块初始化 */
     WINDOW::Init(1920, 1080, "Cube Demo");
     Renderer::Init();
-    UIMng::Init();
+    
 
     /* 场景与预制体初始化 */
     init_managers();
@@ -29,8 +29,8 @@ GLFWwindow* Init(int argc, char* argv[]) {
 
     // 场景管理器初始化
     SCENE_MNG->Init();
-    // 注意：场景管理器的初始化会根据当前场景状态，来自动调用内部场景实例的初始化.
-    // 然后又因为内部场景实例的初始化，会进行一系列的场景、着色器、光源等资源初始化的加载，所以再场景实例初始化中会执行：MIL::InitModels();函数进行初始化模型
+    
+    UIMng::Init();
 
     /* ---------- 结束 ------------ */
     std::cout << "[INITER] 初始化阶段结束\n" << std::endl;

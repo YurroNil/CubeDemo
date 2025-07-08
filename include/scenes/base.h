@@ -7,8 +7,8 @@ namespace CubeDemo::Scenes {
 
 struct SceneInfo {
     string id, name, description,
-    author, icon,
-    resourcePath; // 添加资源路径
+    author, icon, previewImage,
+    resourcePath;
     
     struct PrefabRef {
         string type, path;
@@ -20,17 +20,19 @@ struct SceneInfo {
 
 class SceneBase {
 public:
+    explicit SceneBase(const SceneInfo& info) : m_info(info) {}
     virtual ~SceneBase() = default;
     
     virtual void Init() = 0;
     virtual void Render(GLFWwindow* window, Camera* camera, ShadowMap* shadow_map) = 0;
     virtual void Cleanup() = 0;
     
-    const string& GetID() const { return m_id; }
-    const string& GetName() const { return m_name; }
+    const SceneInfo& GetSceneInfo() const { return m_info; }
+    const string& GetID() const { return m_info.id; }
+    const string& GetName() const { return m_info.name; }
     
     // 成员变量
-    string m_id, m_name;
+    SceneInfo m_info;
 };
 
 } // namespace CubeDemo::Scenes

@@ -16,7 +16,8 @@ public:
     BoundingSphere bounds;
     Shader* ModelShader = nullptr;   // 模型着色器(可公共修改)
 
-    Model(const string& path);  // 初始化
+    Model(const string& path);
+    void Init();
     void NormalDraw(bool is_mainloop_draw);
     void DrawCall(Camera* camera, bool is_mainloop_draw = true);
     void Delete();

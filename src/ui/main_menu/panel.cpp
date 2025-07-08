@@ -5,49 +5,110 @@
 #include "loaders/image.h"
 #include "utils/time.h"
 #include "utils/font_defines.h"
+#include "managers/scene/mng.h"
+
+using TLS = CubeDemo::Texture::LoadState;
+
+namespace CubeDemo {
+    extern Managers::SceneMng* SCENE_MNG;
+}
 
 namespace CubeDemo::UI {
 
 void MainMenuPanel::Init() {
     glfwSetInputMode(WINDOW::GetWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    
-    // 初始化场景列表
-    MainMenuBase::m_sceneList = {
-        {"空白(棋盘)", "一个简单的棋盘场景，用于测试基础渲染", "resources/scenes/chess"},
-        {"测试", "包含各种测试元素的场景", "resources/scenes/test"},
-        {"森林(白天)", "阳光明媚的森林环境", "resources/scenes/forest_day"},
-        {"森林(夜晚)", "月光下的神秘森林", "resources/scenes/forest_night"},
-        {"城市", "现代化城市景观", "resources/scenes/city"},
-        {"地牢", "阴暗潮湿的地下城环境", "resources/scenes/dungeon"}
-    };
-    
+
+    // 从场景管理器加载场景列表
+    LoadScenelistFrom();
     // 加载场景预览图
     LoadScenePreviews();
     m_greeting = Utils::Time::get_time_greeting();
 }
 
-void MainMenuPanel::LoadScenePreviews() {
-    // 为每个场景创建纯色纹理作为占位符
-    for (auto& scene : m_sceneList) {
-        // 创建1x1的纯色图像数据
-        auto imageData = std::make_shared<IL>();
-        imageData->width = 1;
-        imageData->height = 1;
-        imageData->channels = 4;
-        
-        // 生成随机颜色
-        unsigned char* data = new unsigned char[4]{
-            static_cast<unsigned char>(rand() % 200 + 55),
-            static_cast<unsigned char>(rand() % 200 + 55),
-            static_cast<unsigned char>(rand() % 200 + 55),
-            255
-        };
-        
-        imageData->data = std::unique_ptr<unsigned char[]>(data);
-        
-        // 使用纹理加载器创建纹理
-        scene.preview = TL::CreateFromData(imageData, "placeholder", "diffuse");
+void MainMenuPanel::LoadScenelistFrom() {
+
+    // 清空现有场景列表
+    MainMenuBase::m_sceneList.clear();
+    
+    // 从场景管理器获取所有场景
+    const auto& scenes = SCENE_MNG->GetAllScenes();
+    
+    // 构建场景列表
+    for (const auto& [sceneID, scene] : scenes) {
+        const auto& info = scene->GetSceneInfo();
+    
+        MainMenuBase::SceneItem item;
+        item.name = info.name;
+        item.description = info.description;
+        item.author = info.author;
+        item.icon = info.icon;
+        item.previewImage = info.previewImage;
+        item.path = info.resourcePath; // 使用资源路径作为标识
+
+        MainMenuBase::m_sceneList.push_back(item);
     }
+}
+
+void MainMenuPanel::LoadScenePreviews() {
+    // 从场景管理器获取所有场景
+    const auto& scenes = SCENE_MNG->GetAllScenes();
+    
+    for (auto& sceneItem : MainMenuBase::m_sceneList) {
+        // 查找对应的场景信息
+        bool found = false;
+        Scenes::SceneInfo sceneInfo;
+        
+        for (const auto& [id, scene] : scenes) {
+            if (scene->GetSceneInfo().resourcePath != sceneItem.path) continue;
+            
+            sceneInfo = scene->GetSceneInfo();
+            found = true;
+            break;
+        }
+        
+        if (!found) continue;
+        
+        // 尝试加载预览图
+        if (!sceneInfo.previewImage.empty()) {
+            try {
+                // 构建完整路径
+                std::string fullPath = sceneInfo.resourcePath + "/" + sceneInfo.previewImage;
+                
+                // 使用同步加载纹理
+                sceneItem.preview = TL::LoadSync(fullPath, "diffuse");
+                
+                // 如果加载失败，使用占位符
+                if (!sceneItem.preview || sceneItem.preview->State.load() != TLS::Ready) {
+                    CreatePlaceholderTexture(sceneItem, sceneInfo.id);
+                }
+            } catch (...) {
+                // 加载失败，使用占位符
+                CreatePlaceholderTexture(sceneItem, sceneInfo.id);
+            }
+        // 没有预览图路径，使用占位符
+        } else CreatePlaceholderTexture(sceneItem, sceneInfo.id);
+    }
+}
+
+void MainMenuPanel::CreatePlaceholderTexture(SceneItem& sceneItem, const string& sceneId) {
+    // 创建1x1的纯色图像数据
+    auto imageData = std::make_shared<IL>();
+    imageData->width = 1;
+    imageData->height = 1;
+    imageData->channels = 4;
+    
+    // 生成随机颜色
+    unsigned char* data = new unsigned char[4]{
+        static_cast<unsigned char>(rand() % 200 + 55),
+        static_cast<unsigned char>(rand() % 200 + 55),
+        static_cast<unsigned char>(rand() % 200 + 55),
+        255
+    };
+    
+    imageData->data = std::unique_ptr<unsigned char[]>(data);
+    
+    // 使用纹理加载器创建纹理
+    sceneItem.preview = TL::CreateFromData(imageData, "placeholder_" + sceneId, "diffuse");
 }
 
 void MainMenuPanel::Render() {
@@ -64,11 +125,11 @@ void MainMenuPanel::Render() {
     if (ImGui::Begin("MainMenu", &s_isMainMenuPhase, 
         ImGuiWindowFlags_NoTitleBar | 
         ImGuiWindowFlags_NoResize | 
-        ImGuiWindowFlags_NoMove |
-        ImGuiWindowFlags_NoScrollbar |
-        ImGuiWindowFlags_NoCollapse |
-        ImGuiWindowFlags_NoBringToFrontOnFocus |
-        ImGuiWindowFlags_NoBackground |
+        ImGuiWindowFlags_NoMove | 
+        ImGuiWindowFlags_NoScrollbar | 
+        ImGuiWindowFlags_NoCollapse | 
+        ImGuiWindowFlags_NoBringToFrontOnFocus | 
+        ImGuiWindowFlags_NoBackground | 
         ImGuiWindowFlags_NoScrollWithMouse
     )) {
         // 绘制渐变背景
@@ -83,28 +144,27 @@ void MainMenuPanel::Render() {
             ImColor(0.08f, 0.08f, 0.08f, 0.95f),
             ImColor(0.10f, 0.10f, 0.10f, 0.95f)
         );
-        
+
         // 添加星空效果
-        static bool starsInitialized = false;
+        static bool starsInited = false;
         static std::vector<ImVec2> starPositions;
         static std::vector<float> starSizes;
         
-        if (!starsInitialized) {
+        if (!starsInited) {
             for (int i = 0; i < 100; i++) {
                 starPositions.push_back(ImVec2(
-                    rand() % (int)viewport->Size.x, 
+                    rand() % (int)viewport->Size.x,
                     rand() % (int)viewport->Size.y
                 ));
                 starSizes.push_back(0.5f + (rand() % 100) / 200.0f);
             }
-            starsInitialized = true;
+            starsInited = true;
         }
         
         for (int i = 0; i < 100; i++) {
             draw_list->AddCircleFilled(
                 ImVec2(starPositions[i].x, starPositions[i].y), 
-                starSizes[i], 
-                ImColor(1.0f, 1.0f, 1.0f, 0.5f)
+                starSizes[i], ImColor(1.0f, 1.0f, 1.0f, 0.5f)
             );
         }
         
@@ -129,7 +189,7 @@ void MainMenuPanel::Render() {
         MainMenu::Bottombar::Render();
     }
     ImGui::End();
-    
+
     ImGui::PopStyleVar(); // 弹出窗口内边距设置
 }
 } // namespace CubeDemo::UI

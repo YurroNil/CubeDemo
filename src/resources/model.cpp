@@ -14,6 +14,9 @@ extern unsigned int DEBUG_INFO_LV;
 Model::Model(const string& path)
     : m_Path(path), Managers::ModelGetter(this) {}
 
+void Model::Init() {
+}
+
 // 绘制函数. 判断是否符合条件，若符合条件则调用NormalDraw来更进一步地绘制网格
 void Model::DrawCall(Camera* camera, bool is_mainloop_draw) {
     // 模型绘制循环

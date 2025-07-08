@@ -8,7 +8,7 @@ public:
     static void Init();
     static void RenderLoop(GLFWwindow* window, Camera* camera);    // 放进渲染循环的主函数
     static ImVec2 GetWindowCenter(GLFWwindow* window);
-
+    static void PanelUpdate();
     // 添加分辨率错误渲染方法
     static void RenderResolutionError();
     
@@ -16,4 +16,4 @@ private:
     static void InitImGui();
     static void ConfigureImGuiStyle();
 };
-}
+}   // namespace CubeDemo

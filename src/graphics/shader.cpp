@@ -26,10 +26,8 @@ string Shader::Load(const string& path) {
 
 //创建着色器program
 Shader::Shader(
-    const string& vertex_path,
-    const string& fragment_path,
-    const string& geometry_path,
-    const string& compute_path
+    const string& vertex_path, const string& fragment_path,
+    const string& geometry_path, const string& compute_path
 ) {
 
     if(vertex_path == "" && fragment_path == "" && geometry_path == "" && compute_path == "") {

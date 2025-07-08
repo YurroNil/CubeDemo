@@ -25,9 +25,6 @@ void EditPanel::Init() {
     for(const auto& model : MODEL_POINTERS) {
         CMTP::s_AvailableModels.push_back(model->GetName());
     }
-
-    // 加载图标字体
-    // IconFont::Load();
 }
 
 // 主渲染入口函数

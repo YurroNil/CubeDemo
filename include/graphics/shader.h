@@ -35,6 +35,7 @@ public:
     void SetBool(const string& name, bool value);
     void SetViewPos(const vec3& pos);
     void SetLightSpaceMat(const mat4& matrix);
+    unsigned int GetID() const { return m_ID; }
 
 private:
     unsigned int m_ID; 

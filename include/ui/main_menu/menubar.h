@@ -5,7 +5,6 @@
 namespace CubeDemo::UI::MainMenu {
 
 class Menubar : public MainMenuBase {
-public:
-    static void Render();
+public: static void Render();
 };
 }   // namespace CubeDemo::UI

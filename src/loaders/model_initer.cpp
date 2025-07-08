@@ -36,7 +36,6 @@ void MIL::InitModels() {
         
         string fullPath = info.resourcePath + "/" + prefab.path;
         auto modelConfigs = Utils::JsonConfig::LoadModelConfig(fullPath);
-        std::cout << "[INITER] LoadModelConfig.fullPath路径为: " << fullPath << std::endl;
         
         // 预注册所有模型资源
         for (const auto& config : modelConfigs) {
@@ -64,7 +63,6 @@ void MIL::InitModels() {
         if (prefab.type != "light") continue;
         
         string fullPath = info.resourcePath + "/" + prefab.path;
-        std::cout << "[INITER] LoadLightConfigs.fullPath路径为: " << fullPath << std::endl;
 
         // 使用光源管理器加载配置
         auto lightResult = LightMng::LoadLightConfigs(fullPath);
@@ -86,6 +84,11 @@ void MIL::InitModels() {
             scene->AddVolumBeam(beam);
         }
     }
+    // 模型加载完成后，更新面板信息
+    UIMng::PanelUpdate();
+    // 更新鼠标状态
+    glfwSetInputMode(WINDOW::GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    
     s_isInitPhase = false;
 }
 
@@ -170,7 +173,7 @@ void MIL::WaitForModelLoad(std::atomic<bool>& model_loaded) {
         }
         // 无任务时让出CPU
         if (processed == 0) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            std::this_thread::sleep_for(millisec(10));
         }
     }
 }

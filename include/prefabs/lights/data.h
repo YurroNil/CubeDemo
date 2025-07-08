@@ -17,6 +17,7 @@ struct DirLight {
     float
         intensity = 1.0f, sourceRadius = 0.5f, sourceSoftness = 0.2f, atmosphereThickness = 0.5f;
 
+    void Init();
     void SetShader(Shader& shader);
 };
 
@@ -30,6 +31,7 @@ struct PointLight {
 
     float intensity = 1.0f, constant, linear, quadratic;
 
+    void Init();
     void SetShader(Shader& shader);
 };
 
@@ -46,6 +48,7 @@ struct SpotLight {
     
     float intensity = 1.0f, constant, linear, quadratic, cutOff, outerCutOff;
 
+    void Init();
     void SetShader(Shader& shader);
 };
 
@@ -58,11 +61,13 @@ struct SkyLight {
 
     float intensity, horizonBlend, groundReflection = 0.3f, cloudOpacity = 0.4f;
 
+    void Init();
     void SetShader(Shader& shader);
 };
 
 // 光束效果
 struct BeamEffects {
+
     string id, type, name, noiseTexture, description;
 
     float
@@ -72,12 +77,14 @@ struct BeamEffects {
     
     vec2 attenuationFactors = vec2(0.1f, 0.05f);
 
+    // 体积光束的闪烁参数
     struct FlickerParams {
         bool enable = false;
         float min = 0.8f, max = 1.2f, speed = 1.0f;
     };
     
     FlickerParams flicker;
+
 };
 
 } // namespace CubeDemo::Prefabs

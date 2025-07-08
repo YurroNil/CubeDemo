@@ -6,12 +6,13 @@
 
 namespace CubeDemo::Managers {
 
+
 class SceneMng {
 public:
     SceneMng() {}
     ~SceneMng();
     
-void Init(const string& sceneDir = SCENE_CONF_PATH);
+    void Init(const string& sceneDir = SCENE_CONF_PATH);
     void SwitchTo(const string& sceneID);
     
     Scenes::SceneBase* GetCurrentScene() const { return m_currentScene; }
@@ -22,11 +23,10 @@ void Init(const string& sceneDir = SCENE_CONF_PATH);
     
 private:
     void LoadSceneConfigs();
-    void LoadScene(const fs::path& sceneDir);
+    void ParsingData(const fs::path& sceneDir);
     
     std::unordered_map<string, Scenes::SceneBase*> m_scenes;
     Scenes::SceneBase* m_currentScene = nullptr;
-    string m_defaultSceneID = "default";
     string m_sceneDir;
     
     inline static unsigned int m_InstCount = 0;
