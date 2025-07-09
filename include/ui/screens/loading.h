@@ -8,8 +8,9 @@ public:
 
     static void Init();
     static void Cleanup();
+    static void DynamicGraphic();
     static void Render(bool async_mode);
     static void StaticGraphic();
-    static void DynamicGraphic();
+
 };
 } // namespace CubeDemo::UI

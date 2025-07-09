@@ -39,7 +39,7 @@ void SceneMng::ParsingData(const fs::path& sceneDir) {
     try {
         // 读取文件内容
         std::ifstream file(configPath);
-        std::string content(
+        string content(
             (std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>()
         );
         
@@ -63,6 +63,12 @@ void SceneMng::ParsingData(const fs::path& sceneDir) {
     }
 }
 
+// 仅卸载场景资源
+void SceneMng::Cleanup() {
+    if (m_currentScene) m_currentScene->Cleanup();
+    m_currentScene = nullptr;
+}
+
 // 切换场景
 void SceneMng::SwitchTo(const string& sceneID) {
     auto it = m_scenes.find(sceneID);
@@ -70,20 +76,13 @@ void SceneMng::SwitchTo(const string& sceneID) {
         std::cerr << "场景不存在: " << sceneID << std::endl;
         return;
     }
-    // 先卸载当前场景
-    if (m_currentScene) m_currentScene->Cleanup();
-
-    // 加载新场景
-    m_currentScene = it->second;
-    
-    try {
-        // 初始化场景资源
-        MIL::InitModels();
-
-    } catch (const std::exception& e) {
-
+    // 先卸载当前场景, 再加载新场景
+    Cleanup(); m_currentScene = it->second;
+    // 初始化场景资源
+    try { MIL::InitModels(); }
+    // 失败处理
+    catch (const std::exception& e) {
         std::cerr << "场景初始化失败: " << sceneID << " - " << e.what() << std::endl;
-        
         m_currentScene = nullptr;
     }
 }

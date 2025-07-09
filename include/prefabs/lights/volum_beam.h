@@ -26,6 +26,7 @@ public:
     
     void Init();
     void Render(Camera* camera, SL* spot_light);
+    void CleanUp();
 
     // 配置光束效果
     void Configure(const BeamEffects& effects);

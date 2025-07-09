@@ -11,7 +11,7 @@ LightMng::LightLoadResult LightMng::LoadLightConfigs(const string& config_path) 
     
     if (config.is_array()) {
         for (const auto& item : config) {
-            std::string type = item.value("type", "");
+            string type = item.value("type", "");
             
             if (type == "prefab.dir_light") {
                 auto light_ptr = new DL();

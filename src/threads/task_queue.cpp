@@ -70,7 +70,7 @@ bool TaskQueue::Empty() const {
 
 float TaskQueue::GetQueuePressure() const {
     std::lock_guard lock(mutex_);
-    const auto now = csclock::now();
+    const auto now = steady_clock::now();
     const auto elapsed = std::chrono::duration_cast<millisec>(
         now - lastEnqueueTime_
     ).count();

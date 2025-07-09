@@ -92,30 +92,6 @@ void MIL::InitModels() {
     s_isInitPhase = false;
 }
 
-void MIL::SwitchScene(const string& sceneID) {
-    // 卸载当前场景所有模型
-    RemoveAllModels();
-    
-    // 切换到新场景
-    SCENE_MNG->SwitchTo(sceneID);
-    
-    // 加载新场景模型
-    InitModels();
-}
-
-void MIL::RemoveAllModels() {
-    // 清理全局模型列表
-    for (auto* model : MODEL_POINTERS) {
-        delete model;
-    }
-    MODEL_POINTERS.clear();
-    
-    // 清理场景中的模型引用
-    if (auto* scene = dynamic_cast<Scenes::DynamicScene*>(SCENE_MNG->GetCurrentScene())) {
-        scene->Cleanup();
-    }
-}
-
 void MIL::LoadSingleModel(const string& model_path, const Utils::ModelConfig& config) {
     
     try {
@@ -157,7 +133,7 @@ void MIL::LoadModelData(std::atomic<bool>& model_loaded, ML* model_loader, bool 
 
 // 监控加载状态的等待循环
 void MIL::WaitForModelLoad(std::atomic<bool>& model_loaded) {
-    auto start_time = csclock::now();
+    auto start_time = steady_clock::now();
     auto& tracker = Loaders::ProgressTracker::Get();
     
     while (!model_loaded.load()) {
@@ -179,9 +155,9 @@ void MIL::WaitForModelLoad(std::atomic<bool>& model_loaded) {
 }
 
 // 超时检测
-void MIL::CheckForTimeout(const std::chrono::time_point<csclock>& start_time) {
-    constexpr auto timeout = std::chrono::seconds(3);
-    if (csclock::now() > start_time + timeout) {
+void MIL::CheckForTimeout(const timepoint_steady& start_time) {
+    constexpr auto timeout = seconds(3);
+    if (steady_clock::now() > start_time + timeout) {
         throw std::runtime_error("[INITER_ERROR] 模型加载超时");
     }
 }

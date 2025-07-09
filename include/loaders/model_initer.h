@@ -12,10 +12,7 @@ using ML = ::CubeDemo::Loaders::Model;
 class ModelIniter {
 public:
     inline static bool s_isInitPhase = false;
-
-    static void RemoveAllModels();
     static void InitModels();
-    static void SwitchScene(const string& sceneID);
     
 private:
     // 子功能模块
@@ -26,7 +23,7 @@ private:
     );
 
     static void WaitForModelLoad(std::atomic<bool>& model_loaded);
-    static void CheckForTimeout(const std::chrono::time_point<csclock>& start_time);
+    static void CheckForTimeout(const timepoint_steady& start_time);
     static void ValidateModelData(::CubeDemo::Model* model);
     static void LoadSingleModel(const string& model_path, const Utils::ModelConfig& config);
 };

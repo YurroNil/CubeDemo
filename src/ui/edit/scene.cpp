@@ -5,12 +5,9 @@
 #include "loaders/model_initer.h"
 
 // 外部变量声明
-namespace CubeDemo {
-    extern SceneMng* SCENE_MNG;
-}
+namespace CubeDemo { extern SceneMng* SCENE_MNG; }
 
 namespace CubeDemo::UI {
-
 
 void ScenePanel::SaveCurrentScene() {
     auto* scene = SCENE_MNG->GetCurrentScene();
@@ -83,13 +80,15 @@ void ScenePanel::Render() {
         }
         
         // 使用场景名称作为按钮标签
-        if (ImGui::Button(scene->GetName().c_str(), ImVec2(0, 50))) {
-            MIL::SwitchScene(sceneID);
+         if (ImGui::Button(scene->GetName().c_str(), ImVec2(0, 50))) {
+            try {
+                SCENE_MNG->SwitchTo(sceneID);
+            } catch (const std::exception& e) {
+                std::cerr << "场景切换失败: " << e.what() << std::endl;
+            }
         }
         
-        if (isCurrent) {
-            ImGui::PopStyleColor(2);
-        }
+        if (isCurrent) ImGui::PopStyleColor(2);
         
         // 添加工具提示显示场景ID
         if (ImGui::IsItemHovered()) {

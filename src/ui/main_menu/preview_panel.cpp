@@ -95,7 +95,7 @@ void PreviewPanel::Render() {
         
         if (ImGui::Button("加载场景", ImVec2(200, 60))) {
             // 查找场景ID
-            std::string sceneID;
+            string sceneID;
             const auto& allScenes = SCENE_MNG->GetAllScenes();
             
             // 通过资源路径查找场景ID

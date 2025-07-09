@@ -72,7 +72,7 @@ void MainMenuPanel::LoadScenePreviews() {
         if (!sceneInfo.previewImage.empty()) {
             try {
                 // 构建完整路径
-                std::string fullPath = sceneInfo.resourcePath + "/" + sceneInfo.previewImage;
+                string fullPath = sceneInfo.resourcePath + "/" + sceneInfo.previewImage;
                 
                 // 使用同步加载纹理
                 sceneItem.preview = TL::LoadSync(fullPath, "diffuse");

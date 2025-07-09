@@ -282,4 +282,19 @@ void VolumBeam::LoadNoiseTexture(const string& path) {
     // 加载噪声纹理
     SetTextureArgs(path);
 }
+void VolumBeam::CleanUp() {
+    if (coneVAO) {
+        glDeleteVertexArrays(1, &coneVAO);
+        coneVAO = 0;
+    }
+    if (coneVBO) {
+        glDeleteBuffers(1, &coneVBO);
+        coneVBO = 0;
+    }
+    if (VolumShader) {
+        delete VolumShader;
+        VolumShader = nullptr;
+    }
+    NoiseTexture = nullptr; // 纹理由纹理管理器管理，不需要手动删除
+}
 }   // namespace CubeDemo::Prefabs

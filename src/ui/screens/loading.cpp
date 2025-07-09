@@ -70,6 +70,7 @@ void LoadingScreen::StaticGraphic() {
     // 初始化阶段则endframe
     if(MIL::s_isInitPhase) Renderer::EndFrame(WINDOW::GetWindow());
 }
+
 // 渲染静态的加载画面(异步模式专用)
 void LoadingScreen::DynamicGraphic() {}
 

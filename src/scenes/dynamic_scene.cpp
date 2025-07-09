@@ -3,6 +3,7 @@
 #include "scenes/dynamic_scene.h"
 #include "resources/model.h"
 #include "managers/model/mng.h"
+#include "loaders/texture.h"
 
 namespace CubeDemo {
     extern Managers::ModelMng* MODEL_MNG;
@@ -75,35 +76,56 @@ void DynamicScene::Render(GLFWwindow* window, Camera* camera, ShadowMap* shadow_
 }
 
 void DynamicScene::Cleanup() {
-
-    // 清理模型
+    // 清理模型 - 确保正确释放模型资源
     MODEL_MNG->RmvAllModels();
 
     // 清理光源
     for (auto* light : m_dirLights) {
-        delete light;
+        if (light) {
+            delete light;
+        }
     }
     m_dirLights.clear();
     
     for (auto* light : m_pointLights) {
-        delete light;
+        if (light) {
+            delete light;
+        }
     }
     m_pointLights.clear();
     
     for (auto* light : m_spotLights) {
-        delete light;
+        if (light) {
+            delete light;
+        }
     }
     m_spotLights.clear();
     
     for (auto* light : m_skyLights) {
-        delete light;
+        if (light) {
+            delete light;
+        }
     }
     m_skyLights.clear();
     
+    // 清理体积光
     for (auto* beam : m_volumBeams) {
-        delete beam;
+        if (beam) {
+            delete beam;
+        }
     }
     m_volumBeams.clear();
+    
+    // 清理阴影贴图
+    for (auto* shadowMap : m_shadowMaps) {
+        if (shadowMap) {
+            // delete shadowMap;
+        }
+    }
+    m_shadowMaps.clear();
+    
+    // 额外清理：确保纹理缓存也被清理
+    TL::ClearCache();
 }
 
 // 添加模型

@@ -14,7 +14,7 @@ public:
     
     void Init(const string& sceneDir = SCENE_CONF_PATH);
     void SwitchTo(const string& sceneID);
-    
+    void Cleanup();
     Scenes::SceneBase* GetCurrentScene() const { return m_currentScene; }
     const auto& GetAllScenes() const { return m_scenes; }
     

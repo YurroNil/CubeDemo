@@ -22,7 +22,7 @@ extern ModelMng* MODEL_MNG;
 void Cleanup(GLFWwindow* window, Camera* camera) {
 
     // 场景资源
-    MIL::RemoveAllModels();
+    SCENE_MNG->Cleanup();
 
     // 确保资源释放顺序. 先关闭资源加载器
     RL::Shutdown();

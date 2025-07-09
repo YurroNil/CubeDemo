@@ -17,16 +17,6 @@
     ],
     "source_code": [
         "../src",
-        "../src/core",
-
-        "../src/loaders",
-        "../src/resources",
-        "../src/graphics",
-        "../src/threads",
-        "../src/utils",
-
-        "../src/prefabs",
-        "../src/prefabs/lights",
 
         "../src/ui",
         "../src/ui/panels",
@@ -34,23 +24,14 @@
         "../src/ui/presetlib",
         "../src/ui/edit",
         "../src/ui/screens",
-        "../src/ui/main_menu",
-        
-        "../src/main",
-        "../src/scenes",
-        
-        "../src/managers",
-        "../src/managers/light",
-        "../src/managers/model",
-        "../src/managers/scene",
-        "../src/managers/ui"
+        "../src/ui/main_menu"
     ]
 },
 "arguments": {
     "cmd_prefix" : "g++.exe ",
     "output" : " -o ../bin/Demo.exe",
     "lib_suffix" : [
-        "-l3rd_party",
+        "-lwithout_ui_module", "-l3rd_party",
         "-lglfw3", "-lopengl32", "-lassimp", "-std=c++23", "-Winvalid-pch", "-fexec-charset=UTF-8", "-g"
     ]
 }
