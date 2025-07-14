@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "ui/panels/debug.h"
 #include "core/monitor.h"
+#include "graphics/renderer.h"
 
 using MONITOR = CubeDemo::System::MONITOR;
 

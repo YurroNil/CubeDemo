@@ -27,8 +27,9 @@ void Model::DrawCall(Camera* camera, bool is_mainloop_draw) {
     // 视椎体裁剪判断
     // if (IsReady() && camera->isSphereVsble(bounds.Center, bounds.Rad)) { ... }
     NormalDraw(is_mainloop_draw);
-}
+    // 使用着色器
 
+}
 // 普通模式绘制模型
 void Model::NormalDraw(bool is_mainloop_draw) {
 
@@ -39,6 +40,28 @@ void Model::NormalDraw(bool is_mainloop_draw) {
     for (const Mesh& mesh : m_Meshes) mesh.Draw(ModelShader);
 }
 
+void Model::UseShaders(
+    Camera* camera,
+    DL* dir_light, SL* spot_light,
+    PL* point_light, SkL* sky_light)
+{
+    // 使用着色器
+    ModelShader->Use();
+    // 摄像机参数传递
+    ModelShader->ApplyCamera(camera, WINDOW::GetAspectRatio());
+    // 设置视点
+    ModelShader->SetViewPos(camera->Position);
+
+    // 传递模型的着色器指针，给光源setter来获取光源信息
+    if(dir_light != nullptr) dir_light->SetShader(*ModelShader);
+    if(spot_light != nullptr) spot_light->SetShader(*ModelShader);
+    if(point_light != nullptr) point_light->SetShader(*ModelShader);
+    if(sky_light != nullptr) sky_light->SetShader(*ModelShader);
+
+    // 设置模型变换
+    ModelShader->SetMat4("model", GetModelMatrix());
+}
+// 更新模型矩阵
 const void Model::UpdateModelMatrix() {
     m_ModelMatrix = mat4(1.0f);
     m_ModelMatrix = translate(m_ModelMatrix, m_Position);

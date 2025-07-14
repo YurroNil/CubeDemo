@@ -28,8 +28,6 @@ void RL::Init(int ioThreads) {
             const auto tid = std::this_thread::get_id();
             diag.ReportThreadState(tid, DTS::Created);
 
-            if(DEBUG_INFO_LV > 1) std::cout << "[THREAD] IO线程ID: " << std::this_thread::get_id() << "启动, ";
-
             // 线程启动运行循环
             RunningLoop(diag, tid);
         });
@@ -38,7 +36,6 @@ void RL::Init(int ioThreads) {
 // s_Running = true时循环执行
 void RL::RunningLoop(Diagnostic& diag, const TID& tid) {
 
-int temp_counter = 1;
 // 循环体
 while(s_Running) {
     // 报告等待状态
@@ -55,9 +52,6 @@ while(s_Running) {
     } catch(const std::exception& e) { if(DEBUG_INFO_LV > 0)  std::cerr<<"[THREAD] 任务处理失败: "<<e.what()<< std::endl; }
     // 线程让步
     std::this_thread::yield();
-    // 调试部分
-    if(DEBUG_INFO_LV > 1) std::cout << "[资源加载器] 运行中, 当前帧号: "<< temp_counter << std::endl;
-    temp_counter++;
 }
     // 退出循环后报告
     diag.ReportThreadState(tid, DTS::Terminated);

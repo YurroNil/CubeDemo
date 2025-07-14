@@ -6,8 +6,5 @@
 namespace CubeDemo {
 
 struct BoundingSphere;
-struct Vertex;
-class Mesh;
 class Shader;
 }
-using UnsignedArray = std::vector<unsigned>;

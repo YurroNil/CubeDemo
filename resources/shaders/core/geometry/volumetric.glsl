@@ -1,5 +1,5 @@
 // resources/shaders/geometry/core/volumetric.glsl
-#version 450 core
+#version 460 core
 layout (points) in;
 layout (triangle_strip, max_vertices = 128*3) out;
 

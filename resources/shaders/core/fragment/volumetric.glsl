@@ -1,5 +1,5 @@
 // resources/shaders/fragment/core/volumetric.glsl
-#version 450 core
+#version 460 core
 in vec3 WorldPos;
 in vec3 Normal;
 in vec3 EmitColor;

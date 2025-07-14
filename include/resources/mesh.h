@@ -1,16 +1,18 @@
-// include/graphics/mesh.h
+// include/resources/mesh.h
 #pragma once
-#include "graphics/fwd.h"
 #include "resources/fwd.h"
 
+using UnsignedArray = std::vector<unsigned>;
+
 namespace CubeDemo {
+// 向前声明
+class Shader;
 
 struct Vertex {
-    vec3 Position;
-    vec3 Normal;
+    vec3
+        Position, Normal,
+        Tangent, emitColor;
     vec2 TexCoords;
-    vec3 Tangent;
-    vec3 emitColor;
 };
 
 using TexPtrArray = std::vector<TexturePtr>;
@@ -23,9 +25,8 @@ public:
 
     // 提供一个默认的构造函数
     Mesh();
-    
     // 普通版本的构造函数
-    Mesh(const VertexArray& vertices, const UnsignedArray& indices, const TexPtrArray& textures);
+    Mesh(const VertexArray& vertices, const UnsignedArray& indices, const TexPtrArray& textures, MaterialPtr material);
         
     // 声明移动构造函数.
     // 注意：noexcept声明该函数​​不抛出异常​​，这是关键设计！若未标记 noexcept，标准库（如std::vector扩容）可能回退到低效的拷贝操作.
@@ -55,12 +56,14 @@ public:
     unsigned int GetEBO() const;
     unsigned int GetIndexCount() const;
     void ReleaseGLResources();
+    void SetMaterial(MaterialPtr material) { m_Material = material; }
+    MaterialPtr GetMaterial() const { return m_Material; }
 
 private:
     unsigned m_VAO, m_VBO, m_EBO;
     size_t m_indexCount;
     mutable std::mutex m_TextureMutex;
-    
+    MaterialPtr m_Material; // 网格材质
     UnsignedArray m_Indices;
 };
 }   // namespace CubeDemo

@@ -11,7 +11,7 @@ void WINDOW::Init(int width, int height, const char* title) {
 
     // 初始化窗口
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     m_Window = glfwCreateWindow(width, height, "Cube Demo", NULL, NULL);
     if (!m_Window) { glfwTerminate(); throw std::runtime_error("[Error] 窗口创建失败"); }

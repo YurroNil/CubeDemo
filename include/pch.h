@@ -20,6 +20,7 @@
     #include <future>
     #include <array>
     #include <deque>
+    #include <queue>
     #include <unordered_set>
     #include <windows.h>
     #include <algorithm>
@@ -45,8 +46,11 @@
     #include "threads/diagnostic.h"
     // 图形模块
     #include "graphics/renderer.h"
-    #include "graphics/mesh.h"
+    #include "resources/mesh.h"
     #include "graphics/shader.h"
     // 工具模块
     #include "utils/json_config.h"
     #include "utils/string_conv.h"
+    // 预制体模块
+    #include "prefabs/lights/data.h"
+

@@ -18,9 +18,5 @@ namespace CubeDemo {
 
     // 渲染循环
     void rendering_judgment(GLFWwindow* window, Camera* camera);
-    void render_scene(
-        GLFWwindow* window,
-        Camera* camera,
-        ShadowMap* shadow_map
-    );
+    void render_scene(GLFWwindow* window, Camera* camera);
 }

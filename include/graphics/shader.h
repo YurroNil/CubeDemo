@@ -1,6 +1,5 @@
 // include/graphics/shader.h
 #pragma once
-#include "prefabs/lights/data.h"
 
 namespace CubeDemo {
 class Camera;
@@ -13,6 +12,7 @@ public:
         const string& geometry_path = "",
         const string& compute_path = ""
     );
+    Shader(const string& compute_path, GLenum type);
     ~Shader();
     unsigned int CompileShader(GLenum type, const string& source);
     void Use() const;

@@ -12,5 +12,6 @@ SceneMng* SCENE_MNG; LightMng* LIGHT_MNG; ModelMng* MODEL_MNG;
 ShadowMap* SHADOW_MAP;
 
 // 暂时采用同步模式
-bool DEBUG_ASYNC_MODE = false; unsigned int DEBUG_INFO_LV = 0;
+bool DEBUG_ASYNC_MODE = false, RAY_TRACING_ENABLED = false, RT_DEBUG = false;
+unsigned int DEBUG_INFO_LV = 0;
 }

@@ -198,7 +198,14 @@ Mesh ML::ProcMesh(aiMesh* mesh, const aiScene* scene) {
         
     } else std::cerr << "无效材质索引: " << mesh->mMaterialIndex << "/" << scene->mNumMaterials << std::endl;
 
-    return Mesh(vertices, indices, textures);
+    // 处理材质
+    MaterialPtr material = nullptr;
+    if (mesh->mMaterialIndex >= 0) {
+        aiMaterial* aiMat = scene->mMaterials[mesh->mMaterialIndex];
+        material = MaL::CreateMaterial(aiMat);
+    }
+    
+    return Mesh(vertices, indices, textures, material);
 }
 
 // 异步加载模型
@@ -208,8 +215,6 @@ void ML::LoadAsync(ModelLoadCallback cb) {
 
         if(DEBUG_INFO_LV > 1) std::cout << "\n---[模型加载器] 使用异步加载模式加载模型..." << std::endl;
         this->LoadModel(Rawpath);
-        
-        if(DEBUG_INFO_LV > 1) std::cout << "---[模型加载器] 加载模型结束" << std::endl;
         
         TaskQueue::AddTasks([this, cb]{
             // 通知所有网格更新纹理引用

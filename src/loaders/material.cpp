@@ -1,8 +1,9 @@
 // src/loaders/material.cpp
 #include "pch.h"
 #include "loaders/material.h"
-#include "threads/task_queue.h"
 #include "loaders/texture.h"
+#include "threads/task_queue.h"
+#include "resources/material.h"
 
 // 别名
 using MaL = CubeDemo::Loaders::Material;
@@ -60,5 +61,46 @@ TexPtrArray MaL::LoadTex(aiMaterial* mat, aiTextureType type, const string& type
             return TL::LoadSync(path, type);
         });
     }
+}
+
+MaterialPtr MaL::CreateMaterial(aiMaterial* aiMat) {
+    auto material = std::make_shared<CubeDemo::Material>();
+    
+    // 设置默认值
+    material->diffuse = vec3(0.8f);
+    material->specular = vec3(0.5f);
+    material->emission = vec3(0.0f);
+    material->shininess = 32.0f;
+    material->opacity = 1.0f;
+
+    float shininess, opacity;
+    
+    // 尝试获取漫反射颜色
+    aiColor3D color(0.f, 0.f, 0.f);
+    if (aiMat->Get(AI_MATKEY_COLOR_DIFFUSE, color) == AI_SUCCESS) {
+        material->diffuse = vec3(color.r, color.g, color.b);
+    }
+    
+    // 尝试获取镜面反射颜色
+    if (aiMat->Get(AI_MATKEY_COLOR_SPECULAR, color) == AI_SUCCESS) {
+        material->specular = vec3(color.r, color.g, color.b);
+    }
+    
+    // 尝试获取自发光颜色
+    if (aiMat->Get(AI_MATKEY_COLOR_EMISSIVE, color) == AI_SUCCESS) {
+        material->emission = vec3(color.r, color.g, color.b);
+    }
+    
+    // 尝试获取光泽度
+    if (aiMat->Get(AI_MATKEY_SHININESS, shininess) == AI_SUCCESS) {
+        material->shininess = shininess;
+    }
+    
+    // 透明度处理
+    if (aiMat->Get(AI_MATKEY_OPACITY, opacity) == AI_SUCCESS) {
+        material->opacity = opacity;
+    }
+    
+    return material;
 }
 }

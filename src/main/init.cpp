@@ -10,27 +10,14 @@ GLFWwindow* Init(int argc, char* argv[]) {
 
     /* 解析参数 */
     if(argc != 0) parsing_arguments(argc, argv);
-
-    /* 程序核心初始化 */
-    init_program_core();
-
-    /* 基本模块初始化 */
+    
+    init_program_core();    // 程序核心
     WINDOW::Init(1920, 1080, "Cube Demo");
-    Renderer::Init();
-    
-
-    /* 场景与预制体初始化 */
-    init_managers();
-
-    /* 摄像机初始化 */
-    init_camera();
-
-    /* ---------- 模型初始化 ------------ */
-
-    // 场景管理器初始化
-    SCENE_MNG->Init();
-    
-    UIMng::Init();
+    Renderer::Init();       // 渲染器
+    init_managers();        // 场景与预制体
+    init_camera();          // 摄像机
+    SCENE_MNG->Init();      // 场景管理器
+    UIMng::Init();          // GUI
 
     /* ---------- 结束 ------------ */
     std::cout << "[INITER] 初始化阶段结束\n" << std::endl;
@@ -48,16 +35,18 @@ void parsing_arguments(int argc, char* argv[]) {
         if(arg == "-async") DEBUG_ASYNC_MODE = true;
         if(arg == "-debug1") DEBUG_INFO_LV = 1; // 调试信息详细等级: 1
         if(arg == "-debug2") DEBUG_INFO_LV = 2; // 调试信息详细等级: 2
+        if(arg == "-raytracing") RAY_TRACING_ENABLED = true; // 启用光线追踪
+        if(arg == "-rtdebug") RT_DEBUG = true; // 开启光追调试模式
     }
 }
-
 // 程序核心初始化(如GLFW, GLAD, ThreadModules, etc.)
 void init_program_core() {
 
-    // 线程初始化
-    CubeDemo::Loaders::Resource::Init(1);
+    // 分配线程数量. 同步模式=1, 异步模式=CPU核心数
+    const unsigned int MAX_THREADS = DEBUG_ASYNC_MODE ? 1 : std::thread::hardware_concurrency();
+    CubeDemo::Loaders::Resource::Init(MAX_THREADS);
 
-/* ---------- OpenGL初始化 ------------ */
+/* ---------- OpenGL检查 ------------ */
     if (!glfwInit()) {
         std::cerr << "[INITER_ERROR] GLFW初始化失败" << std::endl;
         exit(EXIT_FAILURE);
@@ -66,20 +55,17 @@ void init_program_core() {
         std::cerr << "[INITER_ERROR] GLFW错误 " << error << ": " << what << std::endl;
     });
 }
-
 // 初始化管理器
 void init_managers() {
     // 创建场景和光源管理器
     SCENE_MNG = SceneMng::CreateInst();
     LIGHT_MNG = LightMng::CreateInst();
     MODEL_MNG = ModelMng::CreateInst();
-
     // 创建阴影
     SHADOW_MAP = ShadowMap::CreateShadow();
     // 创建阴影着色器
     SHADOW_MAP->CreateShader();
 }
-
 // 初始化相机
 void init_camera() {
     Camera* camera = new Camera(

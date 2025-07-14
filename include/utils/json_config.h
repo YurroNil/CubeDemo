@@ -19,7 +19,7 @@ struct ModelConfig {
 
     string
         vsh_path = VSH_PATH + string("model.glsl"),
-        fsh_path = FSH_PATH + string("model_default.glsl"),
+        fsh_path = FSH_PATH + string("model_none.glsl"),
         icon_path = ICON_PATH + string("unknown.png"), description = "无描述.";
 };
 

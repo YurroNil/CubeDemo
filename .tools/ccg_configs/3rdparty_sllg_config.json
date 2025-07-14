@@ -1,17 +1,9 @@
 {
-    "library_name": "without_rt_module",
+    "library_name": "3rd_party",
     
     "paths": {
         "source_code": [
-            "../src/core",
-            "../src/loaders",
-            "../src/threads",
-            "../src/utils",
-            "../src/prefabs",
-            "../src/ui",
-            "../src/main",
-            "../src/scenes",
-            "../src/managers"
+            "../.3rdParty/src"
         ],
         "include": [
             "../include",
@@ -26,7 +18,6 @@
     "arguments": {
         "cmd_prefix": "g++.exe -c",
         "lib_suffix": [
-            "-l3rd_party",
             "-lglfw3", "-lopengl32", "-lassimp", "-std=c++23", "-Winvalid-pch", "-fexec-charset=UTF-8", "-g"
         ],
         "output": "../lib"

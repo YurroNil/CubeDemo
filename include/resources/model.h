@@ -17,11 +17,16 @@ public:
     Shader* ModelShader = nullptr;   // 模型着色器(可公共修改)
 
     Model(const string& path);
+    ~Model();
     void Init();
     void NormalDraw(bool is_mainloop_draw);
     void DrawCall(Camera* camera, bool is_mainloop_draw = true);
     void Delete();
-    ~Model();
+    void UseShaders(
+        Camera* camera,
+        DL* dir_light = nullptr, SL* spot_light = nullptr,
+        PL* point_light = nullptr, SkL* sky_light = nullptr
+    );
 
 private:
     // 模型的基本属性 (不可见)

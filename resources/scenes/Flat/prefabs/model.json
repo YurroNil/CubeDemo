@@ -1,0 +1,36 @@
+[
+    {
+        "id": "cube",
+        "type": "model.scene",
+        "name": "立方体",
+        "path": "cubes/cube.obj",
+        "icon_path": "cubes/cube_icon.png",
+        "description": "一个立方体.",
+        "shaders": {
+            "vertex": "model.glsl",
+            "fragment": "model_none.glsl"
+        },
+        "attributes": {
+            "position": [0, 0, 3],
+            "rotation": [0.0, 0.0, 0],
+            "scale": [0.4, 0.4, 0.4]
+        }
+    },
+    {
+        "id": "floor",
+        "type": "model.scene",
+        "name": "地板",
+        "path": "cubes/floor.obj",
+        "icon_path": "cubes/floor_icon.png",
+        "description": "由平面组成的地板.",
+        "shaders": {
+            "vertex": "model.glsl",
+            "fragment": "model_none.glsl"
+        },
+        "attributes": {
+            "position": [0, 0, 0],
+            "rotation": [0.0, 0.0, 0],
+            "scale": [1, 1, 1]
+        }
+    }
+]

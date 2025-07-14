@@ -8,7 +8,7 @@
         "description": "简易的森林场景.",
         "shaders": {
             "vertex": "model.glsl",
-            "fragment": "model_default.glsl"
+            "fragment": "model_day.glsl"
         },
         "attributes": {
             "position": [0, -2, 0],
@@ -25,7 +25,7 @@
         "description": "废弃的工厂仓库场景.",
         "shaders": {
             "vertex": "model.glsl",
-            "fragment": "model_default.glsl"
+            "fragment": "model_day.glsl"
         },
         "attributes": {
             "position": [80, 7, -10],

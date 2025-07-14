@@ -20,30 +20,16 @@ extern ModelMng* MODEL_MNG;
 
 // 清理函数
 void Cleanup(GLFWwindow* window, Camera* camera) {
-
-    // 场景资源
-    SCENE_MNG->Cleanup();
-
-    // 确保资源释放顺序. 先关闭资源加载器
-    RL::Shutdown();
     
-    // 等待3秒确保资源释放
-    TaskQueue::PushTaskSync([]{ 
-        glFinish();
-    });
-
-    // 摄像机
-    Camera::Delete(camera);
-
-    // 所有模型相关的资源(包含模型所使用的网格, 着色器和纹理等)
-    MODEL_MNG->RmvAllModels();
-
-    // 阴影着色器
-    SHADOW_MAP->DeleteShader();
-
-    // 阴影贴图
-    ShadowMap::DeleteShadow(SHADOW_MAP);
-
+    SCENE_MNG->Cleanup();                 // 场景资源
+    RL::Shutdown();                       // 源加载器
+    TaskQueue::PushTaskSync([]{ glFinish(); }); // 等待3秒确保资源释放
+    Renderer::Cleanup();                  // 渲染器
+    Camera::Delete(camera);               // 摄像机
+    MODEL_MNG->RmvAllModels();            // 所有模型
+    SHADOW_MAP->DeleteShader();           // 阴影着色器
+    ShadowMap::DeleteShadow(SHADOW_MAP);  // 阴影贴图
+    
     // 管理器
     delete SCENE_MNG; SCENE_MNG = nullptr;
     delete LIGHT_MNG; LIGHT_MNG = nullptr;

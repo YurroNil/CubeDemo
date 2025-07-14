@@ -1,9 +1,10 @@
 // include/loaders/material.h
 #pragma once
-#include "graphics/fwd.h"
+#include "resources/fwd.h"
 #include "loaders/async_tex.h"
 
 namespace CubeDemo {
+
 // 别名
 using ATL = CubeDemo::Loaders::AsyncTexture;
 using VertexArray = std::vector<Vertex>;
@@ -14,6 +15,7 @@ public:
 
     string Directory;
     void ProcMaterial(aiMesh* &mesh, const aiScene* &scene, TexPtrArray& textures, bool is_aync);
+    MaterialPtr CreateMaterial(aiMaterial* aiMat);
 
 private:
     string BuildTexPath(const char* aiPath) const;

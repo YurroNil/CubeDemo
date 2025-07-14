@@ -8,6 +8,10 @@
 
 namespace fs = std::filesystem;
 
+namespace CubeDemo {
+    extern bool RAY_TRACING_ENABLED, RT_DEBUG;
+}
+
 namespace CubeDemo::Managers {
 
 void SceneMng::Init(const string& sceneDir) {
@@ -24,13 +28,11 @@ void SceneMng::LoadSceneConfigs() {
 
 // 解析json文件，然后将数据存进SceneInfo中
 void SceneMng::ParsingData(const fs::path& sceneDir) {
+    
     string sceneID = sceneDir.filename().string();
-
     if (m_scenes.find(sceneID) != m_scenes.end()) return;
-    
     fs::path configPath = sceneDir / "scene_info.json";
-    std::cout << "加载场景配置: " << configPath << std::endl;
-    
+
     if (!fs::exists(configPath)) {
         std::cerr << "错误: 场景配置文件不存在: " << configPath << std::endl;
         return;
@@ -79,7 +81,12 @@ void SceneMng::SwitchTo(const string& sceneID) {
     // 先卸载当前场景, 再加载新场景
     Cleanup(); m_currentScene = it->second;
     // 初始化场景资源
-    try { MIL::InitModels(); }
+    try {
+        // 初始化模型资源
+        MIL::InitModels();
+        // 初始化光线追踪
+        if(RAY_TRACING_ENABLED || RT_DEBUG) Renderer::Create_RT_Inst(true);
+    }
     // 失败处理
     catch (const std::exception& e) {
         std::cerr << "场景初始化失败: " << sceneID << " - " << e.what() << std::endl;

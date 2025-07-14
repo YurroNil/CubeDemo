@@ -19,6 +19,7 @@ public:
     
     // 获取场景信息
     const SceneInfo& GetSceneInfo() const { return m_info; }
+    const unsigned int GetLightCount() const { return m_LightCount; }
     // 获取方向光
     const std::vector<Prefabs::DirLight*>& GetDirLights() const { return m_dirLights; }
     // 获取点光源
@@ -56,6 +57,7 @@ private:
     std::vector<Prefabs::SkyLight*> m_skyLights;
     std::vector<Prefabs::VolumBeam*> m_volumBeams;
     std::vector<Prefabs::ShadowMap*> m_shadowMaps;
+    unsigned int m_LightCount;
 };
 
 } // namespace CubeDemo::Scenes

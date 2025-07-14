@@ -34,10 +34,8 @@ Shader::Shader(
         std::cerr << "[ERROR_SHADER] 着色器路径为空" << std::endl;
         return;
     }
-
     std::vector<unsigned int> shaders;
     m_ID = glCreateProgram();   // 创建着色器程序
-    GLint success; char infoLog[512];
 
     /* ------------加载着色器------------ */
 
@@ -48,11 +46,31 @@ Shader::Shader(
 
     // 链接着色器程序
     glLinkProgram(m_ID);
+    for(const auto& shader : shaders) glDeleteShader(shader);
+}
 
-    for(const auto& shader : shaders) {
-        // 删除着色器对象
-        glDeleteShader(shader);
+// 创建专属着色器
+Shader::Shader(const string& path, GLenum type) {
+
+    if(path.empty()) {
+        std::cerr << "[ERROR_SHADER] 着色器路径为空" << std::endl;
+        return;
     }
+
+    m_ID = glCreateProgram();   // 创建着色器程序
+
+    unsigned int shader =
+        type == GL_VERTEX_SHADER   ? InitVertexShader(path)   :
+        type == GL_GEOMETRY_SHADER ? InitGeometryShader(path) :
+        type == GL_FRAGMENT_SHADER ? InitFragmentShader(path) :
+        type == GL_COMPUTE_SHADER  ? InitComputeShader(path)  :
+        0;
+
+    if(shader == 0) return;  // 编译失败处理
+    
+    // 链接着色器程序
+    glLinkProgram(m_ID);
+    glDeleteShader(shader);
 }
 
 unsigned int Shader::CompileShader(GLenum type, const string& source) {
@@ -64,7 +82,12 @@ unsigned int Shader::CompileShader(GLenum type, const string& source) {
     // 错误检查
     GLint success; char infoLog[512];
 
-    string err_type_str = (type == GL_VERTEX_SHADER ? "VERTEX" : type == GL_GEOMETRY_SHADER ? "GEOMETRY" : type == GL_FRAGMENT_SHADER ? "FRAGMENT" : type == GL_COMPUTE_SHADER ? "COMPUTE" : "UNKNOWN");
+    string err_type_str =
+        type == GL_VERTEX_SHADER   ? "VERTEX"   :
+        type == GL_GEOMETRY_SHADER ? "GEOMETRY" :
+        type == GL_FRAGMENT_SHADER ? "FRAGMENT" :
+        type == GL_COMPUTE_SHADER  ? "COMPUTE"  :
+        "UNKNOWN";
 
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
     if (!success) {
@@ -72,7 +95,6 @@ unsigned int Shader::CompileShader(GLenum type, const string& source) {
         std::cerr << "着色器编译错误 (" << err_type_str << "):\n" << infoLog << std::endl;
         return 0; // 返回0表示编译失败
     }
-    
     return shader;
 }
 
@@ -151,7 +173,6 @@ void Shader::ApplyCamera(const Camera* camera, float aspect) const {
     );
     SetMat4("projection", projection);
     SetMat4("view", camera->GetViewMat());
-    
 }
 
 // 乱七八糟的Setters

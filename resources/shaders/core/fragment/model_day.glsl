@@ -1,5 +1,5 @@
-// resources/shaders/fragment/core/model_default.glsl
-#version 450 core
+// resources/shaders/fragment/core/model_day.glsl
+#version 460 core
 out vec4 FragColor;
 
 in vec3 FragPos;

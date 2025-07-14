@@ -13,7 +13,7 @@ namespace CubeDemo {
 namespace CubeDemo::Scenes {
 
 DynamicScene::DynamicScene(const SceneInfo& info) 
-    : m_info(info), SceneBase(info) {
+    : m_info(info), SceneBase(info), m_LightCount(0) {
 }
 void DynamicScene::Init() {
     // 初始化场景中的模型
@@ -52,18 +52,18 @@ void DynamicScene::Render(GLFWwindow* window, Camera* camera, ShadowMap* shadow_
     PL* pointLight = m_pointLights.empty() ? nullptr : m_pointLights[0];
     SL* spotLight = m_spotLights.empty() ? nullptr : m_spotLights[0];
     SkL* skyLight = m_skyLights.empty() ? nullptr : m_skyLights[0];
-    
-    // 更新所有模型的着色器uniform
-    MODEL_MNG->AllUseShader(
-        camera, WINDOW::GetAspectRatio(),
-        dirLight, spotLight,
-        pointLight, skyLight
-    );
 
     // 渲染所有模型
     if (!MODEL_POINTERS.empty()) {
         for (auto* model : MODEL_POINTERS) {
+            // 绘制
             model->DrawCall(camera);
+            // 更新所有模型的着色器uniform
+            model->UseShaders(
+                camera,
+                dirLight, spotLight,
+                pointLight, skyLight
+            );
         }
     }
 
@@ -123,7 +123,7 @@ void DynamicScene::Cleanup() {
         }
     }
     m_shadowMaps.clear();
-    
+    m_LightCount = 0; 
     // 额外清理：确保纹理缓存也被清理
     TL::ClearCache();
 }
@@ -131,15 +131,15 @@ void DynamicScene::Cleanup() {
 // 添加模型
 void DynamicScene::AddModel(::CubeDemo::Model* model) { MODEL_POINTERS.push_back(model); }
 // 添加方向光
-void DynamicScene::AddDirLight(Prefabs::DirLight* light) { m_dirLights.push_back(light); }
+void DynamicScene::AddDirLight(Prefabs::DirLight* light) { m_dirLights.push_back(light); m_LightCount++; }
 // 添加点光源
-void DynamicScene::AddPointLight(Prefabs::PointLight* light) { m_pointLights.push_back(light); }
+void DynamicScene::AddPointLight(Prefabs::PointLight* light) { m_pointLights.push_back(light); m_LightCount++; }
 // 添加聚光灯
-void DynamicScene::AddSpotLight(Prefabs::SpotLight* light) { m_spotLights.push_back(light); }
+void DynamicScene::AddSpotLight(Prefabs::SpotLight* light) { m_spotLights.push_back(light); m_LightCount++; }
 // 添加天空光
-void DynamicScene::AddSkyLight(Prefabs::SkyLight* light) { m_skyLights.push_back(light); }
+void DynamicScene::AddSkyLight(Prefabs::SkyLight* light) { m_skyLights.push_back(light); m_LightCount++; }
 // 添加体积光
-void DynamicScene::AddVolumBeam(Prefabs::VolumBeam* beam) { m_volumBeams.push_back(beam); }
+void DynamicScene::AddVolumBeam(Prefabs::VolumBeam* beam) { m_volumBeams.push_back(beam); m_LightCount++; }
 // 添加阴影贴图
-void DynamicScene::AddShadowMap(Prefabs::ShadowMap* shadowMap) { m_shadowMaps.push_back(shadowMap); }
+void DynamicScene::AddShadowMap(Prefabs::ShadowMap* shadowMap) { m_shadowMaps.push_back(shadowMap); m_LightCount++; }
 } // namespace CubeDemo::Scenes

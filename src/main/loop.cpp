@@ -74,6 +74,6 @@ void rendering_judgment(GLFWwindow* window, Camera* camera) {
     if (!INPUTS::s_isGamePaused) update_models();
 
     /* 渲染场景 */
-    render_scene(window, camera, SHADOW_MAP);
+    render_scene(window, camera);
 }
 }   // Namespace CubeDemo

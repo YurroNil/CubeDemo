@@ -38,7 +38,6 @@ private:
     std::condition_variable condition_;
     steady_clock::time_point lastEnqueueTime_;
 };
-
 }   // namespace CubeDemo
 
 // 模板具体实现

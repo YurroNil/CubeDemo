@@ -18,20 +18,15 @@
     "source_code": [
         "../src",
 
-        "../src/ui",
-        "../src/ui/panels",
-        "../src/ui/settings",
-        "../src/ui/presetlib",
-        "../src/ui/edit",
-        "../src/ui/screens",
-        "../src/ui/main_menu"
+        "../src/graphics",
+        "../src/resources"
     ]
 },
 "arguments": {
     "cmd_prefix" : "g++.exe ",
     "output" : " -o ../bin/Demo.exe",
     "lib_suffix" : [
-        "-lwithout_ui_module", "-l3rd_party",
+        "-l3rd_party", "-lwithout_rt_module",
         "-lglfw3", "-lopengl32", "-lassimp", "-std=c++23", "-Winvalid-pch", "-fexec-charset=UTF-8", "-g"
     ]
 }

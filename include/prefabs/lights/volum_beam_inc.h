@@ -4,9 +4,6 @@
     Prefabs.VolumBeam因为涉及到多个模块的类，因此需要专门做个inc类整合
 */
 
-// 第三方库
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/rotate_vector.hpp>
 // 工具模块
 #include "utils/defines.h"
 // 加载器模块

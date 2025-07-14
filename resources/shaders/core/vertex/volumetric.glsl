@@ -1,6 +1,6 @@
 // resources/shaders/vertex/core/volumetric.glsl
 // resources/shaders/vertex/core/volumetric.glsl
-#version 450 core
+#version 460 core
 layout (location = 0) in vec3 aTip;
 layout (location = 1) in vec3 aBase;
 layout (location = 2) in float aRadius;

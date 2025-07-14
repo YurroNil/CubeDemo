@@ -90,6 +90,7 @@ void MIL::InitModels() {
     glfwSetInputMode(WINDOW::GetWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     
     s_isInitPhase = false;
+    if(DEBUG_INFO_LV > 1) std::cout << "---[INITER] 模型加载已完成" << std::endl;
 }
 
 void MIL::LoadSingleModel(const string& model_path, const Utils::ModelConfig& config) {

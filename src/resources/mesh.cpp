@@ -8,7 +8,7 @@ namespace CubeDemo {
 extern bool DEBUG_ASYNC_MODE;
 
 // OpenGL错误检查函数(注意，这是个普通函数，不是成员函数)
-void OpenGL_rrror_check(GLenum err, bool notice) {
+void OpenGL_error_check(GLenum err, bool notice) {
     notice = true; string error;
 
     switch (err) {
@@ -26,10 +26,11 @@ void OpenGL_rrror_check(GLenum err, bool notice) {
 // 普通版本的构造函数
 Mesh::Mesh(
     const VertexArray& vertices, const UnsignedArray& indices,
-    const TexPtrArray& textures
+    const TexPtrArray& textures, MaterialPtr material
 )   : m_textures(textures),
       m_indexCount(indices.size()),
-      m_Indices(indices)
+      m_Indices(indices),
+      m_Material(material)
 {
     // 储存顶点数组
     this->Vertices = vertices;
@@ -72,7 +73,7 @@ Mesh::Mesh(
     // 添加OpenGL错误检查
     GLenum err; static bool notice = false;
 
-    while (notice == false && (err = glGetError()) != GL_NO_ERROR) OpenGL_rrror_check(err, notice);
+    while (notice == false && (err = glGetError()) != GL_NO_ERROR) OpenGL_error_check(err, notice);
 }
 
 // 提供一个默认的构造函数
@@ -159,7 +160,8 @@ Mesh::Mesh(Mesh&& other) noexcept
       m_Indices(std::move(other.m_Indices)),
       m_textures(std::move(other.m_textures)),
       m_VAO(other.m_VAO), m_VBO(other.m_VBO), m_EBO(other.m_EBO),
-      m_indexCount(other.m_indexCount) 
+      m_indexCount(other.m_indexCount),
+      m_Material(other.m_Material)
 {
     other.m_VAO = other.m_VBO = other.m_EBO = 0;
     other.m_indexCount = 0;
@@ -190,6 +192,7 @@ Mesh& Mesh::operator<<(const Mesh& other) {
     m_Indices = other.m_Indices;
     m_textures = other.m_textures;
     m_indexCount = other.m_indexCount;
+    m_Material = other.m_Material;
 
     // 重新生成OpenGL资源
     glGenVertexArrays(1, &m_VAO);

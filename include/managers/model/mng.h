@@ -9,11 +9,6 @@ class ModelMng {
 public:
     static ModelMng* CreateInst();
     static void RemoveInst(ModelMng** ptr);
-    void AllUseShader(
-        Camera* camera, float aspect_ratio,
-        DL* dir_light = nullptr, SL* spot_light = nullptr,
-        PL* point_light = nullptr, SkL* sky_light = nullptr
-    );
     void RmvAllModels();
     void RmvAllShaders();
 

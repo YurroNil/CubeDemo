@@ -325,8 +325,8 @@ void CMTP::InitFramebuffer() {
     
     // 创建简化的预览着色器
     m_PreviewShader = new Shader(
-        VSH_PATH + string("preview.glsl"),
-        FSH_PATH + string("preview.glsl")
+        VSH_PATH + string("model.glsl"),
+        FSH_PATH + string("model_none.glsl")
     );
     
     s_FBO_Inited = true;
