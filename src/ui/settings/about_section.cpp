@@ -8,7 +8,11 @@ void AboutSection::Render() {
 
     // Logo区域
     ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 200) * 0.5f);
-    ImGui::Image((void*)(intptr_t)0, ImVec2(200, 100)); // 假设0是占位纹理ID
+    // 假设0是占位纹理ID
+    ImGui::Image(
+        ImTextureRef( (ImTextureID)(intptr_t) 0 ),
+        ImVec2(200, 100)
+    );
     
     ImGui::SetCursorPosX((ImGui::GetWindowWidth() - ImGui::CalcTextSize("CubeDemo Engine v1.0.1").x) * 0.5f);
     ImGui::Text("CubeDemo Engine v1.0.1");

@@ -1,6 +1,6 @@
 // include/ui/edit/panel.h
 #pragma once
-#include "managers/scene/mng.h"
+#include "managers/scene.h"
 
 namespace CubeDemo {
     class Camera;

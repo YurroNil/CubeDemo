@@ -108,8 +108,7 @@ void CMTP::ModelCard(const string& model_name, float width, float height) {
     ImGui::Image(
         (ImTextureID)(intptr_t)0, 
         ImVec2(previewWidth, previewHeight), 
-        ImVec2(0,0), ImVec2(1,1), 
-        tintColor, ImVec4(1,1,1,1)
+        ImVec2(0,0), ImVec2(1,1)
     ); 
     
     // 模型名称 - 放在预览图下方
@@ -281,9 +280,13 @@ void CMTP::RenderModelPreview() {
     }
     
     // 在ImGui中显示纹理
-    ImGui::Image((void*)(intptr_t)m_Texture, preview_size, ImVec2(0,1), ImVec2(1,0)); // 注意纹理坐标翻转
-    
-    // 添加叠加信息（可选）
+    ImGui::Image(
+        ImTextureRef( (ImTextureID)(intptr_t) m_Texture ),
+        preview_size,
+        ImVec2(0,1), ImVec2(1,0)
+    );
+
+    // 添加叠加信息
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
     ImVec2 p_min = ImGui::GetCursorScreenPos();
     ImVec2 p_max = ImVec2(p_min.x + preview_size.x, p_min.y + preview_size.y);
@@ -325,8 +328,8 @@ void CMTP::InitFramebuffer() {
     
     // 创建简化的预览着色器
     m_PreviewShader = new Shader(
-        VSH_PATH + string("model.glsl"),
-        FSH_PATH + string("model_none.glsl")
+        VSH_PATH + string("model/preview.glsl"),
+        FSH_PATH + string("model/preview.glsl")
     );
     
     s_FBO_Inited = true;

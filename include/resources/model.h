@@ -1,7 +1,7 @@
 // include/resources/model.h
 #pragma once
 #include "graphics/bound_sphere.h"
-#include "managers/model/getter.h"
+#include "managers/model_getter.h"
 #include "ui/fwd.h"
 
 namespace CubeDemo {

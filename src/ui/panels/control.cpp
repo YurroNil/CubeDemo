@@ -1,7 +1,7 @@
 // src/ui/panels/control.cpp
 #include "pch.h"
 #include "ui/panels/control.h"
-#include "managers/scene/mng.h"
+#include "managers/scene.h"
 #include "scenes/dynamic_scene.h"
 #include "resources/model.h"
 #include "graphics/ray_tracing.h"

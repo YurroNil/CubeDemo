@@ -20,7 +20,6 @@ ImagePtr IL::Load(const string& path) {
 
     stbi_set_flip_vertically_on_load(false);
 
-
     // 分阶段更新进度
     ProgressTracker::Get().UpdateProgress(
         ProgressTracker::TEXTURE_IO, 

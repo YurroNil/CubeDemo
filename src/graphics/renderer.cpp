@@ -2,7 +2,7 @@
 #include "pch.h"
 #include "graphics/renderer.h"
 #include "scenes/dynamic_scene.h"
-#include "managers/scene/mng.h"
+#include "managers/scene.h"
 #include "ui/main_menu/panel.h"
 #include "graphics/ray_tracing.h"
 
@@ -108,7 +108,7 @@ void Renderer::RenderFullscreenQuad() {
     
     if (!m_QuadShader) {
         m_QuadShader = new Shader(
-            VSH_POST_PATH + string("screen_quad.glsl"), FSH_POST_PATH + string("screen_quad.glsl")
+            VSH_PATH + string("screen_quad.glsl"), FSH_PATH + string("screen_quad.glsl")
         );
         if (m_QuadShader == nullptr) {
             std::cerr << "全屏四边形着色器加载失败" << std::endl;

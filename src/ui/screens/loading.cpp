@@ -1,7 +1,6 @@
 // src/ui/screens/loading.cpp
 #include "pch.h"
 #include "ui/screens/loading.h"
-#include "imgui.h"
 #include "loaders/model_initer.h"
 
 namespace CubeDemo::UI {

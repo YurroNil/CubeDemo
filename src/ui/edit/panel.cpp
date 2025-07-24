@@ -3,7 +3,7 @@
 #include "ui/edit/panel.h"
 #include "ui/edit/_all.h"
 #include "resources/model.h"
-#include "managers/model/mng.h"
+#include "managers/model.h"
 #include "utils/font_defines.h"
 
 // 外部变量声明
@@ -97,9 +97,9 @@ void EditPanel::ApplyModernDarkTheme() {
     style.Colors[ImGuiCol_SeparatorActive] = ImVec4(0.30f, 0.30f, 0.32f, 1.00f);
     style.Colors[ImGuiCol_Tab] = ImVec4(0.15f, 0.15f, 0.16f, 1.00f);
     style.Colors[ImGuiCol_TabHovered] = ImVec4(0.26f, 0.59f, 0.98f, 0.80f);
-    style.Colors[ImGuiCol_TabActive] = ImVec4(0.20f, 0.45f, 0.85f, 1.00f);
-    style.Colors[ImGuiCol_TabUnfocused] = ImVec4(0.15f, 0.15f, 0.16f, 1.00f);
-    style.Colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.20f, 0.45f, 0.85f, 1.00f);
+    style.Colors[ImGuiCol_TabSelected] = ImVec4(0.20f, 0.45f, 0.85f, 1.00f);
+    style.Colors[ImGuiCol_TabDimmed] = ImVec4(0.15f, 0.15f, 0.16f, 1.00f);
+    style.Colors[ImGuiCol_TabDimmedSelected] = ImVec4(0.20f, 0.45f, 0.85f, 1.00f);
     style.Colors[ImGuiCol_Text] = ImVec4(0.95f, 0.96f, 0.98f, 1.00f);
     
     // 圆角设置

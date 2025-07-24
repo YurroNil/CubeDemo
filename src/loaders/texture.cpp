@@ -293,7 +293,7 @@ try {
 string TL::GetStatePrint(TexturePtr tex) {
     string name;
 
-    if (tex->State == LoadState::Uninitialized) return "LoadState: Uninited";
+    if (tex->State == LoadState::Uninited) return "LoadState: Uninited";
     if (tex->State == LoadState::Placeholder) return "LoadState: PlaceHolder";
     if (tex->State == LoadState::Loading) return "LoadState: Loading";
     if (tex->State == LoadState::Init) return "LoadState: Init";

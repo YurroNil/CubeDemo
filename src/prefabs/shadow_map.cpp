@@ -4,8 +4,8 @@
 #include "resources/model.h"
 #include "utils/defines.h"
 
-#include "managers/light/mng.h"
-#include "managers/scene/mng.h"
+#include "managers/light.h"
+#include "managers/scene.h"
 
 // 外部变量声明
 namespace CubeDemo {

@@ -1,6 +1,6 @@
 // src/ui/panels/pause.cpp
 #include "pch.h"
-#include "managers/ui/mng.h"
+#include "managers/ui.h"
 #include "ui/panels/pause.h"
 #include "ui/settings/panel.h"
 #include "utils/font_defines.h"
@@ -160,6 +160,6 @@ void PausePanel::Copyright(float button_area_topY) {
         (m_MenuSize.x - text_width) * 0.5f, 
         button_area_topY + 70
     ));
-    ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 0.8f), copyright_text);
+    ImGui::TextColored(ImVec4(0.6f, 0.6f, 0.6f, 0.8f), "%s", copyright_text);
 }
 } // namespace CubeDemo::UI

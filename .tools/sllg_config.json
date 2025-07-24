@@ -1,34 +1,58 @@
-{
-    "library_name": "without_rt_module",
-    
-    "paths": {
-        "source_code": [
-            "../src/core",
-            "../src/loaders",
-            "../src/threads",
-            "../src/utils",
-            "../src/prefabs",
-            "../src/ui",
-            "../src/main",
-            "../src/scenes",
-            "../src/managers"
-        ],
-        "include": [
-            "../include",
-            "../.3rdParty/include",
-            "%PDT_I%",
-            "%PDT_I%/imgui",
-            "%PDT_I%/assimp",
-            "%PDT_I%/stb"
-        ]
+[
+    {
+        "is_running": true,
+        "library_name": "sample1_module",
+        
+        "paths": {
+            "source_code": [
+                "../src/core",
+                "../src/loaders"
+            ],
+            "include": [
+                "../include",
+                "../.3rdParty/include",
+                "%PDT_I%",
+                "%PDT_I%/imgui",
+                "%PDT_I%/assimp",
+                "%PDT_I%/stb"
+            ]
+        },
+        
+        "arguments": {
+            "cmd_prefix": "g++.exe -c",
+            "lib_suffix": [
+                "-l3rd_party",
+                "-lglfw3", "-lopengl32", "-lassimp", "-std=c++23", "-Winvalid-pch", "-fexec-charset=UTF-8", "-g"
+            ],
+            "output": "../lib"
+        }
     },
-    
-    "arguments": {
-        "cmd_prefix": "g++.exe -c",
-        "lib_suffix": [
-            "-l3rd_party",
-            "-lglfw3", "-lopengl32", "-lassimp", "-std=c++23", "-Winvalid-pch", "-fexec-charset=UTF-8", "-g"
-        ],
-        "output": "../lib"
+    {
+        "is_running": true,
+        "library_name": "sample2_module",
+        
+        "paths": {
+            "source_code": [
+                "../src/threads",
+                "../src/ui"
+            ],
+            "include": [
+                "../include",
+                "../.3rdParty/include",
+                "%PDT_I%",
+                "%PDT_I%/imgui",
+                "%PDT_I%/assimp",
+                "%PDT_I%/stb"
+            ]
+        },
+        
+        "arguments": {
+            "cmd_prefix": "g++.exe -c",
+            "lib_suffix": [
+                "-l3rd_party",
+                "-lglfw3", "-lopengl32", "-lassimp", "-std=c++23", "-Winvalid-pch", "-fexec-charset=UTF-8", "-g"
+            ],
+            "output": "../lib"
+        }
     }
-}
+]

@@ -4,13 +4,13 @@
 #include "resources/model.h"
 #include "loaders/resource.h"
 #include "loaders/model_initer.h"
-#include "managers/model/mng.h"
-#include "managers/light/mng.h"
+#include "managers/model.h"
+#include "managers/light.h"
 
 namespace CubeDemo {
 
 // 别名与外部变量声明
-using RL = Loaders::Resource; using MMC = Managers::ModelCleanner;
+using RL = Loaders::Resource;
 extern std::vector<Model*> MODEL_POINTERS;
 extern ShadowMap* SHADOW_MAP;
 

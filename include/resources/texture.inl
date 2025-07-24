@@ -13,6 +13,8 @@ struct formatter<TLS> : formatter<string_view> {
             case TLS::Loading: name = "Loading"; break;
             case TLS::Ready: name = "Ready"; break;
             case TLS::Failed: name = "Failed"; break;
+            
+            default: case TLS::Uninited: name = "Uninited"; break;
         }
         return formatter<string_view>::format(name, ctx);
     }

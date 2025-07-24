@@ -4,13 +4,11 @@
 #include "ui/main_menu/panel.h"
 #include "utils/font_defines.h"
 #include "loaders/texture.h"
-#include "managers/scene/mng.h"
+#include "managers/scene.h"
 
 using MainMenuPanel = CubeDemo::UI::MainMenuPanel;
 
-namespace CubeDemo {
-    extern Managers::SceneMng* SCENE_MNG;
-}
+namespace CubeDemo { extern Managers::SceneMng* SCENE_MNG; }
 
 namespace CubeDemo::UI::MainMenu {
 
@@ -55,9 +53,8 @@ void PreviewPanel::Render() {
         
         // 场景信息
         ImGui::BeginChild("SceneInfo",
-            ImVec2(0, 300), true,
-            ImGuiWindowFlags_NoScrollWithMouse |
-            ImGuiWindowFlags_AlwaysUseWindowPadding
+            ImVec2(0, 300), ImGuiChildFlags_AlwaysUseWindowPadding,
+            ImGuiWindowFlags_NoScrollWithMouse
         );
         
         // 场景名称
@@ -105,7 +102,6 @@ void PreviewPanel::Render() {
                     break;
                 }
             }
-            
             if (!sceneID.empty()) {
                 // 切换场景
                 SCENE_MNG->SwitchTo(sceneID);
@@ -115,9 +111,7 @@ void PreviewPanel::Render() {
             }
         }
         
-        if (ImGui::IsItemHovered()) {
-            ImGui::SetTooltip("%s", scene.name.c_str());
-        }
+        if (ImGui::IsItemHovered()) ImGui::SetTooltip("%s", scene.name.c_str());
         
         ImGui::PopStyleColor(3);
         ImGui::PopStyleVar(2);

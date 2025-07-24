@@ -157,7 +157,7 @@ void FL::LoadFonts() {
     
 
     // 构建字体集
-    io.Fonts->Build();
+    // io.Fonts->Build();
 
     // 更新进度：字体加载完成
     ProgressTracker::Get().FinishResource(

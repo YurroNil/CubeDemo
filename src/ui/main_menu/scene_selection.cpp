@@ -4,11 +4,9 @@
 #include "utils/font_defines.h"
 #include "loaders/font.h"
 #include "loaders/texture.h"
-#include "managers/scene/mng.h"
+#include "managers/scene.h"
 
-namespace CubeDemo {
-    extern Managers::SceneMng* SCENE_MNG;
-}
+namespace CubeDemo { extern Managers::SceneMng* SCENE_MNG; }
 
 namespace CubeDemo::UI::MainMenu {
 
@@ -32,9 +30,8 @@ inline void AddRectRounded(ImDrawList* draw_list, const ImVec2& p_min, const ImV
         draw_list->PathArcTo(ImVec2(p_max.x - rounding, p_max.y - rounding), rounding, 0.0f, IM_PI * 0.5f);
         draw_list->PathArcTo(ImVec2(p_min.x + rounding, p_max.y - rounding), rounding, IM_PI * 0.5f, IM_PI);
         draw_list->PathStroke(col, true, thickness);
-    } else {
-        draw_list->AddRect(p_min, p_max, col, 0.0f, 0, thickness);
-    }
+        
+    } else draw_list->AddRect(p_min, p_max, col, 0.0f, 0, thickness);
 }
 
 void SceneSelection::Render() {
@@ -154,7 +151,7 @@ void SceneSelection::SceneCard(const SceneItem& scene, int id, float width, floa
     );
     
     // 场景名称（居中）
-    ImGui::PushFont(FL::GetDefaultFont());
+    ImGui::PushFont(FL::GetDefaultFont(), 0.0f);
     ImVec2 text_size = ImGui::CalcTextSize(scene.name.c_str());
     float text_pos_x = p.x + (width - text_size.x) * 0.5f;
     float text_pos_y = p.y + height - text_size.y - 15.0f;

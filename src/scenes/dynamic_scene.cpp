@@ -2,7 +2,7 @@
 #include "pch.h"
 #include "scenes/dynamic_scene.h"
 #include "resources/model.h"
-#include "managers/model/mng.h"
+#include "managers/model.h"
 #include "loaders/texture.h"
 
 namespace CubeDemo {

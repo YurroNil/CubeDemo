@@ -1,7 +1,7 @@
 // include/scenes/base.h
 #pragma once
-#include "prefabs/lights/fwd.h"
-#include "prefabs/lights/volum_beam.h"
+#include "prefabs/lights_fwd.h"
+#include "prefabs/volum_beam.h"
 
 namespace CubeDemo::Scenes {
 

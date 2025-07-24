@@ -5,6 +5,7 @@
 namespace CubeDemo::UI::MainMenu {
 
 void Menubar::Render() {
+
     // 增加菜单栏高度
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(15, 8));
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(20, 8));
@@ -25,7 +26,6 @@ void Menubar::Render() {
             }
             ImGui::EndMenu();
         }
-        
         // 右侧菜单
         ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 200);
         if (ImGui::BeginMenu("帮助")) {
@@ -34,10 +34,8 @@ void Menubar::Render() {
             }
             ImGui::EndMenu();
         }
-        
         ImGui::EndMainMenuBar();
     }
-    
     ImGui::PopStyleVar(2);
 }
 }   // namespace CubeDemo::UI::MainMenu

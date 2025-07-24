@@ -52,10 +52,12 @@ CubeDemo目前处于开发阶段，功能尚不完整，但部分基本功能已
 │   ├── resources/ (资源模块)
 │   │   ├── model
 │   │   ├── place_holder
-│   │   └── texture
+│   │   ├── texture
+│   │   ├── material
+│   │   └── mesh
 │   ├── graphics/ (图形模块)
 │   │   ├── bound_sphere
-│   │   ├── mesh
+│   │   ├── ray_tracing
 │   │   ├── renderer
 │   │   └── shader
 │   ├── threads/ (线程模块)
@@ -67,9 +69,8 @@ CubeDemo目前处于开发阶段，功能尚不完整，但部分基本功能已
 │   │   └── UTF8_to_unicode
 │   ├── prefabs/ (预制体模块)
 │   │   ├── shadow_map
-│   │   └── lights/ (光源)
-│   │       ├── data
-│   │       └── volum_beam
+│   │   └── lights
+│   │   └── volum_beam
 │   ├── ui/ (UI模块)
 │   │   ├── panels/
 │   │   │   ├── control
@@ -102,27 +103,19 @@ CubeDemo目前处于开发阶段，功能尚不完整，但部分基本功能已
 │   │       └── loading
 │   ├── main/ (主程序阶段模块)
 │   │   ├── cleanup
-│   │   ├── handles
 │   │   ├── init
 │   │   ├── loop
-│   │   └── rendering
 │   ├── scenes/ (场景模块)
 │   │   ├── dynamic_scene
 │   │   └── scene_info
 │   └── managers/ (管理器模块)
-│       ├── ui/
-│       │   └── mng
-│       ├── light/
-│       │   ├── creater
-│       │   ├── json_mapper
-│       │   ├── utils
-│       │   └── mng
-│       ├── model/
-│       │   ├── cleanner
-│       │   ├── getter
-│       │   └── mng
-│       └── scene/
-│           └── mng
+│       ├── uiMng
+│       ├── light_utils
+│       ├── json_mapper
+│       ├── lightMng
+│       ├── modelMng
+│       ├── model_getter
+│       └── sceneMng
 │
 ├── include/ (头文件. 格式为.h后缀)
 │   ├── 与src保持镜像结构. 与之不同的是可能会多出一些头文件专属文件(见下面).

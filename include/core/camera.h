@@ -34,7 +34,7 @@ public:
     mat4 GetViewMat() const;
     mat4 GetProjectionMat(float aspect) const;
     static Camera* GetCamera() { return m_SaveCameraPtr; }
-    Frustum GetFrustum(float aspect) const;
+    Frustum GetFrustum(float aspect_ratio) const;
     bool isSphereVsble(const vec3& center, float radius) const;
 
 /* ----Proceesors and Actions----- */

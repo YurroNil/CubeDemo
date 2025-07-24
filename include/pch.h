@@ -52,5 +52,5 @@
     #include "utils/json_config.h"
     #include "utils/string_conv.h"
     // 预制体模块
-    #include "prefabs/lights/data.h"
+    #include "prefabs/lights.h"
 

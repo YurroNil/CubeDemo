@@ -1,6 +1,6 @@
 // include/ui/edit/scene.h
 #pragma once
-#include "managers/scene/mng.h"
+#include "managers/scene.h"
 
 namespace CubeDemo::UI {
 class EditPanel;

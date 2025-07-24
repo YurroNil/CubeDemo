@@ -3,7 +3,7 @@
 #include "graphics/ray_tracing.h"
 #include "resources/model.h"
 #include "resources/material.h"
-#include "managers/model/mng.h"
+#include "managers/model.h"
 
 namespace CubeDemo {
 
@@ -177,7 +177,7 @@ void RayTracing::RenderDebug(Camera* camera) {
 }
 
 void RayTracing::Render(Camera* camera) {
-    if(RT_DEBUG) return;
+    if(RT_DEBUG || !m_RayTraceShader) return;
 
     m_RayTraceShader->Use();
     // 传递相机参数

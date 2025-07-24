@@ -18,15 +18,13 @@ struct ModelConfig {
     vec3 position = vec3(0.0f), scale = vec3(1.0f), rotation = vec3(0.0f);
 
     string
-        vsh_path = VSH_PATH + string("model.glsl"),
-        fsh_path = FSH_PATH + string("model_none.glsl"),
+        vsh_path = VSH_PATH + string("model/generic.glsl"),
+        fsh_path = FSH_PATH + string("model/generic.glsl"),
         icon_path = ICON_PATH + string("unknown.png"), description = "无描述.";
 };
 
 class JsonConfig {
-
     static ImWchar HexStringToImWchar(const string& hex_str);
-
 public:
     static json GetFileData(const string& config_path);
     

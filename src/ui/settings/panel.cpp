@@ -50,7 +50,9 @@ void SettingPanel::Render(PausePanelBridge& bridge) {
             }
             
             // 使用按钮代替Selectable
-            const char* buttonText = (tabIcons[i] + string("  ") + tabNames[i]).c_str();
+            string buttonStr = tabIcons[i] + string("  ") + tabNames[i];
+            const char* buttonText = buttonStr.c_str();
+
             if (ImGui::Button(buttonText, ImVec2(-1, 0))) {
                 bridge.CurrentTab = i;
             }

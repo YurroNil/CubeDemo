@@ -30,7 +30,8 @@ void ATL::HandleTexState(TexturePtr tex, const string& path) {
             std::cout << "[Warning] 使用占位纹理: " << path << std::endl; break;
         case TLS::Failed:
             std::cerr << "[Error] 最终加载失败: " << path << std::endl; break;
+
+        default: case TLS::Uninited: std::cout << "[Warning] 状态异常, 未能成功初始化: " << path << std::endl; break;
     }
 }
-
-}
+}   // namespace CubeDemo

@@ -62,14 +62,14 @@ void Camera::SaveCamera(Camera* c) { m_SaveCameraPtr = c; }
 void Camera::Delete(Camera* c) { delete c; m_SaveCameraPtr = nullptr; }
 
  // 视锥体相关方法
-Camera::Frustum Camera::GetFrustum(float aspectRatio) const {
+Camera::Frustum Camera::GetFrustum(float aspect_ratio) const {
 
     // 创建一个视锥体
     Frustum frustum;
     // 计算视锥体远平面的半高
     const float half_v_side = frustumPlane.far_plane * tanf(radians(attribute.zoom) * 0.5f);
     // 计算视锥体远平面的半宽
-    const float half_h_side = half_v_side * aspectRatio;
+    const float half_h_side = half_v_side * aspect_ratio;
     // 计算视锥体前向的远平面
     const vec3 front_mult_far = frustumPlane.far_plane * direction.front;
 
@@ -106,7 +106,7 @@ vec3 Camera::ScreenToWorld(
     
     // 创建NDC坐标点 (z值范围[-1,1]，depth参数范围[0,1])
     float ndcZ = 2.0f * depth - 1.0f;
-    vec4 ndcPoint(ndcX, ndcY, ndcZ, 1.0f);
+    vec4 ndc_pt(ndcX, ndcY, ndcZ, 1.0f);
     
     // 计算视图和投影矩阵的逆矩阵
     float aspect = static_cast<float>(width) / height;
@@ -115,7 +115,7 @@ vec3 Camera::ScreenToWorld(
     mat4 inv_view_proj = glm::inverse(proj_matrix * view_matrix);
     
     // 将NDC坐标转换为世界坐标
-    vec4 world_Point = inv_view_proj * ndcPoint;
+    vec4 world_Point = inv_view_proj * ndc_pt;
     
     // 透视除法 (将齐次坐标转换为3D坐标)
     if (world_Point.w != 0.0f) {

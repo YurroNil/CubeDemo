@@ -14,7 +14,7 @@ logs/
 # IDE files
 *.sln
 .idea
-
+cmake-build-debug
 
 # Build Tools
 /.tools/*.exe

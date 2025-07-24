@@ -1,6 +1,6 @@
 // include/main/rendering.h
 #pragma once
-#include "managers/scene/mng.h"
+#include "managers/scene.h"
 #include "prefabs/shadow_map.h"
 
 // 别名

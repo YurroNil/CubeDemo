@@ -8,8 +8,9 @@ namespace CubeDemo::Utils::Time {
 // 获取当前时间对应的问候语
 string get_time_greeting() {
     time_t now = time(0);
-    tm* ltm = localtime(&now);
-    int hour = ltm->tm_hour;
+    tm ltm;
+    localtime_s(&ltm, &now);
+    int hour = ltm.tm_hour;
 
     if (hour >= 5 && hour < 12) {
         return "早上好";

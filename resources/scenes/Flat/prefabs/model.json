@@ -7,8 +7,8 @@
         "icon_path": "cubes/cube_icon.png",
         "description": "一个立方体.",
         "shaders": {
-            "vertex": "model.glsl",
-            "fragment": "model_none.glsl"
+            "vertex": "model/generic.glsl",
+            "fragment": "model/generic.glsl"
         },
         "attributes": {
             "position": [0, 0, 3],
@@ -24,8 +24,8 @@
         "icon_path": "cubes/floor_icon.png",
         "description": "由平面组成的地板.",
         "shaders": {
-            "vertex": "model.glsl",
-            "fragment": "model_none.glsl"
+            "vertex": "model/generic.glsl",
+            "fragment": "model/generic.glsl"
         },
         "attributes": {
             "position": [0, 0, 0],

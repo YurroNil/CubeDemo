@@ -14,9 +14,9 @@
 #include "loaders/progress_tracker.h"
 #include "loaders/resource.h"
 // 管理器模块
-#include "managers/light/mng.h"
-#include "managers/model/mng.h"
-#include "managers/ui/mng.h"
+#include "managers/light.h"
+#include "managers/model.h"
+#include "managers/ui.h"
 
 // 乱七八糟的别名
 using RL = CubeDemo::Loaders::Resource;

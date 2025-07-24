@@ -7,8 +7,8 @@
         "icon_path": "kokomi/icon.png",
         "description": "《原神》游戏中的角色.",
         "shaders": {
-            "vertex": "model.glsl",
-            "fragment": "model_night.glsl"
+            "vertex": "model/generic.glsl",
+            "fragment": "model/night.glsl"
         },
         "attributes": {
             "position": [-6.4, -1.4, -29.2],
@@ -24,8 +24,8 @@
         "icon_path": "mia_vacuum/icon.png",
         "description": "二次元风格的小女孩. 只是着装有点不太一样...",
         "shaders": {
-            "vertex": "model.glsl",
-            "fragment": "model_night.glsl"
+            "vertex": "model/generic.glsl",
+            "fragment": "model/night.glsl"
         },
         "attributes": {
             "position": [16, -1.4, -45.5],
@@ -41,8 +41,8 @@
         "icon_path": "forest/icon.png",
         "description": "简易的森林场景.",
         "shaders": {
-            "vertex": "model.glsl",
-            "fragment": "model_night.glsl"
+            "vertex": "model/generic.glsl",
+            "fragment": "model/night.glsl"
         },
         "attributes": {
             "position": [0, -2, 0],
@@ -58,8 +58,8 @@
         "icon_path": "factory_warehouse/icon.png",
         "description": "废弃的工厂仓库场景.",
         "shaders": {
-            "vertex": "model.glsl",
-            "fragment": "model_night.glsl"
+            "vertex": "model/generic.glsl",
+            "fragment": "model/night.glsl"
         },
         "attributes": {
             "position": [80, 7, -10],

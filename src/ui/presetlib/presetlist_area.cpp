@@ -37,7 +37,7 @@ void PresetlistArea::Render() {
     ImGui::Text("当前选择: ");
     ImGui::SameLine();
     ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.7f, 0.3f, 1.0f)); // 金色文字
-    ImGui::Text(m_CurrSelector.empty() ? "无" : m_CurrSelector.c_str());
+    ImGui::Text("%s", m_CurrSelector.empty() ? "无" : m_CurrSelector.c_str());
     ImGui::PopStyleColor();
 }
 

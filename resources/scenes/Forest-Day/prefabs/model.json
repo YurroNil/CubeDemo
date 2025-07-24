@@ -7,8 +7,8 @@
         "icon_path": "forest/icon.png",
         "description": "简易的森林场景.",
         "shaders": {
-            "vertex": "model.glsl",
-            "fragment": "model_day.glsl"
+            "vertex": "model/generic.glsl",
+            "fragment": "model/day.glsl"
         },
         "attributes": {
             "position": [0, -2, 0],
@@ -24,8 +24,8 @@
         "icon_path": "factory_warehouse/icon.png",
         "description": "废弃的工厂仓库场景.",
         "shaders": {
-            "vertex": "model.glsl",
-            "fragment": "model_day.glsl"
+            "vertex": "model/generic.glsl",
+            "fragment": "model/day.glsl"
         },
         "attributes": {
             "position": [80, 7, -10],

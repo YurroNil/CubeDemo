@@ -15,8 +15,8 @@
 // 工具模块
 #include "utils/defines.h"
 // 管理器模块
-#include "managers/scene/mng.h"
-#include "managers/ui/mng.h"
-#include "managers/light/mng.h"
+#include "managers/scene.h"
+#include "managers/ui.h"
+#include "managers/light.h"
 // 界面模块
 #include "ui/screens/loading.h"

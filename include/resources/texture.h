@@ -10,7 +10,7 @@ public:
 
     enum class LoadState {
         Init,           // 初始化
-        Uninitialized,  // 初始状态
+        Uninited,  // 初始状态
         Placeholder,    // 使用占位纹理
         Loading,        // 正在异步加载
         Ready,          // 加载完成可用
@@ -31,7 +31,7 @@ public:
     string Type;                          //纹理类型（diffuse/normal等）
     std::atomic<unsigned int> ID = 0;     //OpenGL纹理ID
     //加载任务数
-    std::atomic<LoadState> State{LoadState::Uninitialized}; // 当前状态
+    std::atomic<LoadState> State{LoadState::Uninited}; // 当前状态
     string Path;    // 原始文件路径
 
 }; }    // namespace CubeDemo

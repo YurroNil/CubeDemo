@@ -5,13 +5,11 @@
 #include "loaders/image.h"
 #include "utils/time.h"
 #include "utils/font_defines.h"
-#include "managers/scene/mng.h"
+#include "managers/scene.h"
 
 using TLS = CubeDemo::Texture::LoadState;
 
-namespace CubeDemo {
-    extern Managers::SceneMng* SCENE_MNG;
-}
+namespace CubeDemo { extern Managers::SceneMng* SCENE_MNG; }
 
 namespace CubeDemo::UI {
 
