@@ -9,7 +9,7 @@
 
     "configurePresets": [{
 
-        "name": "mingw64构建器",
+        "name": "mingw64",
         "displayName": "MinGW Makefiles",
         "generator": "MinGW Makefiles",
         "binaryDir": "${sourceDir}/build"

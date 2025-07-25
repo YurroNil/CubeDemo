@@ -58,7 +58,7 @@ void Renderer::Create_RT_Inst(bool is_scene_switching) {
         return;
     }
 
-    s_RayTracing->Init();
+    s_RayTracing->Init();   // 初始化OptiX
     if (s_isFirstLoad) s_isFirstLoad = false;
 }
 

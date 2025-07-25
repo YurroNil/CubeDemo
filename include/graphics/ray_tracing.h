@@ -1,6 +1,7 @@
 // include/graphics/ray_tracing.h
 #pragma once
 #include "resources/fwd.h"
+#include "graphics/optix_backend.h"
 
 namespace CubeDemo {
 
@@ -34,38 +35,20 @@ struct HitRecord {
 
 class RayTracing {
 public:
-
     RayTracing();
     ~RayTracing();
 
     void Init();
+    void Cleanup();
     void Render(Camera* camera);
     void RenderDebug(Camera* camera);
-    void Cleanup();
     
-    // 射线场景查询
-    bool TraceRay(const Ray& ray, HitRecord& rec) const;
-
-    // 获取渲染输出
-    GLuint GetOutputTexture() const { return m_OutputTexture; }
+    unsigned int GetOutputTexture() const;
 
 private:
-    GLuint m_OutputTexture = 0;
-    GLuint m_AccumulationTexture = 0;
-    GLuint m_BVHBuffer = 0, m_MaterialBuffer = 0;
-    
-    int m_FrameWidth = 0;
-    int m_FrameHeight = 0;
-    int m_SampleCount = 0;
-    
-    // 计算着色器
-    Shader
-        *m_RayTraceShader = nullptr,
-        *m_BVHBuilderShader = nullptr,
-        *m_DebugShader = nullptr;
-    
-    // 创建GPU数据结构
     void CreateSceneBuffers();
-    void BuildBVH();
+    
+    OptixBackend& m_OptixBackend;
+    unsigned int m_OutputTexture = 0;
 };
 }   // namespace CubeDemo

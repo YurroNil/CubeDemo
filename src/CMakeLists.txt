@@ -13,3 +13,8 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 target_precompile_headers(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/include/pch.h
 )
+
+# 抑制GCC警告
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    target_compile_options(CubeDemo PRIVATE -Wno-psabi)
+endif()

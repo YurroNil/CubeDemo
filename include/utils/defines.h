@@ -18,6 +18,7 @@
 #define FSH_PATH "../resources/shaders/fragment/"
 #define GSH_PATH "../resources/shaders/geometry/"
 #define CSH_PATH "../resources/shaders/compute/"
+#define PTX_PATH "../resources/shaders/ptx/"
 
 // 场景配置文件
 #define SCENE_CONF_PATH "../resources/scenes/"
