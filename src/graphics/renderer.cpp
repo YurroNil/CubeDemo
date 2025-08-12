@@ -78,7 +78,7 @@ void Renderer::RenderFullscreenQuad() {
     
     // 首次使用时初始化全屏四边形
     if (screenQuadVAO == 0) {
-        float quadVertices[] = {
+        const float quadVertices[] = {
             // 位置         // 纹理坐标
             -1.0f,  1.0f,  0.0f, 1.0f,
             -1.0f, -1.0f,  0.0f, 0.0f,
@@ -139,4 +139,4 @@ void Renderer::RenderFullscreenQuad() {
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
-}
+}   // namespace CubeDemo

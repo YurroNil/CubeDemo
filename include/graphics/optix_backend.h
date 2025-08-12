@@ -1,27 +1,10 @@
 // include/graphics/optix_backend.h
 #pragma once
-#include <cuda_runtime.h>
 #include "graphics/optix_utils.h"
 
 namespace CubeDemo {
 
-// 定义OptiX使用的数据结构
-struct OptixTriangle {
-    float3 v0, v1, v2;
-    float3 n0, n1, n2;
-    float2 uv0, uv1, uv2;
-    int materialIndex;
-    float3 emission;
-};
-
-struct OptixMaterial {
-    float3 diffuse;
-    float3 specular;
-    float3 emission;
-    float shininess;
-    float opacity;
-};
-
+#include "graphics/optix_structures.h"
 // 相机参数
 struct CameraParams {
     float3 eye;
@@ -42,21 +25,6 @@ struct MissRecord {
 
 struct HitgroupRecord {
     char header[OPTIX_SBT_RECORD_HEADER_SIZE];
-};
-
-// 启动参数
-struct Params {
-    OptixTraversableHandle handle;
-    cudaArray_t image;
-    int width;
-    int height;
-    float3 eye;
-    float3 lookat;
-    float3 up;
-    float fov;
-    float aspect;
-    OptixTriangle* triangles;
-    OptixMaterial* materials;
 };
 
 class OptixBackend {
@@ -81,8 +49,8 @@ public:
     
     void Render();
     
-    cudaGraphicsResource_t GetOutputTextureResource() { return cuda_texture_resource_; }
-    unsigned int GetOutputTexture() { return output_texture_; }
+    cudaGraphicsResource_t GetOutputTextureResource() const { return cuda_texture_resource_; }
+    unsigned int GetOutputTexture() const { return output_texture_; }
 
 private:
     OptixBackend();
@@ -91,6 +59,7 @@ private:
     void CreatePipeline();
     void SetupSBT();
     void BuildAccelerationStructure();
+    void ResetRayStates();
     
     OptixDeviceContext context_ = nullptr;
     OptixPipeline pipeline_ = nullptr;
@@ -120,5 +89,12 @@ private:
     
     // 设备指针
     CUdeviceptr d_params = 0;
+
+    // 添加输出缓冲区
+    float4* d_output = nullptr;
+    int material_count_ = 0;
+    curandState* d_rand_state_ = nullptr;
+    RayState* d_ray_states_ = nullptr;
+    std::vector<OptixTriangle> host_triangles_;
 };
 } // namespace CubeDemo

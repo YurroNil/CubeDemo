@@ -1,10 +1,5 @@
 // src/graphics/optix_utils.h
 #pragma once
-// 启用optix 9.0的"无静态链接库 仅头文件"模式
-#define OPTIX_HEADERS_ONLY 1
-
-#include <optix.h>
-#include <optix_stubs.h>
 #include "graphics/cuda_utils.h"
 
 #define OPTIX_CHECK(call) \

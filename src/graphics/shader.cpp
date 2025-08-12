@@ -30,7 +30,7 @@ Shader::Shader(
     const string& geometry_path, const string& compute_path
 ) {
 
-    if(vertex_path == "" && fragment_path == "" && geometry_path == "" && compute_path == "") {
+    if(vertex_path.empty() && fragment_path.empty() && geometry_path.empty() && compute_path.empty()) {
         std::cerr << "[ERROR_SHADER] 着色器路径为空" << std::endl;
         return;
     }
@@ -76,7 +76,7 @@ Shader::Shader(const string& path, GLenum type) {
 unsigned int Shader::CompileShader(GLenum type, const string& source) {
     unsigned int shader = glCreateShader(type);
     const char* src = source.c_str();
-    glShaderSource(shader, 1, &src, NULL);
+    glShaderSource(shader, 1, &src, nullptr);
     glCompileShader(shader);
     
     // 错误检查
@@ -198,6 +198,6 @@ void Shader::SetInt(const string& name, int value) const {
     glUniform1i(glGetUniformLocation(m_ID, name.c_str()), value);
 }
 void Shader::SetBool(const string& name, bool value) {
-    glUniform1i(glGetUniformLocation(m_ID, name.c_str()), (int)value);
+    glUniform1i(glGetUniformLocation(m_ID, name.c_str()), static_cast<int>(value));
 }
 }   // namespace CubeDemo

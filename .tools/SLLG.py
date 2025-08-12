@@ -58,8 +58,7 @@ class SLLG:
         
         # 编译所有源文件
         object_files = []
-        if not self.compile_all_src_files(source_files, library_name, include_paths, 
-                                        cmd_prefix, lib_suffix, output_dir, object_files):
+        if not self.compile_all_src_files(source_files, library_name, include_paths, cmd_prefix, lib_suffix, output_dir, object_files):
             return False
         
         # 创建静态库
@@ -119,8 +118,7 @@ class SLLG:
         return (f'{cmd_prefix} "{source_path}"{include_flags} '
                 f'-o "{object_path}"{lib_suffix_str}')
     
-    def compile_all_src_files(self, source_files, library_name, include_paths, 
-                             cmd_prefix, lib_suffix, output_dir, object_files):
+    def compile_all_src_files(self, source_files, library_name, include_paths, cmd_prefix, lib_suffix, output_dir, object_files):
         """编译所有源文件"""
         print("\n\033[1;35m阶段 1: 编译源文件\033[0m")
         

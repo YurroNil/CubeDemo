@@ -35,6 +35,7 @@
     #include "kits/glm.h"
     #include "kits/imgui.h"
     #include "kits/json.h"
+    #include "kits/cuda_and_optix.h"
 
 /* ---------项目头文件--------- */
     // 核心模块

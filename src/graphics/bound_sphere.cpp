@@ -12,6 +12,7 @@ void BoundingSphere::Calc(const MeshArray& meshes) {
         Rad = 0.0f;
         return;
     }
+
     // 精确计算包围球（使用所有顶点）
     vec3 min_vert(FLT_MAX), max_vert(-FLT_MAX);
     for (const auto& mesh : meshes) {
@@ -26,8 +27,7 @@ void BoundingSphere::Calc(const MeshArray& meshes) {
     // 计算最大距离
     for (const auto& mesh : meshes) {
         for (const auto& v : mesh.Vertices) {
-            float dist = length(v.Position - Center);
-            if (dist > Rad) Rad = dist;
+            if (const float dist = length(v.Position - Center); dist > Rad) Rad = dist;
         }
     }
 }

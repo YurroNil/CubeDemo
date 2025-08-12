@@ -1,6 +1,5 @@
 // src/graphics/cuda_utils.h
 #pragma once
-#include <cuda_runtime.h>
 
 #define CUDA_CHECK(call) \
     do { \

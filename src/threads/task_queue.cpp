@@ -4,7 +4,7 @@
 
 namespace CubeDemo {
 
-extern unsigned int DEBUG_INFO_LV; 
+extern unsigned int DEBUG_INFO_LV;
 
 constexpr int MAX_TASKS_PER_PROCESS = 100; // 处理限制
 static TaskQueue s_MainThreadQueue; // 添加全局任务队列
@@ -40,7 +40,6 @@ void TaskQueue::Push(Task task, bool is_high_priority) {
     }
     condition_.notify_all(); // 必须使用notify_all
 }
-
 Task TaskQueue::Pop() {
     auto& diag = Diagnostic::Get();
 
@@ -62,12 +61,10 @@ Task TaskQueue::Pop() {
     }
     return nullptr;
 }
-
 bool TaskQueue::Empty() const {
     std::lock_guard lock(mutex_);
     return queue_.empty();
 }
-
 float TaskQueue::GetQueuePressure() const {
     std::lock_guard lock(mutex_);
     const auto now = steady_clock::now();
@@ -76,16 +73,13 @@ float TaskQueue::GetQueuePressure() const {
     ).count();
     return queue_.size() * 1000.0f / (elapsed + 1); // +1防止除零
 }
-
 void TaskQueue::Shutdown() {
     std::lock_guard lock(mutex_);
     while(!queue_.empty()) queue_.pop_front();
     condition_.notify_all();
 }
-
 size_t TaskQueue::GetQueueSize() const {
     std::lock_guard<std::mutex> lock(mutex_);
     return queue_.size();
 }
-
 }   // namespace CubeDemo
