@@ -69,12 +69,5 @@ void VideoSettings::Render() {
     ImGui::SetNextItemWidth(200);
     const char* qualityOptions[] = {"极低", "低", "中", "高", "超高"};
     ImGui::Combo("##QualityPreset", &qualityPreset, qualityOptions, IM_ARRAYSIZE(qualityOptions));
-    
-    // 抗锯齿
-    static int aaMode = 2;
-    ImGui::Text("抗锯齿");
-    ImGui::SetNextItemWidth(200);
-    const char* aaOptions[] = {"关闭", "FXAA", "TAA", "SMAA", "MSAA 2x", "MSAA 4x", "MSAA 8x"};
-    ImGui::Combo("##AntiAliasing", &aaMode, aaOptions, IM_ARRAYSIZE(aaOptions));
 }
 }

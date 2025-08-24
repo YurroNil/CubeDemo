@@ -35,8 +35,6 @@ void parsing_arguments(int argc, char* argv[]) {
         if(arg == "-async") DEBUG_ASYNC_MODE = true;
         if(arg == "-debug1") DEBUG_INFO_LV = 1; // 调试信息详细等级: 1
         if(arg == "-debug2") DEBUG_INFO_LV = 2; // 调试信息详细等级: 2
-        if(arg == "-raytracing") RAY_TRACING_ENABLED = true; // 启用光线追踪
-        if(arg == "-rtdebug") RT_DEBUG = true; // 开启光追调试模式
     }
 }
 // 程序核心初始化(如GLFW, GLAD, ThreadModules, etc.)
@@ -61,10 +59,6 @@ void init_managers() {
     SCENE_MNG = SceneMng::CreateInst();
     LIGHT_MNG = LightMng::CreateInst();
     MODEL_MNG = ModelMng::CreateInst();
-    // 创建阴影
-    SHADOW_MAP = ShadowMap::CreateShadow();
-    // 创建阴影着色器
-    SHADOW_MAP->CreateShader();
 }
 // 初始化相机
 void init_camera() {

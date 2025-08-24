@@ -26,5 +26,4 @@ public:
 private:
     static void HandleTexState(TexturePtr tex, const string& path);
 };
-
 }

@@ -4,7 +4,6 @@
 #include "managers/scene.h"
 #include "scenes/dynamic_scene.h"
 #include "resources/model.h"
-#include "graphics/ray_tracing.h"
 
 namespace CubeDemo {
     extern Managers::SceneMng* SCENE_MNG;
@@ -20,16 +19,6 @@ void ControlPanel::Render(Camera* camera) {
 
     // 添加一个滑动条，用于调整相机移动速度
     ImGui::SliderFloat("移动速度", &camera->attribute.movementSpeed, 1.0f, 30.0f);
-    
-    // 添加光线追踪开关
-    static bool enableRT = false;
-    if (ImGui::Checkbox("启用光线追踪", &enableRT)) {
-        Renderer::RayTracingEnabled(enableRT);
-    }
-
-    // 光追调试信息
-    if (!RT_DEBUG) { ImGui::End(); return; }
-
 
     ImGui::End();
 }

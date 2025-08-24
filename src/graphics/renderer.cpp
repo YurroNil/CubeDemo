@@ -4,7 +4,6 @@
 #include "scenes/dynamic_scene.h"
 #include "managers/scene.h"
 #include "ui/main_menu/panel.h"
-#include "graphics/ray_tracing.h"
 
 // 别名
 using MMP = CubeDemo::UI::MainMenuPanel;
@@ -21,17 +20,10 @@ void Renderer::Init() {
 }
 
 void Renderer::Cleanup() {
-    if(!s_RayTracing) {
-        delete s_RayTracing; s_RayTracing = nullptr;
-    }
     // 清理屏幕四边形
     if (!m_QuadShader) delete m_QuadShader; m_QuadShader = nullptr;
 }
 
-void Renderer::RayTracingEnabled(bool enabled) {
-    if(enabled) RAY_TRACING_ENABLED = true;
-    else RAY_TRACING_ENABLED = false;
-}
 
 // 渲染循环首帧
 void Renderer::BeginFrame() {
@@ -43,23 +35,8 @@ void Renderer::BeginFrame() {
     ImGui::NewFrame();
 
     // 进入渲染循环后，首帧进行一次初始化工作
-    if(!RAY_TRACING_ENABLED && !RT_DEBUG) return;
-    if (MMP::s_isMainMenuPhase || s_RayTracing) return;
-    Create_RT_Inst();
-}
-
-void Renderer::Create_RT_Inst(bool is_scene_switching) {
-    // 切换场景时先清理
-    if (s_RayTracing && (is_scene_switching || !s_isFirstLoad)) s_RayTracing->Cleanup();
-    // 创建光追实例
-    if (!s_RayTracing) { s_RayTracing = new RayTracing(); }
-    else {
-        std::cerr << "光追实例创建失败" << std::endl;
-        return;
-    }
-
-    s_RayTracing->Init();   // 初始化OptiX
-    if (s_isFirstLoad) s_isFirstLoad = false;
+    if (MMP::s_isMainMenuPhase) return;
+    // 初始化
 }
 
 // 渲染循环尾帧
@@ -122,7 +99,7 @@ void Renderer::RenderFullscreenQuad() {
     // 设置纹理
     m_QuadShader->SetInt("screenTexture", 0);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, s_RayTracing->GetOutputTexture());
+    glBindTexture(GL_TEXTURE_2D, 0);
     
     // 设置色调映射参数
     static float exposure = 1.0f;

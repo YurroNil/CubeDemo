@@ -62,7 +62,7 @@
 世界6、高级渲染技术 (难度★★★★★)
   1. 光照与阴影
       • 动态阴影（Shadow Mapping、CSM）
-      • 全局光照（Lightmap、VXGI、光线追踪）
+      • 全局光照（Lightmap、VXGI）
   2. 后处理效果
       • HDR、Bloom、SSAO、运动模糊
       • 屏幕空间反射（SSR）

@@ -5,14 +5,12 @@ out vec4 FragColor;
 in vec3 FragPos;
 in vec3 Normal;
 in vec2 TexCoords;
-in vec4 FragPosLightSpace;
 
 uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_specular;
 uniform sampler2D texture_normal;
 uniform sampler2D texture_ao;
 
-uniform sampler2D shadowMap;
 uniform vec3 viewPos;
 uniform mat4 model;
 
@@ -39,27 +37,6 @@ struct SpotLight {
     float quadratic;
 };
 uniform SpotLight spot_light;
-
-// 计算影子
-float CalcShadow(vec4 fragPosLightSpace) {
-    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-    projCoords = projCoords * 0.5 + 0.5;
-    
-    float closestDepth = texture(shadowMap, projCoords.xy).r; 
-    float currentDepth = projCoords.z;
-    float bias = max(0.05 * (1.0 - dot(Normal, -dir_light.direction)), 0.005);
-    
-    float shadow = 0.0;
-    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
-    for(int x = -1; x <= 1; ++x) {
-        for(int y = -1; y <= 1; ++y) {
-            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x,y) * texelSize).r;
-            // 影子的强度
-            shadow += currentDepth - bias > pcfDepth ? 0.5 : 0.0;
-        }
-    }
-    return shadow / 9.0;
-}
 
 // 计算方向光照
 vec3 CalcDirLight(DirLight light, vec3 normal) {
@@ -101,7 +78,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos) {
     vec3 diffuse = light.diffuse * diff * texture(texture_diffuse1, TexCoords).rgb;
     
     // 镜面反射
-    vec3 viewDir = normalize(viewPos - fragPos);
+    vec3 viewDir = normalize(viewPos - FragPos);
     vec3 halfwayDir = normalize(lightDir + viewDir);  // 使用Blinn-Phong优化
     float spec = pow(max(dot(normal, halfwayDir), 0.0), 64.0);
     
@@ -120,13 +97,12 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos) {
 void main() {
     vec3 result = vec3(0);
     vec3 norm = normalize(Normal);
-    float shadow = CalcShadow(FragPosLightSpace);
 
     // 方向光
-    vec3 dirResult = CalcDirLight(dir_light, norm) * (1.0 - shadow);
+    vec3 dirResult = CalcDirLight(dir_light, norm);
 
     // 聚光
-    vec3 spotResult = CalcSpotLight(spot_light, norm, FragPos) * (1.0 - shadow);
+    vec3 spotResult = CalcSpotLight(spot_light, norm, FragPos);
     
     // 环境光减弱 (夜晚场景)
     vec3 ambient = 0.05 * texture(texture_diffuse1, TexCoords).rgb;

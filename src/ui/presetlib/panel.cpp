@@ -8,7 +8,7 @@ namespace CubeDemo::UI {
 void PresetlibPanel::Init() {
     m_inited = true; // 标记面板已初始化
 }
- 
+
 // 预设库主渲染函数（核心UI逻辑）
 void PresetlibPanel::Render(Camera* camera) {
     // 窗口初始化设置（仅首次显示时生效）

@@ -84,8 +84,6 @@ void SceneMng::SwitchTo(const string& sceneID) {
     try {
         // 初始化模型资源
         MIL::InitModels();
-        // 初始化光线追踪
-        if(RAY_TRACING_ENABLED || RT_DEBUG) Renderer::Create_RT_Inst(true);
     }
     // 失败处理
     catch (const std::exception& e) {

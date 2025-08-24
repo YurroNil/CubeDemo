@@ -12,7 +12,6 @@ namespace CubeDemo {
 // 别名与外部变量声明
 using RL = Loaders::Resource;
 extern std::vector<Model*> MODEL_POINTERS;
-extern ShadowMap* SHADOW_MAP;
 
 // 管理器
 extern SceneMng* SCENE_MNG; extern LightMng* LIGHT_MNG;
@@ -27,8 +26,6 @@ void Cleanup(GLFWwindow* window, Camera* camera) {
     Renderer::Cleanup();                  // 渲染器
     Camera::Delete(camera);               // 摄像机
     MODEL_MNG->RmvAllModels();            // 所有模型
-    SHADOW_MAP->DeleteShader();           // 阴影着色器
-    ShadowMap::DeleteShadow(SHADOW_MAP);  // 阴影贴图
     
     // 管理器
     delete SCENE_MNG; SCENE_MNG = nullptr;

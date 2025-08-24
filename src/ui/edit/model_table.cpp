@@ -4,12 +4,15 @@
 #include "ui/edit/preset_table.h"
 #include "resources/model.h"
 #include "utils/font_defines.h"
+#include "utils/graphic_drawing.inl"
 
 namespace CubeDemo {
     extern std::vector<::CubeDemo::Model*> MODEL_POINTERS;
 }
 
 namespace CubeDemo::UI {
+constexpr float CARD_SPACING_X = 20.0f;
+constexpr float CARD_SPACING_Y = 20.0f;
 
 // 静态成员初始化
 std::vector<string> CMTP::s_AvailableModels;
@@ -49,87 +52,146 @@ void CMTP::RenderModelList() {
         ImGui::Text("没有可用模型");
         return;
     }
+    
     // 计算卡片尺寸 - 考虑间距
     const float availableWidth = ImGui::GetContentRegionAvail().x;
-    const float cardWidth = (availableWidth - ImGui::GetStyle().ItemSpacing.x * 2) / 3.0f;
+    const float cardWidth = (availableWidth - CARD_SPACING_X * 2) / 3.0f;
     const float cardHeight = cardWidth * 1.2f;
     
     ImGui::Text("可用模型:");
     ImGui::Spacing();
     
-    // 网格布局
+    // 网格布局 - 使用表格确保正确的从左到右排列
     if (ImGui::BeginChild("ModelGrid", ImVec2(0, 0), false, ImGuiWindowFlags_AlwaysVerticalScrollbar)) {
-        for (size_t i = 0; i < s_AvailableModels.size(); i++) {
-            if (i % 3 != 0) ImGui::SameLine();
-            ModelCard(s_AvailableModels[i], cardWidth, cardHeight);
+        // 增加表格间距
+        ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(CARD_SPACING_X, CARD_SPACING_Y));
+        
+        if (ImGui::BeginTable("ModelTable", 3, ImGuiTableFlags_SizingFixedFit)) {
+            for (size_t i = 0; i < s_AvailableModels.size(); i++) {
+                if (i % 3 == 0) {
+                    ImGui::TableNextRow();
+                    ImGui::TableSetColumnIndex(0);
+                } else {
+                    ImGui::TableSetColumnIndex(i % 3);
+                }
+                
+                ModelCard(s_AvailableModels[i], cardWidth, cardHeight);
+            }
+            ImGui::EndTable();
         }
+        
+        ImGui::PopStyleVar();
     }
     ImGui::EndChild();
 }
 
 // 模型卡片组件
 void CMTP::ModelCard(const string& model_name, float width, float height) {
-    ImGui::BeginGroup();
+    bool isSelected = (m_SelectedModel == model_name);
     ImGui::PushID(model_name.c_str());
     
-    // 卡片样式
-    ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.18f, 0.18f, 0.20f, 1.0f));
-
-    // 使用固定大小的子区域
-    ImGui::BeginChild(model_name.c_str(), ImVec2(width, height), true, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+    // 获取当前绘制位置
+    ImVec2 p = ImGui::GetCursorScreenPos();
+    ImVec2 card_size(width, height);
     
-    // 整个卡片作为可点击按钮
-    if (ImGui::InvisibleButton("##CardBtn", ImVec2(width, height))) {
+    // 添加垂直间距
+    ImGui::Dummy(ImVec2(0, CARD_SPACING_Y / 4));
+    p = ImGui::GetCursorScreenPos(); // 更新位置
+    
+    // 不可见按钮（覆盖整个卡片区域）
+    if (ImGui::InvisibleButton("##card", card_size)) {
         m_SelectedModel = model_name; // 设置选中模型
     }
     
-    // 悬停效果 - 直接使用当前项的位置
-    const bool isHovered = ImGui::IsItemHovered();
-    if (isHovered) {
-        ImDrawList* draw_list = ImGui::GetWindowDrawList();
-        ImVec2 min = ImGui::GetItemRectMin();
-        ImVec2 max = ImGui::GetItemRectMax();
-        draw_list->AddRect(min, max, ImGui::GetColorU32(ImVec4(0.26f, 0.59f, 0.98f, 1.0f)), 8.0f, 0, 2.0f);
+    // 绘制卡片背景
+    ImDrawList* draw_list = ImGui::GetWindowDrawList();
+    
+    // 卡片圆角
+    const float rounding = 12.0f;
+    
+    // 卡片背景颜色
+    ImU32 bgColor = isSelected ? 
+        ImColor(0.20f, 0.20f, 0.22f, 1.0f) : 
+        ImColor(0.15f, 0.15f, 0.17f, 1.0f);
+    
+    // 使用兼容方法绘制圆角矩形
+    Utils::AddRectFilledRounded(draw_list, p, ImVec2(p.x + card_size.x, p.y + card_size.y), bgColor, rounding);
+    
+    // 绘制高亮边框（选中状态）
+    if (isSelected) {
+        Utils::AddRectRounded(draw_list, p, ImVec2(p.x + card_size.x, p.y + card_size.y), ImColor(0.26f, 0.59f, 0.98f, 1.0f), rounding, 2.0f);
     }
     
-    // 模型预览图 - 使用卡片内部尺寸
-    const float previewHeight = height * 0.6f;
-    const float previewWidth = width - 20;
-    ImVec2 previewPos((width - previewWidth) * 0.5f, 10);
+    // 添加卡片悬停效果
+    if (ImGui::IsItemHovered()) {
+        Utils::AddRectFilledRounded(draw_list, p, ImVec2(p.x + card_size.x, p.y + card_size.y), ImColor(255, 255, 255, 20), rounding);
+    }
     
-    // 设置预览图位置
-    ImGui::SetCursorPos(previewPos);
+    // 预览图区域
+    float imageSize = std::min(width * 0.8f, height * 0.6f);
+    float imageX = p.x + (width - imageSize) * 0.5f;
+    float imageY = p.y + 15.0f;
     
-    // 使用悬停状态改变色调
-    ImVec4 tintColor = isHovered ? 
+    // 绘制预览图背景
+    Utils::AddRectFilledRounded(draw_list, 
+        ImVec2(imageX - 5, imageY - 5), 
+        ImVec2(imageX + imageSize + 5, imageY + imageSize + 5), 
+        ImColor(0.10f, 0.10f, 0.12f, 1.0f), 
+        6.0f
+    );
+    
+    // 绘制预览图（使用悬停状态改变色调）
+    ImVec4 tintColor = ImGui::IsItemHovered() ? 
         ImVec4(1.0f, 1.0f, 1.0f, 1.0f) : 
         ImVec4(0.8f, 0.8f, 0.8f, 1.0f);
-
-    ImGui::Image(
-        (ImTextureID)(intptr_t)0, 
-        ImVec2(previewWidth, previewHeight), 
-        ImVec2(0,0), ImVec2(1,1)
-    ); 
     
-    // 模型名称 - 放在预览图下方
-    ImGui::SetCursorPos(ImVec2(
-        (width - ImGui::CalcTextSize(model_name.c_str()).x) * 0.5f,
-        previewHeight + 20
-    ));
-    ImGui::Text("%s", model_name.c_str());
+    draw_list->AddImageRounded(
+        (ImTextureID)(intptr_t)0, // 使用0作为占位符纹理
+        ImVec2(imageX, imageY), 
+        ImVec2(imageX + imageSize, imageY + imageSize),
+        ImVec2(0, 0), ImVec2(1, 1),
+        ImGui::GetColorU32(tintColor), 
+        6.0f
+    );
     
-    // 提示文本 - 放在名称下方
-    const char* hint = "点击查看详情";
-    ImGui::SetCursorPos(ImVec2(
-        (width - ImGui::CalcTextSize(hint).x) * 0.5f,
-        previewHeight + 40
-    ));
-    ImGui::TextDisabled("%s", hint);
+    // 模型名称处理 - 确保不会超出卡片
+    std::string displayName = model_name;
+    ImVec2 text_size = ImGui::CalcTextSize(displayName.c_str());
+    float maxTextWidth = width - 30.0f; // 留出边距
     
-    ImGui::EndChild();
-    ImGui::PopStyleColor();
+    if (text_size.x > maxTextWidth) {
+        // 计算可以显示的字符数
+        int numChars = displayName.length();
+        while (numChars > 3 && ImGui::CalcTextSize((displayName.substr(0, numChars) + "...").c_str()).x > maxTextWidth) {
+            numChars--;
+        }
+        displayName = displayName.substr(0, numChars) + "...";
+        text_size = ImGui::CalcTextSize(displayName.c_str());
+    }
+    
+    float text_pos_x = p.x + (width - text_size.x) * 0.5f;
+    float text_pos_y = p.y + height - text_size.y - 25.0f;
+    
+    // 绘制模型名称背景
+    Utils::AddRectFilledRounded(draw_list, 
+        ImVec2(text_pos_x - 10, text_pos_y - 5), 
+        ImVec2(text_pos_x + text_size.x + 10, text_pos_y + text_size.y + 5), 
+        ImColor(0.12f, 0.12f, 0.14f, 0.9f), 
+        8.0f
+    );
+    
+    // 绘制模型名称
+    draw_list->AddText(
+        ImVec2(text_pos_x, text_pos_y), 
+        isSelected ? ImColor(0.9f, 0.9f, 1.0f, 1.0f) : ImColor(1.0f, 1.0f, 1.0f, 1.0f),
+        displayName.c_str()
+    );
+    
+    // 更新光标位置并添加底部间距
+    ImGui::SetCursorScreenPos(ImVec2(p.x, p.y + height));
+    ImGui::Dummy(ImVec2(0, CARD_SPACING_Y / 4));
+    
     ImGui::PopID();
-    ImGui::EndGroup();
 }
 
 // 二级界面：模型详情
@@ -144,7 +206,6 @@ void CMTP::RenderModelDetail(Camera* camera) {
     }
     
     // 模型名称标题
-    ImGui::SameLine();
     float textWidth = ImGui::CalcTextSize(m_SelectedModel.c_str()).x;
     ImGui::SetCursorPosX((containerSize.x - textWidth) * 0.5f);
     ImGui::Text("%s", m_SelectedModel.c_str());
@@ -192,6 +253,12 @@ void CMTP::RenderModelPreview() {
     GLint last_viewport[4];
     glGetIntegerv(GL_VIEWPORT, last_viewport);
     GLboolean last_depth_test = glIsEnabled(GL_DEPTH_TEST);
+    GLint last_program;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
+    GLint last_texture;
+    glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);
+    GLboolean last_cull_face = glIsEnabled(GL_CULL_FACE);
+    GLboolean last_blend = glIsEnabled(GL_BLEND);
     
     // 获取预览区域尺寸
     const ImVec2 preview_size = ImGui::GetContentRegionAvail();
@@ -206,7 +273,7 @@ void CMTP::RenderModelPreview() {
         glBindRenderbuffer(GL_RENDERBUFFER, m_RBO);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, preview_size.x, preview_size.y);
         glBindRenderbuffer(GL_RENDERBUFFER, 0);
-}
+    }
     
     // 绑定FBO并渲染场景
     glBindFramebuffer(GL_FRAMEBUFFER, m_Framebuffer);
@@ -247,12 +314,8 @@ void CMTP::RenderModelPreview() {
             mat4 modelMat = mat4(1.0f);
 
             // 为了预览，我们可以将模型放在原点，并应用一个固定的缩放
-            // 只有预览模型的位置是锁在(0, -1, 0)的，其他参数使用源模型的属性
             modelMat = translate(modelMat, vec3(0.0f, -1.0f, 0.0f));
-
-            // 因为模型的缩放是相对的，所以我们需要将其缩放到适合预览窗口的尺寸
             modelMat = scale(modelMat, model->m_Scale * 0.3f);
-
             modelMat = rotate(modelMat, model->m_Rotation.x, vec3(1.0f, 0.0f, 0.0f));
             modelMat = rotate(modelMat, model->m_Rotation.y, vec3(0.0f, 1.0f, 0.0f));
             modelMat = rotate(modelMat, model->m_Rotation.z, vec3(0.0f, 0.0f, 1.0f));
@@ -262,7 +325,17 @@ void CMTP::RenderModelPreview() {
             // 设置纹理位置（预览着色器只需要一个基础纹理）
             m_PreviewShader->SetInt("texture_diffuse1", 0);
             
+            // 保存当前模型矩阵状态
+            mat4 originalModelMatrix = model->GetModelMatrix();
+            
+            // 临时设置模型矩阵为预览矩阵
+            model->SetModelMatrix(modelMat);
+            
+            // 绘制模型
             model->DrawCall(nullptr, false);
+            
+            // 恢复原始模型矩阵
+            model->SetModelMatrix(originalModelMatrix);
         }
     }
     
@@ -278,6 +351,21 @@ void CMTP::RenderModelPreview() {
     } else {
         glDisable(GL_DEPTH_TEST);
     }
+    
+    if (last_cull_face) {
+        glEnable(GL_CULL_FACE);
+    } else {
+        glDisable(GL_CULL_FACE);
+    }
+    
+    if (last_blend) {
+        glEnable(GL_BLEND);
+    } else {
+        glDisable(GL_BLEND);
+    }
+    
+    glUseProgram(last_program);
+    glBindTexture(GL_TEXTURE_2D, last_texture);
     
     // 在ImGui中显示纹理
     ImGui::Image(

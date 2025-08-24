@@ -65,13 +65,23 @@ void PresetlistArea::DrawPresetGrid() {
 
     // 使用列API实现真正的四列布局
     if (ImGui::BeginTable("PresetGrid", columns, ImGuiTableFlags_SizingFixedFit)) {
-        for (int i = 0; i < preset_count; i++) {
-            if (i % columns == 0) {
-                ImGui::TableNextRow();
-            }
+        // 计算需要多少行 (ceil(preset_count/columns))
+        const int row_count = (preset_count + columns - 1) / columns;
+        
+        for (int row = 0; row < row_count; row++) {
+            ImGui::TableNextRow();
             
-            ImGui::TableSetColumnIndex(i % columns);
-            DrawPresetCard(preset_names[i], i, card_width, card_height);
+            for (int col = 0; col < columns; col++) {
+                ImGui::TableSetColumnIndex(col);
+                
+                const int index = row * columns + col;
+                if (index < preset_count) {
+                    DrawPresetCard(preset_names[index], index, card_width, card_height);
+                } else {
+                    // 绘制空单元格占位符
+                    ImGui::Dummy(ImVec2(card_width, card_height));
+                }
+            }
         }
         ImGui::EndTable();
     }
@@ -124,8 +134,8 @@ void PresetlistArea::DrawPresetCard(const char* name, int id, float width, float
     draw_list->AddCircleFilled(ImVec2(icon_x + icon_size * 0.5f, icon_y + icon_size * 0.5f), icon_size * 0.5f, ImColor(0.8f, 0.8f, 0.8f, 1.0f));
     
     // 更新光标位置以确保正确的布局
-    ImGui::SetCursorScreenPos(ImVec2(p.x, p.y + height));
-    
+    // ImGui::SetCursorScreenPos(ImVec2(p.x, p.y + height));
+    ImGui::Dummy(card_size);
     ImGui::PopID();
 }
 

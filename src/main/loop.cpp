@@ -5,12 +5,11 @@
 #include "managers/ui.h"
 #include "ui/screens/loading.h"
 #include "ui/main_menu/panel.h"
-#include "graphics/ray_tracing.h"
 
 namespace CubeDemo {
 
 // 外部变量声明
-extern SceneMng* SCENE_MNG; extern ShadowMap* SHADOW_MAP;
+extern SceneMng* SCENE_MNG;
 extern bool DEBUG_ASYNC_MODE, RAY_TRACING_ENABLED, RT_DEBUG;
 
 /* ---------------- 程序主循环 -------------- */
@@ -80,12 +79,8 @@ void rendering_judgment(GLFWwindow* window, Camera* camera) {
 
 /* <------------ 渲  染  循  环 ------------> */
 void render_scene(GLFWwindow* window, Camera* camera) {
-    // 光线追踪路径
-    if(Renderer::s_RayTracing && RAY_TRACING_ENABLED && !RT_DEBUG) Renderer::s_RayTracing->Render(camera);
-    // 光追调试路径
-    else if(Renderer::s_RayTracing && RT_DEBUG) Renderer::s_RayTracing->RenderDebug(camera);
-    // 传统渲染路径
-    else if(auto* scene = SCENE_MNG->GetCurrentScene()) scene->Render(window, camera, nullptr);
+    // GLSL渲染路径
+    if(auto* scene = SCENE_MNG->GetCurrentScene()) scene->Render(window, camera);
 }
 
 // 模型变换(如旋转)

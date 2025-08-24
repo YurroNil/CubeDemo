@@ -43,11 +43,8 @@ void AboutSection::Render() {
     ImGui::TextColored(ImVec4(0.26f, 0.59f, 0.98f, 1.0f), "技术特性");
     ImGui::Separator();
 
-    ImGui::BulletText("模型加载、骨骼与动画系统");
-    ImGui::BulletText("物理基础渲染(PBR)材质系统");
-    ImGui::BulletText("高级粒子与流体模拟");
+    ImGui::BulletText("风格化、小清新治愈风格");
     ImGui::BulletText("多线程资源加载");
-    ImGui::BulletText("光线追踪技术");
     ImGui::BulletText("跨平台支持(Windows, Linux, macOS)");
     
     ImGui::Dummy(ImVec2(0, 20));

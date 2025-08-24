@@ -24,7 +24,7 @@ public:
     virtual ~SceneBase() = default;
     
     virtual void Init() = 0;
-    virtual void Render(GLFWwindow* window, Camera* camera, ShadowMap* shadow_map) = 0;
+    virtual void Render(GLFWwindow* window, Camera* camera) = 0;
     virtual void Cleanup() = 0;
     
     const SceneInfo& GetSceneInfo() const { return m_info; }

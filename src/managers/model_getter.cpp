@@ -74,6 +74,10 @@ const void ModelGetter::SetShaderPaths(const string& vsh_path, const string& fsh
     m_owner->m_fshPath = FSH_PATH + fsh_path;
 }
 
+const void ModelGetter::SetModelMatrix(const mat4& matrix) {
+    m_owner->m_ModelMatrix = matrix;
+}
+
 /* ----------- Getters ----------- */
 const string ModelGetter::GetID() const {
     return m_owner->m_ID;

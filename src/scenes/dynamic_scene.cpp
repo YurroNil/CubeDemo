@@ -38,7 +38,7 @@ void DynamicScene::Init() {
     }
 }
 
-void DynamicScene::Render(GLFWwindow* window, Camera* camera, ShadowMap* shadow_map) {
+void DynamicScene::Render(GLFWwindow* window, Camera* camera) {
 
     // 视口设置
     glViewport(0, 0, WINDOW::GetWidth(), WINDOW::GetHeight());
@@ -115,14 +115,7 @@ void DynamicScene::Cleanup() {
         }
     }
     m_volumBeams.clear();
-    
-    // 清理阴影贴图
-    for (auto* shadowMap : m_shadowMaps) {
-        if (shadowMap) {
-            // delete shadowMap;
-        }
-    }
-    m_shadowMaps.clear();
+
     m_LightCount = 0; 
     // 额外清理：确保纹理缓存也被清理
     TL::ClearCache();
@@ -140,6 +133,5 @@ void DynamicScene::AddSpotLight(Prefabs::SpotLight* light) { m_spotLights.push_b
 void DynamicScene::AddSkyLight(Prefabs::SkyLight* light) { m_skyLights.push_back(light); m_LightCount++; }
 // 添加体积光
 void DynamicScene::AddVolumBeam(Prefabs::VolumBeam* beam) { m_volumBeams.push_back(beam); m_LightCount++; }
-// 添加阴影贴图
-void DynamicScene::AddShadowMap(Prefabs::ShadowMap* shadowMap) { m_shadowMaps.push_back(shadowMap); m_LightCount++; }
+
 } // namespace CubeDemo::Scenes

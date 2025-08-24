@@ -5,34 +5,12 @@
 #include "loaders/font.h"
 #include "loaders/texture.h"
 #include "managers/scene.h"
+#include "utils/graphic_drawing.inl"
 
 namespace CubeDemo { extern Managers::SceneMng* SCENE_MNG; }
 
 namespace CubeDemo::UI::MainMenu {
 
-inline void AddRectFilledRounded(ImDrawList* draw_list, const ImVec2& p_min, const ImVec2& p_max, ImU32 col, float rounding, ImDrawFlags flags = 0) {
-    if (rounding > 0.0f) {
-        draw_list->PathArcTo(ImVec2(p_min.x + rounding, p_min.y + rounding), rounding, IM_PI, IM_PI * 1.5f);
-        draw_list->PathArcTo(ImVec2(p_max.x - rounding, p_min.y + rounding), rounding, IM_PI * 1.5f, IM_PI * 2.0f);
-        draw_list->PathArcTo(ImVec2(p_max.x - rounding, p_max.y - rounding), rounding, 0.0f, IM_PI * 0.5f);
-        draw_list->PathArcTo(ImVec2(p_min.x + rounding, p_max.y - rounding), rounding, IM_PI * 0.5f, IM_PI);
-        draw_list->PathFillConvex(col);
-    } else {
-        draw_list->AddRectFilled(p_min, p_max, col, 0.0f);
-    }
-}
-
-// 兼容旧版ImGui的圆角边框绘制函数
-inline void AddRectRounded(ImDrawList* draw_list, const ImVec2& p_min, const ImVec2& p_max, ImU32 col, float rounding, float thickness, ImDrawFlags flags = 0) {
-    if (rounding > 0.0f) {
-        draw_list->PathArcTo(ImVec2(p_min.x + rounding, p_min.y + rounding), rounding, IM_PI, IM_PI * 1.5f);
-        draw_list->PathArcTo(ImVec2(p_max.x - rounding, p_min.y + rounding), rounding, IM_PI * 1.5f, IM_PI * 2.0f);
-        draw_list->PathArcTo(ImVec2(p_max.x - rounding, p_max.y - rounding), rounding, 0.0f, IM_PI * 0.5f);
-        draw_list->PathArcTo(ImVec2(p_min.x + rounding, p_max.y - rounding), rounding, IM_PI * 0.5f, IM_PI);
-        draw_list->PathStroke(col, true, thickness);
-        
-    } else draw_list->AddRect(p_min, p_max, col, 0.0f, 0, thickness);
-}
 
 void SceneSelection::Render() {
     // 左侧场景选择区域 - 调整为25%宽度
@@ -111,16 +89,16 @@ void SceneSelection::SceneCard(const SceneItem& scene, int id, float width, floa
         ImColor(0.15f, 0.15f, 0.17f, 1.0f);
     
     // 使用兼容方法绘制圆角矩形
-    AddRectFilledRounded(draw_list, p, ImVec2(p.x + card_size.x, p.y + card_size.y), bgColor, rounding);
+    Utils::AddRectFilledRounded(draw_list, p, ImVec2(p.x + card_size.x, p.y + card_size.y), bgColor, rounding);
     
     // 绘制高亮边框（选中状态）
     if (isSelected) {
-        AddRectRounded(draw_list, p, ImVec2(p.x + card_size.x, p.y + card_size.y), ImColor(0.26f, 0.59f, 0.98f, 1.0f), rounding, 2.0f);
+        Utils::AddRectRounded(draw_list, p, ImVec2(p.x + card_size.x, p.y + card_size.y), ImColor(0.26f, 0.59f, 0.98f, 1.0f), rounding, 2.0f);
     }
     
     // 添加卡片悬停效果
     if (ImGui::IsItemHovered()) {
-        AddRectFilledRounded(draw_list, p, ImVec2(p.x + card_size.x, p.y + card_size.y), ImColor(255, 255, 255, 20), rounding);
+        Utils::AddRectFilledRounded(draw_list, p, ImVec2(p.x + card_size.x, p.y + card_size.y), ImColor(255, 255, 255, 20), rounding);
     }
     
     // 预览图
@@ -133,7 +111,7 @@ void SceneSelection::SceneCard(const SceneItem& scene, int id, float width, floa
     float imageY = p.y + 15.0f;
     
     // 绘制预览图背景
-    AddRectFilledRounded(draw_list, 
+    Utils::AddRectFilledRounded(draw_list, 
         ImVec2(imageX - 5, imageY - 5), 
         ImVec2(imageX + imageSize + 5, imageY + imageSize + 5), 
         ImColor(0.10f, 0.10f, 0.12f, 1.0f), 
@@ -157,7 +135,7 @@ void SceneSelection::SceneCard(const SceneItem& scene, int id, float width, floa
     float text_pos_y = p.y + height - text_size.y - 15.0f;
     
     // 绘制场景名称背景
-    AddRectFilledRounded(draw_list, 
+    Utils::AddRectFilledRounded(draw_list, 
         ImVec2(text_pos_x - 10, text_pos_y - 5), 
         ImVec2(text_pos_x + text_size.x + 10, text_pos_y + text_size.y + 5), 
         ImColor(0.12f, 0.12f, 0.14f, 0.9f), 

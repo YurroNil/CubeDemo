@@ -7,8 +7,8 @@
 namespace CubeDemo {
 
 class Model : public Managers::ModelGetter {
-    friend class Managers::ModelGetter;
 
+    friend class Managers::ModelGetter;
     friend class UI::ModelTablePanel;
 
 public:
@@ -50,10 +50,8 @@ private:
     vec3 m_Rotation = vec3(0.0f),   m_RotCopy = vec3(0.0f);
     vec3 m_Scale = vec3(1.0f),      m_ScaleCopy = vec3(1.0f);
 
-
 // ------------- 加载状态 -------------
     std::atomic<bool> m_isLoading = false, m_MeshesReady = false;
-
 
 // ------------- 私有方法 -------------
     const void UpdateModelMatrix();

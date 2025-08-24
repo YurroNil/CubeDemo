@@ -13,7 +13,7 @@ public:
     // 初始化场景
     void Init() override;
     // 渲染场景
-    void Render(GLFWwindow* window, Camera* camera, ShadowMap* shadow_map) override;
+    void Render(GLFWwindow* window, Camera* camera) override;
     // 清理场景
     void Cleanup() override;
     
@@ -30,9 +30,7 @@ public:
     const std::vector<Prefabs::SkyLight*>& GetSkyLights() const { return m_skyLights; }
     // 获取体积光
     const std::vector<Prefabs::VolumBeam*>& GetVolumBeams() const { return m_volumBeams; }
-    // 获取阴影贴图
-    const std::vector<Prefabs::ShadowMap*>& GetShadowMaps() const { return m_shadowMaps; }
-    
+
     // 添加模型
     void AddModel(::CubeDemo::Model* model);
     // 添加方向光
@@ -45,9 +43,6 @@ public:
     void AddSkyLight(Prefabs::SkyLight* light);
     // 添加体积光
     void AddVolumBeam(Prefabs::VolumBeam* beam);
-    // 添加阴影贴图
-    void AddShadowMap(Prefabs::ShadowMap* shadowMap);
-    
 private:
     // 场景信息
     SceneInfo m_info;
@@ -56,7 +51,6 @@ private:
     std::vector<Prefabs::SpotLight*> m_spotLights;
     std::vector<Prefabs::SkyLight*> m_skyLights;
     std::vector<Prefabs::VolumBeam*> m_volumBeams;
-    std::vector<Prefabs::ShadowMap*> m_shadowMaps;
     unsigned int m_LightCount;
 };
 

@@ -94,7 +94,7 @@ void MIL::InitModels() {
 }
 
 void MIL::LoadSingleModel(const string& model_path, const Utils::ModelConfig& config) {
-    
+
     try {
         // 创建模型实例
         ::CubeDemo::Model* model = new ::CubeDemo::Model(model_path);
@@ -140,7 +140,7 @@ void MIL::WaitForModelLoad(std::atomic<bool>& model_loaded) {
     while (!model_loaded.load()) {
         int processed = 0;
         TaskQueue::ProcTasks(processed);
-        
+
         CheckForTimeout(start_time);
 
         // 检查窗口关闭
@@ -149,18 +149,14 @@ void MIL::WaitForModelLoad(std::atomic<bool>& model_loaded) {
             exit(EXIT_SUCCESS);
         }
         // 无任务时让出CPU
-        if (processed == 0) {
-            std::this_thread::sleep_for(millisec(10));
-        }
+        if (processed == 0) std::this_thread::sleep_for(millisec(10));
     }
 }
 
 // 超时检测
 void MIL::CheckForTimeout(const timepoint_steady& start_time) {
     constexpr auto timeout = seconds(3);
-    if (steady_clock::now() > start_time + timeout) {
-        throw std::runtime_error("[INITER_ERROR] 模型加载超时");
-    }
+    if (steady_clock::now() > start_time + timeout) throw std::runtime_error("[INITER_ERROR] 模型加载超时");
 }
 
 // 模型数据验证

@@ -35,6 +35,7 @@ public:
     const void SetScale(vec3 scale);
     const void SetTransform(const vec3& pos, vec3 rotation, const vec3& scale);
     const void SetShaderPaths(const string& vsh_path, const string& fsh_path);
+    const void SetModelMatrix(const mat4& matrix);
     const void CreateShader();
 private:
     ::CubeDemo::Model* m_owner;

@@ -6,7 +6,7 @@ namespace CubeDemo::UI {
 
 // 语言选项
 static const char* s_LanguageOptions[] = {
-    "简体中文", "繁體中文", "English", "日本語", "한국어"
+    "简体中文", "繁體中文", "English", "日本語"
 };
 static int s_SelectedLanguage = 0; // 默认简体中文
 // 主题界面选项
@@ -42,6 +42,5 @@ void GameSettings::Render() {
 
     ImGui::SetNextItemWidth(200);
     ImGui::Combo("##Theme", &s_SelectedTheme, s_ThemeOptions, IM_ARRAYSIZE(s_ThemeOptions));
-    
 }
 }
